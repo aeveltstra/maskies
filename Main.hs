@@ -2,8 +2,10 @@
 
 module Main where
 
+import qualified Data.Char as D
 import qualified Data.Text as T
 import qualified System.Exit
+import qualified System.IO
 
 putTxtLn :: T.Text -> IO ()
 putTxtLn input = putStrLn $ T.unpack input
@@ -32,33 +34,27 @@ key 'q' = Q
 key  _  = Wait
 
 
-welcomeMsg = "Welcome to Maskie's Ice Cream. What is your name?"
+welcomeMsg = "Welcome to Maskie's Ice Cream. What is your name? Type your name and press Enter:"
 showWelcome = putTxtLn welcomeMsg
 
-a1DarkHallway :: T.Text -> T.Text
 a1DarkHallway name = T.replace "{name}" name "Hello, {name}. You're in a dark hallway. It is night. Need help? Press h. To go forward: press w. To give up and quit: press q."
 showA1DarkHallway name = putTxtLn $ a1DarkHallway name
 
 a1HelpMsg _  = "This is a text adventure game. It makes you read a lot. After each scene, you get a choice for what to do next. Enter your choice to continue, or q to quit. Take your time. Take as long as you need. No really: think it through. To go back, press w."
 showA1Help name = putTxtLn $ a1HelpMsg name
 
-a1LightAppears :: T.Text -> T.Text
 a1LightAppears name = T.replace "{name}" name "At the end of the hallway, a light moves in. It brightens the opposite wall, which shows an image. It is too far away to recognize. To go forward: press w. To give up and quit: q."
 showA1LightAppears name = putTxtLn $ a1LightAppears name
 
-a1HallwayDeath :: T.Text -> T.Text
 a1HallwayDeath name = T.replace "{name}" name "The light comes from a lantern, held by a security guard. He shines it at the image on the wall. It's an ice cream cone. He turns around and sees you. You tear him to shreds so fast he can't even scream. Now the ice cream image is dripping with blood. That will take some time to clean. Better get to it before the parlor opens again. Press w."
 showA1HallwayDeath name = putTxtLn $ a1HallwayDeath name
 
-a2DarkHallway :: T.Text -> T.Text
 a2DarkHallway name = T.replace "{name}" name "Still here, {name}? You're back in the dark hallway. It is night. Again. This is night 2. Need help? Press h. To go forward: press w. Press a to turn left. There's a light there. To turn right, press d."
 showA2DarkHallway name = putTxtLn $ a2DarkHallway name
 
-a2HelpMsg :: T.Text -> T.Text
 a2HelpMsg name = T.replace "{name}" name "Maskies sells ice cream. Due to a pandemic killing lots of people, the owner replaced all human employees with animatronics. They're like robots, but better. No people touch the ice cream, so no viruses get transmitted. That makes Maskies a popular place. So popular that thieves like to come and steal the ice cream. You are a security guard, {name}. Your job is to keep out the thieves. Press w to continue."
 showA2Help name = putTxtLn $ a2HelpMsg name
 
-a2Storage :: T.Text -> T.Text
 a2Storage name = T.replace "{name}" name "You are in a lit storage room. There is a desk, a water fountain, and a closet. Is it hot in here? Press w to drink water from the fountain. Press d to look at the desk. To inspect in the closet, press a. To go back to the hallway, press s."
 showA2Storage name = putTxtLn $ a2Storage name
 
@@ -68,45 +64,36 @@ showA2StorageDesk name = putTxtLn $ a2StorageDesk name
 a3StorageDesk name = T.replace "{name}" name "There's a letter on the desk, with your name on it, {name}. Would you like to read it? If so, press y. If not, press n."
 showA3StorageDesk name = putTxtLn $ a3StorageDesk name
 
-a3ReadLetter :: T.Text -> T.Text
 a3ReadLetter name = T.replace "{name}" name "The letter reads: \"Dear {name}, if you read this, I will be dead. Chances are you will die too. Something wanders the hallways at night. Did John Masky tell you that you need to keep out thieves? He lied to you. It isn't thieves that kill us. It's something much worse. But don't take my word for it. Check it out yourself. Maybe you can find a way to stop it. Good luck.\" Press s to go back and keep playing. Scared? Give up and quit! Press q."
 showA3ReadLetter name = putTxtLn $ a3ReadLetter name
 
-a2TheParlor :: T.Text -> T.Text
 a2TheParlor name = T.replace "{name}" name "You are in the ice cream parlor. It is closed for the night. The lights are off. You can make out tables and cabinets in the light of the moon. And what's that? In the shadows behind the counter? Is that a person? To do your duty and inspect the situation, press w. However, you might be a coward. Press s to go back to the hallway. It won't be any better, though. Now choose."
 showA2TheParlor name = putTxtLn $ a2TheParlor name
 
-a2TheParlorDeath :: T.Text -> T.Text
 a2TheParlorDeath name = T.replace "{name}" name "You get attacked. You can't see by whom or what: there is not enough light here. Wasn't there a lantern in the storage room? You really could have used that now. The attacker grabs you by the neck, and pulls you really close to his face. ITs face. It's an animatronic. Why is it attacking you? Why is it activated? It's night time! Shouldn't they be off? Good questions. But you have no time to reflect: the animatronic cracked your head like an eggshell. And now you can't even see how it pulled out your brain and eats it. That's going to make a mess! Now choose: to reincarnate and try again, press a. To give up and quit, press q."
 showA2TheParlorDeath name = putTxtLn $ a2TheParlorDeath name
 
-a2DarkHallwayEnd :: T.Text -> T.Text
 a2DarkHallwayEnd name = T.replace "{name}" name "On the far end of the hallway, you see a wall. There might be a painting there, but it's too dark to make out. As a matter of fact, you can hardly see anything. Better go back, {name}. Press s to go back. Or press d to go right. Want to go left? Press a. To give up and quit, press q."
 showA2DarkHallwayEnd name = putTxtLn $ a2DarkHallwayEnd name
 
-a2HallwayDeath :: T.Text -> T.Text
 a2HallwayDeath name = T.replace "{name}" name "What's that? In the shadows? It's moving fast. It's coming for you, {name}! You try and get away, but it's dark. It jumps on you. You fall over backwards, cracking your head on the floor. The squeaky clean floor. Not so clean anymore. You have nothing to protect yourself. The attacker weighs down on your chest. You can't breathe. You can't see anything anymore. Desparately you grasp for air and try to push away your attacker. To no avail. Good bye, {name}. Press a to reincarnate and try again. Press q to give up and quit."
 showA2HallwayDeath name = putTxtLn $ a2HallwayDeath name
 
 a3LitHallway name = T.replace "{name}" name "You're back in the hallway. It's still night 2. Your lantern helps you see. Where to? Forward: press w. Left: a. Right: d. You could give up now and press q. But you've come so far!"
 showA3LitHallway name = putTxtLn $ a3LitHallway name
 
-a3LitHallwayEnd :: T.Text -> T.Text
 a3LitHallwayEnd name = T.replace "{name}" name "On the far wall at the end of the hallway, you see a painting of an ice cream cone. Everything is squeaky clean. The cleaning crew must be doing a good job. Surely that's needed to keep the animatronics in good shape. On top of the ice cream in the painting, you spot a red ball with a yellow smiley face. Like a gumball. Wouldn't you like to eat some ice cream now? It is getting hot in here, after all. Press y for yes, n for no."
 showA3LitHallwayEnd name = putTxtLn $ a3LitHallwayEnd name
 
-a3TheParlor :: T.Text -> T.Text
 a3TheParlor name = T.replace "{name}" name "You are in the ice cream parlor. It is closed for the night. The lights are off, but your lantern spreads the light. You can make out tables and cabinets. And what's that? In the shadows behind the counter? Is that an ice cream dispenser? Let's have some! Surely that will cool you down. Press y to eat the ice cream. Press s to return to the hallway. To quit, press q."
 showA3TheParlor name = putTxtLn $ a3TheParlor name
 
-a3EatIcecream :: T.Text -> T.Text
 a3EatIcecream name = T.replace "{name}" name "This truly is the best ice cream ever. It's clear why people would want to come here and have some. The ice cream tastes so good, that you forgot to wonder why the dispenser hadn't been turned off. It's midnight, after all. Shouldn't it have been cleaned for hygiene? If you agree, press y. If not, press n."
 showA3EatIcecream name = putTxtLn $ a3EatIcecream name
 
 a2StorageCloset name = T.replace "{name}" name "The closet is really dark. You can't see anything. Wouldn't you feel better with a lantern? Didn't you see one on the desk? To check the desk, press d. To rummage around the closet anyway, press w. To give up and quit, press q."
 showA2StorageCloset name = putTxtLn $ a2StorageCloset name
 
-a2StorageClosetDeath :: T.Text -> T.Text
 a2StorageClosetDeath name = T.replace "{name}" name "Ack! Something just grabbed you! You can't see what it is: it's too dark! It jumps on you. You fall over backwards, cracking your head on the edge of the desk. The desk with the lantern. The light makes your attacker visible. It's... an animatronic!? Why is it attacking you? And why is it singing? This is not the right time for the ice cream song! It's shredding your clothes and your skin. You have nothing to protect yourself. You succumb to pain and blood loss. Good try, {name}. Don't give up now. Press a to reincarnate and try again. Press q to give up and quit."
 showA2StorageClosetDeath name = putTxtLn $ a2StorageClosetDeath name
 
@@ -246,7 +233,7 @@ next A3LitHallwayEnd Y = A3TheParlor
 next A3LitHallwayEnd _ = A3LitHallway
 next A3TheParlor Y = A3EatIcecream
 next A3TheParlor _ = A3LitHallway
-next _ _ = error "Not yet wired up."
+next _ _ = error "Yet to wire up."
 
 
 showStage :: Stage -> T.Text -> IO ()
@@ -286,19 +273,20 @@ showStage A5Storage name = showA5Storage name
 
 
 loop :: Stage -> T.Text -> IO ()
+loop Quit input = do
+    showStage Quit input
+    System.Exit.exitSuccess
 loop stage input = do 
-     showStage stage input
-     if stage == Quit
-         then System.Exit.exitSuccess
-         else do
-             choice <- getChar
-             putStrLn ""
-             loop (next stage (key choice)) input
+    showStage stage input
+    choice <- getChar
+    putStrLn ""
+    loop (next stage (key choice)) input
 
 
 main :: IO ()
 main = do
     showStage Init ""
     nameStr <- getLine
+    System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
     loop A1DarkHallway (T.pack nameStr)
     
