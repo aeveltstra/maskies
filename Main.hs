@@ -287,6 +287,10 @@ main :: IO ()
 main = do
     showStage Init ""
     nameStr <- getLine
+    --This turns off input buffering. Buffering makes it so that the
+    --the executable will wait for an enter key press after any input.
+    --Our application will see the enter key and act on it, 
+    --acting twice on the same stage.
     System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
     loop A1DarkHallway (T.pack nameStr)
     
