@@ -88,8 +88,11 @@ a2HallwayDeath :: T.Text -> T.Text
 a2HallwayDeath name = T.replace "{name}" name "What's that? In the shadows? It's moving fast. It's coming for you, {name}! You try and get away, but it's dark. It jumps on you. You fall over backwards, cracking your head on the floor. The squeaky clean floor. Not so clean anymore. You have nothing to protect yourself. The attacker weighs down on your chest. You can't breathe. You can't see anything anymore. Desparately you grasp for air and try to push away your attacker. To no avail. Good bye, {name}. Press a to reincarnate and try again. Press q to give up and quit."
 showA2HallwayDeath name = putTxtLn $ a2HallwayDeath name
 
+a3LitHallway name = T.replace "{name}" name "You're back in the hallway. It's still night 2. Your lantern helps you see. Where to? Forward: press w. Left: a. Right: d. You could give up now and press q. But you've come so far!"
+showA3LitHallway name = putTxtLn $ a3LitHallway name
+
 a3LitHallwayEnd :: T.Text -> T.Text
-a3LitHallwayEnd name = T.replace "{name}" name "On the far wall at the end of the hallway, you see a painting of an ice cream cone. Everything is squeaky clean. The cleaning crew must be doing a good job. Surely that's needed to keep the animatronics in good shape. On top of the ice cream in the painting, you spot a red ball with a yellow smiley face. Like a gumball. Wouldn't you like to eat some ice cream now? Press y for yes, n for no."
+a3LitHallwayEnd name = T.replace "{name}" name "On the far wall at the end of the hallway, you see a painting of an ice cream cone. Everything is squeaky clean. The cleaning crew must be doing a good job. Surely that's needed to keep the animatronics in good shape. On top of the ice cream in the painting, you spot a red ball with a yellow smiley face. Like a gumball. Wouldn't you like to eat some ice cream now? It is getting hot in here, after all. Press y for yes, n for no."
 showA3LitHallwayEnd name = putTxtLn $ a3LitHallwayEnd name
 
 a3TheParlor :: T.Text -> T.Text
@@ -218,6 +221,10 @@ next A2TheParlor W = A2TheParlorDeath
 next A2TheParlor _ = A2DarkHallway
 next A2TheParlorDeath A = A2DarkHallway
 next A2TheParlorDeath _ = Quit
+next A3LitHallway A = A3Storage
+next A3LitHallway W = A3LitHallwayEnd
+next A3LitHallway D = A3TheParlor
+next A3LitHallway _ = A3LitHallway
 next A3Storage S = A3LitHallway
 next A3StorageCloset Y = A3InspectSupplies
 next A3StorageCloset _ = A3Storage
@@ -233,8 +240,12 @@ next A3StorageDesk Y = A3ReadLetter
 next A3ReadLetter _ = A3Storage
 next A3ViewMirror S = A3Storage
 next A3ViewMirror W = A3HallwayDeath
-next A3HallwayDeath A = A3Hallway
+next A3HallwayDeath A = A3LitHallway
 next A3HallwayDeath _ = Quit
+next A3LitHallwayEnd Y = A3TheParlor
+next A3LitHallwayEnd _ = A3LitHallway
+next A3TheParlor Y = A3EatIcecream
+next A3TheParlor _ = A3LitHallway
 next _ _ = error "Not yet wired up."
 
 
@@ -257,6 +268,8 @@ showStage A2StorageCloset name = showA2StorageCloset name
 showStage A2StorageClosetDeath name = showA2StorageClosetDeath name
 showStage A2StorageFountain name = showA2StorageFountain name
 showStage A2ViewMirror name = showA2ViewMirror name
+showStage A3LitHallway name = showA3LitHallway name
+showStage A3LitHallwayEnd name = showA3LitHallwayEnd name
 showStage A3Storage name = showA3Storage name
 showStage A3StorageCloset name = showA3StorageCloset name
 showStage A3InspectSupplies name = showA3InspectSupplies name
@@ -265,6 +278,7 @@ showStage A3StorageDesk name = showA3StorageDesk name
 showStage A3ReadLetter name = showA3ReadLetter name
 showStage A3StorageFountain name = showA3StorageFountain name
 showStage A3ViewMirror name = showA3ViewMirror name
+showStage A3TheParlor name = showA3TheParlor name
 showStage A3EatIcecream name = showA3EatIcecream name
 showStage A3HallwayDeath name = showA3HallwayDeath name
 showStage A4Storage name = showA4Storage name
