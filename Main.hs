@@ -7,8 +7,30 @@ import qualified Data.Text as T
 import qualified System.Exit
 import qualified System.IO
 
+main :: IO ()
+main = do
+    stage Init ""
+    nameStr <- getLine
+    --This turns off input buffering. Buffering makes it so that the
+    --the executable will wait for an enter key press after any input.
+    --Our application will see the enter key and act on it, 
+    --acting twice on the same stage.
+    System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
+    loop A1DarkHallway (T.pack nameStr)
+    
+loop :: Stage -> T.Text -> IO ()
+loop Quit input = do
+    stage Quit input
+    System.Exit.exitSuccess
+loop theStage input = do 
+    stage theStage input
+    choice <- getChar
+    putStrLn ""
+    loop (next theStage (key choice)) input
+
 putTxtLn :: T.Text -> IO ()
 putTxtLn input = putStrLn $ T.unpack input
+
 
 data Key
     = Q
@@ -50,7 +72,8 @@ data Stage =
   | A2TheParlor
   | A2TheParlorDeath
   | A2DarkHallwayEnd
-  | A2HallwayDeath
+  | A2DarkToilets
+  | A2DarkHallwayDeath
   | A3Storage
   | A3StorageFountain
   | A3ViewMirror
@@ -64,7 +87,15 @@ data Stage =
   | A3HallwayDeath
   | A3TheParlor
   | A3EatIcecream
+  | A3FoodPoisoning
+  | A3LitToilets
+  | A3FeelBetterNow
+  | A3DieFromFoodPoisoning
   | A4Storage
+  | A4StorageDesk
+  | A4StorageFountain
+  | A4PressedButton
+  | A4StorageDeath
   | A5Storage
   | Quit
   deriving (Show, Eq)
@@ -81,7 +112,7 @@ next A1HallwayDeath _ = A2DarkHallway
 next A2DarkHallway H = A2Help
 next A2DarkHallway A = A2Storage
 next A2DarkHallway W = A2DarkHallwayEnd
-next A2Help _ = A2DarkHallway
+next A2Help _ = A2Storage
 next A2Storage D = A2StorageDesk
 next A2Storage A = A2StorageCloset
 next A2Storage W = A2StorageFountain
@@ -98,10 +129,13 @@ next A2StorageFountain _ = A2Storage
 next A2ViewMirror _ = A2Storage
 next A2DarkHallwayEnd D = A2TheParlor
 next A2DarkHallwayEnd S = A2DarkHallway
-next A2DarkHallwayEnd _ = A2HallwayDeath
-next A2HallwayDeath A = A2DarkHallway
+next A2DarkHallwayEnd A = A2DarkToilets
+next A2DarkHallwayEnd _ = A2DarkHallwayDeath
+next A2DarkHallwayDeath A = A2DarkHallway
+next A2DarkToilets S = A2DarkHallway
+next A2DarkToilets _ = A2DarkHallwayDeath
 next A2DarkHallway D = A2TheParlor
-next A2HallwayDeath _ = Quit
+next A2DarkHallwayDeath _ = Quit
 next A2TheParlor W = A2TheParlorDeath
 next A2TheParlor _ = A2DarkHallway
 next A2TheParlorDeath A = A2DarkHallway
@@ -112,7 +146,7 @@ next A3LitHallway D = A3TheParlor
 next A3LitHallway _ = A3LitHallway
 next A3Storage S = A3LitHallway
 next A3StorageCloset Y = A3InspectSupplies
-next A3StorageCloset _ = A3Storage
+next A3StorageCloset _ = A4Storage
 next A3InspectSupplies S = A4Storage
 next A3InspectSupplies _ = A3FindShield
 next A3FindShield _ = A5Storage
@@ -122,6 +156,7 @@ next A3Storage W = A3StorageFountain
 next A3StorageFountain W = A3ViewMirror
 next A3StorageFountain _  = A3Storage
 next A3StorageDesk Y = A3ReadLetter
+next A3StorageDesk _ = A3Storage
 next A3ReadLetter _ = A3Storage
 next A3ViewMirror S = A3Storage
 next A3ViewMirror W = A3HallwayDeath
@@ -130,7 +165,25 @@ next A3HallwayDeath _ = Quit
 next A3LitHallwayEnd Y = A3TheParlor
 next A3LitHallwayEnd _ = A3LitHallway
 next A3TheParlor Y = A3EatIcecream
+next A3EatIcecream N = A3FoodPoisoning
+next A3FoodPoisoning W = A3LitToilets
+next A3FoodPoisoning _ = A3DieFromFoodPoisoning
+next A3LitToilets S = A3DieFromFoodPoisoning
+next A3DieFromFoodPoisoning A = A3LitHallway
+next A3DieFromFoodPoisoning _ = Quit
+next A3LitToilets _ = A3FeelBetterNow
+next A3FeelBetterNow _ = A3LitHallwayEnd
+next A3EatIcecream _ = A3LitHallway
 next A3TheParlor _ = A3LitHallway
+next A4Storage D = A4StorageDesk
+next A4Storage _ = A4StorageFountain
+next A4StorageDesk Y = A4PressedButton
+next A4StorageDesk _ = A4StorageFountain
+next A4PressedButton Y = A4StorageFountain
+next A4PressedButton _ = A4StorageDeath
+next A4StorageFountain _ = A4StorageDeath
+next A4StorageDeath _ = Quit
+
 next _ _ = error "Yet to wire up."
 
 stage :: Stage -> T.Text -> IO ()
@@ -147,11 +200,11 @@ stage A1LightAppears name = putTxtLn $ T.replace "{name}" name "At the end of th
 
 stage A1HallwayDeath name = putTxtLn $ T.replace "{name}" name "The light comes from a lantern, held by a security guard. He shines it at the image on the wall. It's an ice cream cone. He turns around and sees you. You tear him to shreds so fast he can't even scream. Now the ice cream image is dripping with blood. That will take some time to clean. Better get to it before the parlor opens again. Press w."
 
-stage A2DarkHallway name = putTxtLn $ T.replace "{name}" name "Still here, {name}? You're back in the dark hallway. It is night. Again. This is night 2. Need help? Press h. To go forward: press w. Press a to turn left. There's a light there. To turn right, press d."
+stage A2DarkHallway name = putTxtLn $ T.replace "{name}" name "Still here, {name}? You're back in the dark hallway. It is night. Again. This is night 2. To read the letter from your employer, press h. To go forward: press w. Press a to turn left. There's a light there. To turn right, press d."
 
-stage A2Help name = putTxtLn $ T.replace "{name}" name "Maskies sells ice cream. Due to a pandemic killing lots of people, the owner replaced all human employees with animatronics. They're like robots, but better. No people touch the ice cream, so no viruses get transmitted. That makes Maskies a popular place. So popular that thieves like to come and steal the ice cream. You are a security guard, {name}. Your job is to keep out the thieves. Press w to continue."
+stage A2Help name = putTxtLn $ T.replace "{name}" name "The letter reads: \"Dear {name}, Welcome to Maskies Ice Cream! Great to have you on staff. Due a pandemic killing lots of people, I replaced all human employees with animatronics. They're like robots, but better. No people touch the ice cream, so no viruses get transmitted. That makes Maskies a popular place. So popular that thieves like to come and steal the ice cream. That's where you come in, {name}. Your job is to keep out the thieves. See you tomorrow! Sincerely, John Masky.\" Press w to continue."
 
-stage A2Storage name = putTxtLn $ T.replace "{name}" name "You are in a lit storage room. There is a desk, a water fountain, and a closet. Is it hot in here? Press w to drink water from the fountain. Press d to look at the desk. To inspect in the closet, press a. To go back to the hallway, press s."
+stage A2Storage name = putTxtLn $ T.replace "{name}" name "You are in a lit storage room. There is a desk, a water fountain, and a closet. Is it hot in here? Press w to drink water from the fountain. Press d to look at the desk. To inspect the closet, press a. To go back to the hallway, press s."
 
 stage A2TheParlor name = putTxtLn $ T.replace "{name}" name "You are in the ice cream parlor. It is closed for the night. The lights are off. You can make out tables and cabinets in the light of the moon. And what's that? In the shadows behind the counter? Is that a person? To do your duty and inspect the situation, press w. However, you might be a coward. Press s to go back to the hallway. It won't be any better, though. Now choose."
 
@@ -159,7 +212,9 @@ stage A2TheParlorDeath name = putTxtLn $ T.replace "{name}" name "You get attack
 
 stage A2DarkHallwayEnd name = putTxtLn $ T.replace "{name}" name "On the far end of the hallway, you see a wall. There might be a painting there, but it's too dark to make out. As a matter of fact, you can hardly see anything. Better go back, {name}. Press s to go back. Or press d to go right. Want to go left? Press a. To give up and quit, press q."
 
-stage A2HallwayDeath name = putTxtLn $ T.replace "{name}" name "What's that? In the shadows? It's moving fast. It's coming for you, {name}! You try and get away, but it's dark. It jumps on you. You fall over backwards, cracking your head on the floor. The squeaky clean floor. Not so clean anymore. You have nothing to protect yourself. The attacker weighs down on your chest. You can't breathe. You can't see anything anymore. Desparately you grasp for air and try to push away your attacker. To no avail. Good bye, {name}. Press a to reincarnate and try again. Press q to give up and quit."
+stage A2DarkToilets name = putTxtLn $ T.replace "{name}" name "You found the toilets. That will come in handy. It's a bit dark in here. If only you had some light. Stay here and take a wee in the dark? Press w. Go back into the hallway and look for a light? Press s."
+
+stage A2DarkHallwayDeath name = putTxtLn $ T.replace "{name}" name "What's that? In the shadows? It's moving fast. It's coming for you, {name}! You try and get away, but it's dark. It jumps on you. You fall over backwards, cracking your head on the floor. The squeaky clean floor. Not so clean anymore. You have nothing to protect yourself. The attacker weighs down on your chest. You can't breathe. You can't see anything anymore. Desparately you grasp for air and try to push away your attacker. To no avail. Good bye, {name}. Press a to reincarnate and try again. Press q to give up and quit."
 
 stage A2StorageDesk name = putTxtLn $ T.replace "{name}" name "The desk holds a lantern. It's the only light in the room. You probably should pick it up and carry it around as you roam the premises. You know: so you don't stumble over anything in the dark. To pick up the lantern, press y. Otherwise, press n."
 
@@ -175,7 +230,7 @@ stage A3LitHallway name = putTxtLn $ T.replace "{name}" name "You're back in the
 
 stage A3LitHallwayEnd name = putTxtLn $ T.replace "{name}" name "On the far wall at the end of the hallway, you see a painting of an ice cream cone. Everything is squeaky clean. The cleaning crew must be doing a good job. Surely that's needed to keep the animatronics in good shape. On top of the ice cream in the painting, you spot a red ball with a yellow smiley face. Like a gumball. Wouldn't you like to eat some ice cream now? It is getting hot in here, after all. Press y for yes, n for no."
 
-stage A3Storage name = putTxtLn $ T.replace "{name}" name "You are in a storage room. Your lantern lights it up. There is a desk, a water fountain, and a closet. Press w to cool down with some cold water from the fountain. Press d to check the desk. To inspect in the closet, press a. To go back to the hallway, press s."
+stage A3Storage name = putTxtLn $ T.replace "{name}" name "You are in a storage room. Your lantern lights it up. There is a desk, a water fountain, and a closet. Press w to cool down with some cold water from the fountain. Press d to check the desk. To inspect the closet, press a. To go back to the hallway, press s."
 
 stage A3StorageCloset name = putTxtLn $ T.replace "{name}" name "The closet contains cleaning supplies and 2 sets of clothes: a spare security guard uniform, and a cleaner's outfit. Would you like to inspect the cleaning supplies? If so, press y. If not, press n."
 
@@ -195,9 +250,25 @@ stage A3TheParlor name = putTxtLn $ T.replace "{name}" name "You are in the ice 
 
 stage A3EatIcecream name = putTxtLn $ T.replace "{name}" name "This truly is the best ice cream ever. It's clear why people would want to come here and have some. The ice cream tastes so good, that you forgot to wonder why the dispenser hadn't been turned off. It's midnight, after all. Shouldn't it have been cleaned for hygiene? If you agree, press y. If not, press n."
 
+stage A3FoodPoisoning name = putTxtLn $ T.replace "{name}" name "You don't feel so good. Your stomach is growling. Better get to the bathroom, {name}, quickly! Press w to go visit the bathrooms. Or s to suck it up and ignore the pain."
+
+stage A3DieFromFoodPoisoning name = putTxtLn $ T.replace "{name}" name "Best ice cream in the country, aye? Not so sure about that anymore, are you, {name}? Your belly swells up fast. It hurts! It explodes! Your guts get flung out all over the place. You fall down on your knees and then flat on your face. You would drown if the blood loss wouldn't kill you first. Press q to quit. Or, to reincarnate and try again, press a. Don't eat the ice cream, OK {name}?"
+
+stage A3LitToilets name = putTxtLn $ T.replace "{name}" name "You found the toilets. Just in time! To go and do a number 2, pick any stall: a, w, or d. Or press s to back out now."
+
+stage A3FeelBetterNow name = putTxtLn $ T.replace "{name}" name "Much better. What a relief! You sure could use cold drink of water now. Let's head back, {name}. Press w to continue."
+
 stage A3HallwayDeath name = putTxtLn $ T.replace "{name}" name "Oh how courageous! You ran after whatever it was, into the hallway. You can see it clearly now: it's an animatronic! It rides around on a wheel. And it's coming for you really fast! If only you had had something to protect yourself! But you don't. Did you not see the shield in the storage room closet? Did you not take it? Too late! The animatronic just ran you over. You notice how heavy it is. Way heavier than a human. You hear your bones crushing and breaking as the animatronic spins in circles on top of you. You want to scream, but the pain is too much. You faint. And then you die. Where does the animatronic go? Why did it attack you? No clue. Want to find out? Press a to reincarnate and try again. Or run away and quit, by pressing q."
 
-stage A4Storage name = putTxtLn $ T.replace "{name}" name "Yet to add. Press q to quit."
+stage A4Storage name = putTxtLn $ T.replace "{name}" name "No need to get your hands dirty, right {name}? After all you aren't the cleaner. And the bucket won't be stealing no ice cream. Alright. Let's walk over to the fountain and get some cold water. Press w. Or press d to take a break and sit down at the desk. Feel like quitting? Press q!"
+
+stage A4StorageDesk name = putTxtLn $ T.replace "{name}" name "Right. Let's take a break. Securing the premises is tiring! You set the lantern down on the desk. That causes a small round shadow to appear. A shadow? You recognize it is cast by a button. What would that do? Want to find out, {name}? Press y for yes. Or be boring and press n for no."
+
+stage A4PressedButton name = putTxtLn $ T.replace "{name}" name "Out of the middle of the desk, a screen flips up. It starts playing a video. It's another security guard. He seems afraid and tired. He says: \"Get out! Get out now! The animatronics! They're not OK! Far from! Someone's messed them up. Find something to protect yourself and get out!\". Really now? That's a bit dramatic, isn't it? The video continues: something jumped the security guard and they fell out of view. He's screaming. Is that the sound of wet rags dropping on the floor? Oh dear, blood spatters? You look around the room: no blood anywhere, now. The video stopped. Was it a prank? It must have been a prank! Press y if so. If not, press n."
+
+stage A4StorageFountain name = putTxtLn $ T.replace "{name}" name "Suddenly you hear glass sliding on glass. The mirror mounted on the wall above the fountain slides sideways. The space behind the mirror is dark. Something in there is making its way out into the light. Where you are, {name}. Jump out of the way, quick! Press a!"
+
+stage A4StorageDeath name = putTxtLn $ T.replace "{name}" name "Oh dear! It fell out, bumped on the fountain, and landed right on top of you! And it's heavy! So heavy! Its metal face looks human, but not quite. It studies you. Does it seem confused? Difficult to tell. You struggle to push it off. Can't... move! Can't... breathe! Is that laughter you hear? Crying? Can't tell. Can't... (Press q.)"
 
 stage A5Storage name = putTxtLn $ T.replace "{name}" name "Yet to add. Press q to quit."
 
@@ -205,26 +276,3 @@ stage A5Storage name = putTxtLn $ T.replace "{name}" name "Yet to add. Press q t
 quitMsg :: T.Text -> T.Text
 quitMsg name = T.replace "{name}" name "Come back to play another day, {name}? Bye!"
 quit name = putTxtLn $ quitMsg name
-
-loop :: Stage -> T.Text -> IO ()
-loop Quit input = do
-    stage Quit input
-    System.Exit.exitSuccess
-loop theStage input = do 
-    stage theStage input
-    choice <- getChar
-    putStrLn ""
-    loop (next theStage (key choice)) input
-
-
-main :: IO ()
-main = do
-    stage Init ""
-    nameStr <- getLine
-    --This turns off input buffering. Buffering makes it so that the
-    --the executable will wait for an enter key press after any input.
-    --Our application will see the enter key and act on it, 
-    --acting twice on the same stage.
-    System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
-    loop A1DarkHallway (T.pack nameStr)
-    
