@@ -109,21 +109,18 @@ data Stage =
   | B2ReadLetter
   | B2StorageCloset
   | B2InspectSupplies
-  | B2aInspectSupplies
-  | B2dInspectSupplies
-  | B2wInspectSupplies
-  | B2aFindShield
-  | B2cFindShield
-  | B2eFindShield
-  | B2jFindShield
-  | B2bFindMap
-  | B2eFindMap
-  | B2gFindMap
-  | B2wFindMap
-  | B2bFindMemoryStick
-  | B2cFindMemoryStick
-  | B2dFindMemoryStick
-  | B2fFindMemoryStick
+  | B2aFind
+  | B2adFind
+  | B2awFind
+  | B2adwFind
+  | B2awdFind
+  | B2dFind
+  | B2daFind
+  | B2dwFind
+  | B2dwaFind
+  | B2wFind
+  | B2waFind
+  | B2wdFind
   | B2LitHallway
   | B2LitHallwayEnd
   | B2HallwayDeath
@@ -134,21 +131,39 @@ data Stage =
   | B2FeelBetterNow
   | B2DieFromFoodPoisoning
   | B3Storage
-  | B3aStorage
-  | B3dStorage
-  | B3wStorage
-  | B3adStorage
-  | B3awStorage
-  | B3dwStorage
   | B3adwStorage
   | B3StorageDesk
   | B3aStorageDesk
+  | B3adStorageDesk
+  | B3awStorageDesk
+  | B3adwStorageDesk
   | B3dStorageDesk
+  | B3dwStorageDesk
   | B3wStorageDesk
   | B3StorageFountain
   | B3PressedButton
+  | B3dPressedButton
   | B3StorageDeath
-  | A5Storage
+  | B4PressedButton
+  | B4EndOfShift
+  | B4aEndOfShift
+  | B4dEndOfShift
+  | B4wEndOfShift
+  | B4adEndOfShift
+  | B4awEndOfShift
+  | B4dwEndOfShift
+  | B4pEndOfShift
+  | B4Ridicule
+  | B4Storage
+  | C1Welcome
+  | C1aWelcome
+  | C1dWelcome
+  | C1wWelcome
+  | C1adWelcome
+  | C1awWelcome
+  | C1dwWelcome
+  | C1Hallway
+  | C1Storage
   | Quit
   deriving (Show, Eq)
 
@@ -204,40 +219,57 @@ next B2LitHallway _ = B2LitHallway
 next B2Storage S = B2LitHallway
 next B2StorageCloset Y = B2InspectSupplies
 next B2StorageCloset _ = B3Storage
-next B2InspectSupplies A = B2aFindShield
-next B2InspectSupplies W = B2wFindMap
-next B2InspectSupplies D = B2dFindMemoryStick
+next B2InspectSupplies A = B2aFind
+next B2InspectSupplies W = B2wFind
+next B2InspectSupplies D = B2dFind
 next B2InspectSupplies _ = B3Storage
-next B2aFindShield W = B2bFindMap
-next B2aFindShield D = B2bFindMemoryStick
-next B2aFindShield _ = B3aStorage
-next B3aStorage A = B2aInspectSupplies
-next B3aStorage _ = B3aStorageDesk
-next B2wFindMap A = B2cFindShield
-next B2wFindMap D = B2cFindMemoryStick
-next B2wFindMap _ = B3wStorage
-next B3wStorage W = B2wInspectSupplies
-next B3wStorage _ = B3wStorageDesk
-next B2dFindMemoryStick A = B2eFindShield
-next B2dFindMemoryStick W = B2eFindMap
-next B2dFindMemoryStick _ = B3dStorage
-next B3dStorage D = B2dInspectSupplies
-next B3dStorage _ = B3dStorageDesk
-next B2bFindMap D = B2fFindMemoryStick
-next B2bFindMap _ = B3awStorage
-next B2bFindMemoryStick W = B2gFindMap
-next B2bFindMemoryStick _ = B3adStorage
-next B2cFindShield D = B2fFindMemoryStick
-next B2cFindShield _ = B3awStorage
-next B2cFindMemoryStick A = B2jFindShield
-next B2cFindMemoryStick _ = B3dwStorage
-next B2eFindShield W = B2gFindMap
-next B2eFindShield _ = B3adStorage
-next B2eFindMap A = B2jFindShield
-next B2eFindMap _ = B3dwStorage
-next B2fFindMemoryStick _ = B3adwStorage
-next B2gFindMap _ = B3adwStorage
-next B2jFindShield _ = B3adwStorage
+next B2aFind W = B2awFind
+next B2aFind D = B2adFind
+next B2aFind _ = B3aStorageDesk
+next B2wFind A = B2waFind
+next B2wFind D = B2wdFind
+next B2wFind _ = B3wStorageDesk
+next B2dFind A = B2daFind
+next B2dFind W = B2dwFind
+next B2dFind _ = B3dStorageDesk
+next B2awFind D = B2awdFind
+next B2awFind _ = B3awStorageDesk
+next B2adFind W = B2adwFind
+next B2adFind _ = B3adStorageDesk
+next B2daFind W = B2adwFind
+next B2daFind _ = B3adStorageDesk
+next B2dwFind A = B2dwaFind
+next B2dwFind _ = B3dwStorageDesk
+next B2waFind D = B2awdFind
+next B2waFind _ = B3awStorageDesk
+next B2wdFind A = B2dwaFind
+next B2wdFind _ = B3dwStorageDesk
+next B2awdFind _ = B3adwStorageDesk
+next B2adwFind _ = B3adwStorageDesk
+next B2dwaFind _ = B3adwStorageDesk
+next B3aStorageDesk W = B2awFind
+next B3aStorageDesk D = B2adFind
+next B3aStorageDesk Y = B3PressedButton
+next B3aStorageDesk _ = B4aEndOfShift
+next B3dStorageDesk A = B2daFind
+next B3dStorageDesk W = B2dwFind
+next B3dStorageDesk Y = B3dPressedButton
+next B3dStorageDesk _ = B4dEndOfShift
+next B3wStorageDesk A = B2waFind
+next B3wStorageDesk D = B2wdFind
+next B3wStorageDesk Y = B3PressedButton
+next B3wStorageDesk _ = B4wEndOfShift
+next B3awStorageDesk D = B2awdFind
+next B3awStorageDesk Y = B3PressedButton
+next B3awStorageDesk _ = B4awEndOfShift
+next B3adStorageDesk W = B2adwFind
+next B3adStorageDesk Y = B3dPressedButton
+next B3adStorageDesk _ = B4adEndOfShift
+next B3dwStorageDesk A = B2dwaFind
+next B3dwStorageDesk Y = B3dPressedButton
+next B3dwStorageDesk _ = B4dwEndOfShift
+next B3adwStorageDesk Y = B4PressedButton
+next B3adwStorageDesk _ = B4EndOfShift
 next B2Storage D = B2StorageDesk
 next B2Storage A = B2StorageCloset
 next B2Storage W = B2StorageFountain
@@ -268,10 +300,21 @@ next B3Storage _ = B3StorageFountain
 next B3StorageDesk Y = B3PressedButton
 next B3StorageDesk _ = B3StorageFountain
 next B3PressedButton Y = B3StorageFountain
+next B3dPressedButton Y = B3StorageFountain
 next B3PressedButton _ = B3StorageDeath
+next B3dPressedButton _ = B3StorageDeath
 next B3StorageFountain _ = B3StorageDeath
 next B3StorageDeath _ = Quit
-
+next B4PressedButton _ = B4pEndOfShift
+next B4pEndOfShift Y = B4Ridicule
+next B4pEndOfShift _ = C1Welcome
+next B4EndOfShift _ = C1Welcome
+next B4aEndOfShift _ = C1aWelcome
+next B4dEndOfShift _ = C1dWelcome
+next B4wEndOfShift _ = C1wWelcome
+next B4adEndOfShift _ = C1adWelcome
+next B4awEndOfShift _ = C1awWelcome
+next B4dwEndOfShift _ = C1dwWelcome
 next _ _ = error "Yet to wire up."
 
 -- These are the texts to show for each stage. This architecture
@@ -327,29 +370,29 @@ stage B2StorageCloset name = T.replace "{name}" name "The closet contains cleani
 
 stage B2InspectSupplies name = T.replace "{name}" name "A broom... a mop... a bucket with rags... You shouldn't need these, {name}. You're a security guard. That's odd: something shiny is sticking out of the rags. Would a security guard ignore that? To ignore it and close the closet, press s. Otherwise, pick where to rummage: press a, w, or d:"
 
-stage B2aFindShield name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. Press s to close the closet and return to the storage room. Still curious? Maybe pressing w or d will get you something else?"
+stage B2aFind name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. Press s to study the shield at the desk. Still curious? Maybe pressing w or d will get you something else?"
 
-stage B2cFindShield name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. Press s to close the closet and return to the storage room. Still curious? You already found a map. Maybe pressing d will get you something else?"
+stage B2waFind name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. You already found a map. Press s to study them at the desk. Still curious? Maybe pressing d will get you something else?"
 
-stage B2eFindShield name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. Press s to close the closet and return to the storage room. Still curious? You already found a memory stick. Maybe pressing w will get you something else?"
+stage B2daFind name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. You already found a memory stick. Press s to study them at the desk. Still curious? Maybe pressing w will get you something else?"
 
-stage B2jFindShield name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. You also found a memory stick and a map. That's all there is to find. Press s to close the closet and return to the storage room."
+stage B2dwaFind name = T.replace "{name}" name "You found a shield! It's shiny and pointy, a triangle with the point down, and fits snugly around your arm. {name}: you look tough now! It makes you feel invulnerable. Except for the painting of a poop tuft on the front. But maybe it will come in handy, later. So you keep the shield. You also found a memory stick and a map. That's all there is to find. Press s to study them at the desk."
 
-stage B2bFindMap name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. Let's have a closer look. Press s to close the closet and return to the storage room. Still curious? You already found a shield. Maybe pressing d will get you something else?"
+stage B2awFind name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. You already found a shield. Let's have a closer look. Press s to study them at the desk. Still curious? Maybe pressing d will get you something else?"
 
-stage B2eFindMap name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. Let's have a closer look. Press s to close the closet and return to the storage room. Still curious? You already found a memory stick. Maybe pressing a will get you something else?"
+stage B2dwFind name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. You already found a memory stick. Let's have a closer look. Press s to study them at the desk. Still curious? Maybe pressing a will get you something else?"
 
-stage B2gFindMap name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. Let's have a closer look. There is nothing else to find. Press s to close the closet and return to the storage room."
+stage B2adwFind name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. Let's have a closer look. Press s to study your finds at the desk."
 
-stage B2wFindMap name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. Let's have a closer look. Press s to close the closet and return to the storage room. Still curious? Maybe pressing a or d will get you something else?"
+stage B2wFind name = T.replace "{name}" name "You found a map! It's wrinkly and stained with water. People really have to take better care of their posessions. Let's have a closer look. Press s to study it at the desk. Still curious? Maybe pressing a or d will get you something else?"
 
-stage B2bFindMemoryStick name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. Press s to close the closet and return to the storage room. Still curious? You already found the shield. Maybe pressing w will get you something else?"
+stage B2adFind name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. Press s to close the closet and return to the storage room. Still curious? You already found the shield. Maybe pressing w will get you something else?"
 
-stage B2cFindMemoryStick name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. Press s to close the closet and return to the storage room. Still curious? You already found the map. Maybe pressing a will get you something else?"
+stage B2wdFind name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. You already found a map. Press s to study them at the desk. Still curious? Maybe pressing a will get you something else?"
 
-stage B2dFindMemoryStick name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. Press s to close the closet and return to the storage room. Still curious? Maybe pressing a or w will get you something else?"
+stage B2dFind name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. Press s to study it at the desk. Still curious? Maybe pressing a or w will get you something else?"
 
-stage B2fFindMemoryStick name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. Press s to close the closet and return to the storage room. There is nothing else here."
+stage B2awdFind name = T.replace "{name}" name "You found a memory stick! What would be stored on it? Must be important! Looks like you'll need a USB port to plug that in. There is nothing else here. Press s to study your finds at the desk."
 
 stage B2StorageDesk name = T.replace "{name}" name "There's a letter on the desk, with your name on it, {name}. Would you like to read it? If so, press y. If not, press n."
 
@@ -377,24 +420,56 @@ stage B3Storage name = T.replace "{name}" name "No need to get your hands dirty,
 
 stage B3StorageDesk name = T.replace "{name}" name "Right. Let's take a break. Securing the premises is tiring! You set the lantern down on the desk. That causes a small round shadow to appear. A shadow? You recognize it is cast by a button. What would that do? Want to find out, {name}? Press y for yes. Or be boring and press n for no."
 
-stage B3PressedButton name = T.replace "{name}" name "Out of the middle of the desk, a screen flips up. It starts playing a video. It's another security guard. He seems afraid and tired. He says: \"Get out! Get out now! The animatronics! They're not OK! Far from! Someone's messed them up. Find something to protect yourself and get out!\". Really now? That's a bit dramatic, isn't it? The video continues: something jumped the security guard and they fell out of view. He's screaming. Is that the sound of wet rags dropping on the floor? Oh dear, blood spatters? You look around the room: no blood anywhere, now. The video stopped. Was it a prank? It must have been a prank! Press y if so. If not, press n."
+stage B3PressedButton name = T.replace "{name}" name "Out of the middle of the desk, a screen flips up. It has a USB port on the side. But you have nothing to plug into it. Doesn't it feel like you may be missing out on something important, {name}? Press y if so. If not, press n."
+
+stage B3dPressedButton name = T.replace "{name}" name "Out of the middle of the desk, a screen flips up. It has a USB port on the side. You plug in the memory stick. The screen starts playing a video. It's another security guard. He seems afraid and tired. He says: \"Get out! Get out now! The animatronics! They're not OK! Far from! Someone's messed them up. Find something to protect yourself and get out!\". Really now? That's a bit dramatic, isn't it, {name}? The video continues: something jumped the security guard and they fell out of view. He's screaming. Is that the sound of wet rags dropping on the floor? Oh dear, blood spatters? You look around the room: no blood anywhere, now. The video stopped. Was it a prank? It must have been a prank! Press y if so. If not, press n."
 
 stage B3StorageFountain name = T.replace "{name}" name "Suddenly you hear glass sliding on glass. The mirror mounted on the wall above the fountain slides sideways. The space behind the mirror is dark. Something in there is making its way out into the light. Where you are, {name}. Jump out of the way, quick! Press a!"
 
 stage B3StorageDeath name = T.replace "{name}" name "Oh dear! It fell out, bumped on the fountain, and landed right on top of you! And it's heavy! So heavy! Its metal face looks human, but not quite. It studies you. Does it seem confused? Difficult to tell. You struggle to push it off. Can't... move! Can't... breathe! Is that laughter you hear? Crying? Can't tell. Can't... (Press q.)"
 
-stage B3aStorage name = T.replace "{name}" name "You are in a storage room. You just found a shield in the supply bucket in the closet. Would it have anything else in store? Press a to rummage through it again. Feel like taking a break? Press s to sit down at the desk. Or press q to quit."
+stage B3aStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. That causes a small round shadow to appear, that wasn't there before. It's a button. What do you do? To press the button, press y. Or maybe look for other objects hidden in the wash bucket? Get your hands dirty? If so, press d or w."
 
-stage B3dStorage name = T.replace "{name}" name "You are in a storage room. You just found a memory stick in the supply bucket in the closet. Would it have anything else in store? Press d to rummage through it again. Feel like taking a break? Press s to sit down at the desk. Or press q to quit."
+stage B3dStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. That causes a small round shadow to appear, that wasn't there before. It's a button. What do you do? To press the button, press y. Or maybe look for other objects hidden in the wash bucket? Get your hands dirty? If so, press a or w."
 
-stage B3wStorage name = T.replace "{name}" name "You are in a storage room. You just found a map in the supply bucket in the closet. Would it have anything else in store? Press w to rummage through it again. Feel like taking a break? Press s to sit down at the desk. Or press q to quit."
+stage B3wStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. That causes a small round shadow to appear, that wasn't there before. It's a button. What do you do? To press the button, press y. Or maybe look for other objects hidden in the wash bucket? Get your hands dirty? If so, press a or d."
 
-stage B3adStorage name = T.replace "{name}" name "Yet to add. Press q to quit."
+stage B3adStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. It lights up a button. What do you do? To press the button, press y. Or maybe look for another object hidden in the wash bucket? Get your hands dirty? If so, press w."
 
-stage B3awStorage name = T.replace "{name}" name "Yet to add. Press q to quit."
+stage B3dwStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. It lights up a button. What do you do? To press the button, press y. Or maybe look for another object hidden in the wash bucket? Get your hands dirty? If so, press a."
 
-stage B3adwStorage name = T.replace "{name}" name "Yet to add. Press q to quit."
+stage B3awStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. It lights up a button. What do you do? To press the button, press y. Or maybe look for another object hidden in the wash bucket? Get your hands dirty? If so, press d."
 
-stage A5Storage name = T.replace "{name}" name "Yet to add. Press q to quit."
+stage B3adwStorageDesk name = T.replace "{name}" name "You set your lantern down on the table. Next to it, you place the map and the memory stick. You keep the shield on your arm. Might come in handy. Now where can you plug in the memory stick? It looks like you need a USB port. On the desk you spot the round shadow of a button. Maybe that gives access to a USB port? To press the button, press y. To ignore it and resume guarding duty until the morning, press n."
 
+stage B4Storage name = T.replace "{name}" name "Yet to add. Press q to quit."
+
+stage B4PressedButton name = T.replace "{name}" name "Out of the middle of the desk, a screen flips up. It has a USB port on the side. You plug in the memory stick. The screen starts playing a video. It's another security guard. He seems afraid and tired. He says: \"Get out! Get out now! The animatronics! They're not OK! Far from! Someone's messed them up. Find something to protect yourself and get out!\". Really now? That's a bit dramatic, isn't it, {name}? The video continues: something jumped the security guard and they fell out of view. He's screaming. Is that the sound of wet rags dropping on the floor? Oh dear, blood spatters? You look around the room: no blood anywhere, now. The video stopped. Was it a prank? It must have been a prank! Press y if so. If not, press n."
+
+stage B4EndOfShift name = T.replace "{name}" name b4EoSMsg
+stage B4aEndOfShift name = T.replace "{name}" name b4EoSMsg
+stage B4dEndOfShift name = T.replace "{name}" name b4EoSMsg
+stage B4wEndOfShift name = T.replace "{name}" name b4EoSMsg
+stage B4adEndOfShift name = T.replace "{name}" name b4EoSMsg
+stage B4awEndOfShift name = T.replace "{name}" name b4EoSMsg
+stage B4dwEndOfShift name = T.replace "{name}" name b4EoSMsg
+
+stage B4pEndOfShift name = T.replace "{name}" name "The door bell rings. Would that be thieves? You walk to the ice cream parlor. Halfway there, you get met by a familiar face. It's your employer, John Masky. What's he doing here at this hour? He says: \"Hey there, {name}! How's it going? Shift's over for today. Anything problematic to report?\" Press y to tell Masky about the video you found. Or press n to stay silent and pretend you didn't see nothing."
+
+stage B4Ridicule name = T.replace "{name}" name "So you tell Masky about the video. About the other security guard. About his concern for the animatronics. And how it looked like he got murdered. Masky takes it in, mulls it over, and responds: \"Murder? That's a serious allegation, {name}. By my animatronics, though? They're robots! They're only programmed to serve ice cream and sing children's songs! Do you really think that if they'd murder anyone, I'd still be in business? Come on now! Sounds like someone pranked you good! Go home, get some rest. Tomorrow is going to be a busy day!\" What do you do? Keep playing anyway? If so, press y. Be upset with Masky and quit right here and now? Press q. That'll show him!"
+
+stage C1Welcome name = T.replace "{name}" name c1Msg
+stage C1aWelcome name = T.replace "{name}" name c1Msg
+stage C1dWelcome name = T.replace "{name}" name c1Msg
+stage C1wWelcome name = T.replace "{name}" name c1Msg
+stage C1adWelcome name = T.replace "{name}" name c1Msg
+stage C1awWelcome name = T.replace "{name}" name c1Msg
+stage C1dwWelcome name = T.replace "{name}" name c1Msg
+
+stage C1Storage name = T.replace "{name}" name "Yet to add. Press q to quit."
+
+
+b4EoSMsg = "The door bell rings. Would that be thieves? You walk to the ice cream parlor. Halfway there, you get met by a familiar face. It's your employer, John Masky. What's he doing here at this hour? He says: \"Hey there, {name}! How's it going? Shift's over for today. Go home! Come back tomorrow, same time?\" Press y to keep playing. Or chicken out and press q to quit."
+
+c1Msg = "Welcome back, {name}. This is night 2. Good to have you here. John Masky, your employer, promised today would be busy. If you need help, press h. You're in the hallway. To turn left, press a. To go forward, press w. Or press d to turn right."
 
