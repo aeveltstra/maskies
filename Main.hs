@@ -185,6 +185,7 @@ next A1HallwayDeath _ = B1DarkHallway
 next B1DarkHallway H = B1Help
 next B1DarkHallway A = B1Storage
 next B1DarkHallway W = B1DarkHallwayEnd
+next B1DarkHallway D = B1TheParlor
 next B1Help _ = B1Storage
 next B1Storage D = B1StorageDesk
 next B1Storage A = B1StorageCloset
@@ -207,7 +208,6 @@ next B1DarkHallwayEnd _ = B1DarkHallwayDeath
 next B1DarkHallwayDeath A = B1DarkHallway
 next B1DarkToilets S = B1DarkHallway
 next B1DarkToilets _ = B1DarkHallwayDeath
-next B1DarkHallway D = B1TheParlor
 next B1DarkHallwayDeath _ = Quit
 next B1TheParlor W = B1TheParlorDeath
 next B1TheParlor _ = B1DarkHallway
@@ -286,7 +286,9 @@ next B2HallwayDeath _ = Quit
 next B2LitHallwayEnd Y = B2TheParlor
 next B2LitHallwayEnd _ = B2LitHallway
 next B2TheParlor Y = B2EatIcecream
+next B2TheParlor _ = B2LitHallway
 next B2EatIcecream N = B2FoodPoisoning
+next B2EatIcecream _ = B2LitHallway
 next B2FoodPoisoning W = B2LitToilets
 next B2FoodPoisoning _ = B2DieFromFoodPoisoning
 next B2LitToilets S = B2DieFromFoodPoisoning
@@ -294,8 +296,6 @@ next B2DieFromFoodPoisoning A = B2LitHallway
 next B2DieFromFoodPoisoning _ = Quit
 next B2LitToilets _ = B2FeelBetterNow
 next B2FeelBetterNow _ = B2LitHallwayEnd
-next B2EatIcecream _ = B2LitHallway
-next B2TheParlor _ = B2LitHallway
 next B3Storage D = B3StorageDesk
 next B3Storage _ = B3StorageFountain
 next B3StorageDesk Y = B3PressedButton
@@ -333,7 +333,7 @@ stage A1Help _ = "This is a text adventure game. It makes you read a lot. After 
 
 stage A1LightAppears name = T.replace "{name}" name "At the end of the hallway, a light moves in. It brightens the opposite wall, which shows an image. It is too far away to recognize. To go forward: press w. To give up and quit: q."
 
-stage A1HallwayDeath name = T.replace "{name}" name "The light comes from a lantern, held by a security guard. He shines it at the image on the wall. It's an ice cream cone. He turns around and sees you. You tear him to shreds so fast he can't even scream. Now the ice cream image is dripping with blood. That will take some time to clean. Better get to it before the parlor opens again. Press w."
+stage A1HallwayDeath name = T.replace "{name}" name "The light comes from a lantern, held by a security guard. He shines it at the image on the wall. It's an ice cream cone. He turns around and sees you. You tear him to shreds so fast he can't even scream. Now the ice cream image is dripping with blood. That will take some time to clean. Better get to it before the parlor opens again. Press w to keep playing. Want to quit? Press q."
 
 stage B1DarkHallway name = T.replace "{name}" name "Still here, {name}? You're back in the dark hallway. It is night. Again. This is night 2. To read the letter from your employer, press h. To go forward: press w. Press a to turn left. There's a light there. To turn right, press d."
 
