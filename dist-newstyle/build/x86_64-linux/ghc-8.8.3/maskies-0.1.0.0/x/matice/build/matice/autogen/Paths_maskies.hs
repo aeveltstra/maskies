@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE NoRebindableSyntax #-}
 {-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
-module Paths_matice (
+module Paths_maskies (
     version,
     getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir,
     getDataFileName, getSysconfDir
@@ -30,19 +30,19 @@ version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
 bindir     = "/home/dave/.cabal/bin"
-libdir     = "/home/dave/.cabal/lib/x86_64-linux-ghc-8.8.3/matice-0.1.0.0-inplace-matice"
+libdir     = "/home/dave/.cabal/lib/x86_64-linux-ghc-8.8.3/maskies-0.1.0.0-inplace-matice"
 dynlibdir  = "/home/dave/.cabal/lib/x86_64-linux-ghc-8.8.3"
-datadir    = "/home/dave/.cabal/share/x86_64-linux-ghc-8.8.3/matice-0.1.0.0"
-libexecdir = "/home/dave/.cabal/libexec/x86_64-linux-ghc-8.8.3/matice-0.1.0.0"
+datadir    = "/home/dave/.cabal/share/x86_64-linux-ghc-8.8.3/maskies-0.1.0.0"
+libexecdir = "/home/dave/.cabal/libexec/x86_64-linux-ghc-8.8.3/maskies-0.1.0.0"
 sysconfdir = "/home/dave/.cabal/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
-getBinDir = catchIO (getEnv "matice_bindir") (\_ -> return bindir)
-getLibDir = catchIO (getEnv "matice_libdir") (\_ -> return libdir)
-getDynLibDir = catchIO (getEnv "matice_dynlibdir") (\_ -> return dynlibdir)
-getDataDir = catchIO (getEnv "matice_datadir") (\_ -> return datadir)
-getLibexecDir = catchIO (getEnv "matice_libexecdir") (\_ -> return libexecdir)
-getSysconfDir = catchIO (getEnv "matice_sysconfdir") (\_ -> return sysconfdir)
+getBinDir = catchIO (getEnv "maskies_bindir") (\_ -> return bindir)
+getLibDir = catchIO (getEnv "maskies_libdir") (\_ -> return libdir)
+getDynLibDir = catchIO (getEnv "maskies_dynlibdir") (\_ -> return dynlibdir)
+getDataDir = catchIO (getEnv "maskies_datadir") (\_ -> return datadir)
+getLibexecDir = catchIO (getEnv "maskies_libexecdir") (\_ -> return libexecdir)
+getSysconfDir = catchIO (getEnv "maskies_sysconfdir") (\_ -> return sysconfdir)
 
 getDataFileName :: FilePath -> IO FilePath
 getDataFileName name = do

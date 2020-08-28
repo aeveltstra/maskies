@@ -2,6 +2,7 @@
 
 module Main where
 
+import Prelude
 import qualified Data.Text as T
 import qualified System.IO
 
