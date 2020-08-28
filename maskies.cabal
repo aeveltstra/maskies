@@ -16,7 +16,7 @@ category:            Games
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
-executable matice
+executable maskies
   main-is:             Main.hs
   -- other-modules:
   -- other-extensions:
