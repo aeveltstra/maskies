@@ -163,7 +163,20 @@ data Stage =
   | C1adWelcome
   | C1awWelcome
   | C1dwWelcome
+  | C1MaskiesLetter
+  | C1aMaskiesLetter
+  | C1dMaskiesLetter
+  | C1wMaskiesLetter
+  | C1adMaskiesLetter
+  | C1dwMaskiesLetter
+  | C1awMaskiesLetter
   | C1Hallway
+  | C1aHallway
+  | C1dHallway
+  | C1wHallway
+  | C1awHallway
+  | C1adHallway
+  | C1dwHallway
   | C1Storage
   | Quit
   deriving (Show, Eq)
@@ -302,12 +315,13 @@ next B3StorageDesk Y = B3PressedButton
 next B3StorageDesk _ = B3StorageFountain
 next B3PressedButton Y = B3StorageFountain
 next B3dPressedButton Y = B3StorageFountain
-next B3PressedButton _ = B3StorageDeath
-next B3dPressedButton _ = B3StorageDeath
+next B3PressedButton _ = B3StorageFountain
+next B3dPressedButton _ = B3StorageFountain
 next B3StorageFountain _ = B3StorageDeath
 next B3StorageDeath _ = Quit
 next B4PressedButton _ = B4pEndOfShift
 next B4pEndOfShift Y = B4Ridicule
+next B4Ridicule Y = C1Welcome
 next B4pEndOfShift _ = C1Welcome
 next B4EndOfShift _ = C1Welcome
 next B4aEndOfShift _ = C1aWelcome
@@ -316,6 +330,27 @@ next B4wEndOfShift _ = C1wWelcome
 next B4adEndOfShift _ = C1adWelcome
 next B4awEndOfShift _ = C1awWelcome
 next B4dwEndOfShift _ = C1dwWelcome
+next C1Welcome H = C1MaskiesLetter
+next C1aWelcome H = C1aMaskiesLetter
+next C1dWelcome H = C1dMaskiesLetter
+next C1wWelcome H = C1wMaskiesLetter
+next C1adWelcome H = C1adMaskiesLetter
+next C1awWelcome H = C1awMaskiesLetter
+next C1dwWelcome H = C1dwMaskiesLetter
+next C1Welcome _ = C1Hallway
+next C1aWelcome _ = C1aHallway
+next C1dWelcome _ = C1dHallway
+next C1wWelcome _ = C1wHallway
+next C1adWelcome _ = C1adHallway
+next C1awWelcome _ = C1awHallway
+next C1dwWelcome _ = C1dwHallway
+next C1MaskiesLetter _ = C1Hallway
+next C1aMaskiesLetter _ = C1aHallway
+next C1dMaskiesLetter _ = C1dHallway
+next C1wMaskiesLetter _ = C1wHallway
+next C1adMaskiesLetter _ = C1adHallway
+next C1awMaskiesLetter _ = C1awHallway
+next C1dwMaskiesLetter _ = C1dwHallway
 next _ _ = error "Yet to wire up."
 
 -- These are the texts to show for each stage. This architecture
@@ -397,7 +432,7 @@ stage B2awdFind name = T.replace "{name}" name "You found a memory stick! What w
 
 stage B2StorageDesk name = T.replace "{name}" name "There's a letter on the desk, with your name on it, {name}. Would you like to read it? If so, press y. If not, press n."
 
-stage B2ReadLetter name = T.replace "{name}" name "The letter reads: \"Dear {name}, if you read this, I will be dead. Chances are you will die too. Something wanders the hallways at night. Did John Masky tell you that you need to keep out thieves? He lied to you. It isn't thieves that kill us. It's something much worse. But don't take my word for it. Check it out yourself. Maybe you can find a way to stop it. Good luck.\" Press s to go back and keep playing. Scared? Give up and quit! Press q."
+stage B2ReadLetter name = T.replace "{name}" name "The letter reads: \"Dear {name}, if you read this, I will be dead. Chances are you will die too. Something wanders the hallways at night. Did John Masky tell you that you need to keep out thieves? He lied to you. It isn't thieves that kill us. It's something much worse. But don't take my word for it. Check it out yourself. Maybe you can find a way to stop it. I've hidden some helpful items in the closet. Good luck.\" Press s to go back and keep playing. Scared? Give up and quit! Press q."
 
 stage B2StorageFountain name = T.replace "{name}" name "Aah, fresh, clean water! You needed that. The heat is getting unbearable! There's a mirror on the wall in front of you. Let's check your hair. Got to look the part, after all. To lean forward and look into the mirror, press w. To return to the storage room, press s."
 
@@ -467,10 +502,32 @@ stage C1adWelcome name = T.replace "{name}" name c1Msg
 stage C1awWelcome name = T.replace "{name}" name c1Msg
 stage C1dwWelcome name = T.replace "{name}" name c1Msg
 
-stage C1Storage name = T.replace "{name}" name "Yet to add. Press q to quit."
+stage C1MaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That's going to be easy if you have a map. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
 
+stage C1aMaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That's going to be difficult if you don't have a map. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
+
+stage C1dMaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. All the animatronics should have been stored for the night. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
+
+stage C1wMaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That's going to be easy if you have a map. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
+
+stage C1adMaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. No worries: all the animatronics have been stored for the night. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
+
+stage C1awMaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That's going to be easy if you have a map. And you won't have to worry about any animatronics: they've been stored for the night. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
+
+stage C1dwMaskiesLetter name = T.replace "{name}" name "The letter reads: \"How's it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don't know whether they're still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. We have some animatronics out there, that you should be able to avoid if you have a map. I'll be back tomorrow morning to debrief you! Signed, John Masky.\" Quit while you can! Press q. Or keep playing: press w."
+
+stage C1Hallway name = T.replace "{name}" name "You're in the hallway. Better strap up that shield: those animatronics may be up to something. And pull up that map. It should help. To turn left, press a. To go forward, press w. Or press d to turn right."
+stage C1aHallway name = T.replace "{name}" name "You're in the hallway. Better strap up that shield. If only you had a map. That would've helped. To turn left, press a. To go forward, press w. Or press d to turn right."
+stage C1dHallway name = T.replace "{name}" name "You're in the hallway.  If only you had had a map. Maybe that would have helped avoid the animatronics. To turn left, press a. To go forward, press w. Or press d to turn right."
+stage C1wHallway name = T.replace "{name}" name "You're in the hallway. It's a good thing you have a map. Better pull it up. Maybe that will help avoid the animatronics. to turn left, press a. To go forward, press w. Or press d to turn right."
+stage C1adHallway name = T.replace "{name}" name "You're in the hallway. Better strap up that shield. Those animatronics may be up to something. If only you had a map! To turn left, press a. To go forward, press w. Or press d to turn right."
+stage C1awHallway name = T.replace "{name}" name "You're in the hallway. Better strap up that shield. Also pull up that map: it should help. To turn left, press a. To go forward, press w. Or press d to turn right."
+stage C1dwHallway name = T.replace "{name}" name "You're in the hallway. Better pull up that map: it should help avoid the animatronics. To turn left, press a. To go forward, press w. Or press d to turn right."
+
+stage C1Storage name = T.replace "{name}" name "Yet to add. Press q to quit."
 
 b4EoSMsg = "The door bell rings. Would that be thieves? You walk to the ice cream parlor. Halfway there, you get met by a familiar face. It's your employer, John Masky. What's he doing here at this hour? He says: \"Hey there, {name}! How's it going? Shift's over for today. Go home! Come back tomorrow, same time?\" Press y to keep playing. Or chicken out and press q to quit."
 
-c1Msg = "Welcome back, {name}. This is night 2. Good to have you here. John Masky, your employer, promised today would be busy. If you need help, press h. You're in the hallway. To turn left, press a. To go forward, press w. Or press d to turn right."
+c1Msg = "Welcome back, {name}. This is night 3. Good to have you here. John Masky, your employer, promised today would be busy. He left you a letter. Maybe that will tell you what to expect? To read it, press h. You don't have to read it. Ignore it! Press w."
+
 

@@ -25,3 +25,6 @@ It would be nice to have / create program that automates this, and inspects the 
 7. wire-7: reach night 2, find the lantern, survive the food poisoning, then quit.
 8. wire-8: reach night 2, find the lantern, die from courage, then quit.
 9. wire-9: reach night 2, find the lantern, find the letter, then quit.
+10. wire-10: reach night 2, find the lantern, ignore the supplies, die due to not having anything to protect you, then quit.
+11. wire-11: reach night 2, view the video, report it to the boss, get ridiculed, then start night 3.
+12. wire-12: reach night 3, read the boss' letter, then quit.
