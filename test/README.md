@@ -13,7 +13,17 @@ $> cat ./wire-1.txt | ../Maskies
 It would be nice to have / create program that automates this, and inspects the resulting stdout.
   
 ---
-  
+
+# Name validations
+
+1. name-1.txt: Provides a paragraph of text instead of  a name. The game should recognize this, substitute it for a shorter name. Then quit.
+2. name-2.txt: Provides nothing but spaces instead of a name. The game should recognize this, substitute it for a short name. Then quit.
+3. name-3.txt: Provides a name that contains the number pi with a bunch of decimals. One of the game testers entered that. The game should recognize this, substitute it for "Pie". Then quit.
+4. name-4.txt: Provides nothing for a name. The game should recognize that and assign the player a name. Then quit.
+5. name-5.txt: Provides a perfectly good name. The game should recognize that and let the player keep it. Then quit.
+
+---  
+
 # Wires  
   
 1. wire-1: reach the end of night 1, then quit. 
@@ -28,3 +38,4 @@ It would be nice to have / create program that automates this, and inspects the 
 10. wire-10: reach night 2, find the lantern, ignore the supplies, die due to not having anything to protect you, then quit.
 11. wire-11: reach night 2, view the video, report it to the boss, get ridiculed, then start night 3.
 12. wire-12: reach night 3, read the boss' letter, then quit.
+13. wire-13: reach night 3 with only the memory stick but not having seen its video, skip Masky's briefing, start the obstacle course, then quit.
