@@ -55,11 +55,11 @@ wire5 = Wire "wire-5" "That's going to make a mess!"
 wire6 = Wire "wire-6" "Best ice cream in the country, aye? Not so sure about that anymore, are you, "
 wire7 = Wire "wire-7" "Much better. What a relief!"
 wire8 = Wire "wire-8" "If only you had had something to protect yourself! But you don't."
-wire9 = Wire "wire-9" "9"
-wire10 = Wire "wire-10" "10"
-wire11 = Wire "wire-11" "11"
-wire12 = Wire "wire-12" "12"
-wire13 = Wire "wire-13" "13"
+wire9 = Wire "wire-9" "Items you need tomorrow? Better go find them!"
+wire10 = Wire "wire-10" "Its metal face looks human, but not quite."
+wire11 = Wire "wire-11" "Welcome back, Wire 11. This is night 3."
+wire12 = Wire "wire-12" "You're in the hallway. Alone. To turn left, press a."
+wire13 = Wire "wire-13" "You have nothing to protect yourself and no map to tell you where to go."
 
 knownWires = [wire1, wire2, wire3, wire4, wire5, wire6, wire7, wire8, wire9, wire10, wire11, wire12, wire13]
 
