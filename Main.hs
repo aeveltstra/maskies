@@ -47,6 +47,7 @@ data PlayerNameValidationResult
     | TooLong
     | TooShort
     | Pie
+    deriving (Show, Eq)
 
 {- Ensures that the player name is neither too long nor too short. And a special case is made for pi, because a certain someone found it necessary to boast their knowledge of the first 100 digits of pi. You know who you are. -}
 validatePlayerName :: T.Text -> PlayerNameValidationResult
@@ -465,7 +466,7 @@ stage B2LitToilets name = T.replace "{name}" name "You found the toilets. Just i
 
 stage B2FeelBetterNow name = T.replace "{name}" name "Much better. What a relief! You sure could use cold drink of water now. Let's head back, {name}. Press w to continue."
 
-stage B2HallwayDeath name = T.replace "{name}" name "Oh how courageous! You ran after whatever it was, into the hallway. You can see it clearly now: it's an animatronic! It rides around on a wheel. And it's coming for you really fast! If only you had had something to protect yourself! But you don't. Didn't you see the shield in the storage room locker? Didn't you take it? Why not? Too latenow! The animatronic runs you over. It's heavy. Way heavier than a human. Your bones crush and break as the animatronic spins circles on top of you. You want to scream, but the pain is too much. You faint. And then you die. Where does the animatronic go? Why did it attack you? No clue. Want to find out? Press a to reincarnate and try again. Or run away and quit, by pressing q."
+stage B2HallwayDeath name = T.replace "{name}" name "Oh how courageous! You ran after whatever it was, into the hallway. You can see it clearly now: it's an animatronic! It rides around on a wheel. And it's coming for you really fast! If only you had had something to protect yourself! But you don't. Didn't you see the shield in the storage room locker? Didn't you take it? Why not? Too late now! The animatronic runs you over. It's heavy. Way heavier than a human. Your bones crush and break as the animatronic spins circles on top of you. You want to scream, but the pain is too much. You faint. And then you die. Where does the animatronic go? Why did it attack you? No clue. Want to find out? Press a to reincarnate and try again. Or run away and quit, by pressing q."
 
 stage B3Storage name = T.replace "{name}" name "No need to get your hands dirty, right {name}? After all you aren't the cleaner. And the bucket won't be stealing no ice cream. Alright. Let's cool off with some cold water from the fountain. Press w. Or press d to take a break and sit down at the desk. Feel like quitting? Press q!"
 
