@@ -18,7 +18,7 @@
 
   @author A.E.Veltstra
   @since 2.20.901.2100
-  @version 2.20.902.0205
+  @version 2.20.904.2000
 -}
 module Main where
 
@@ -33,7 +33,11 @@ main :: IO ()
 main = do
     args <- Env.getArgs --to pick up the wire name
     contents <- getContents --to pick up the stdin
-    print $ (test (args!!0) contents)
+    if 0 == length args 
+        then error "Expected a wire name as 1st arg."
+        else if 0 == length contents
+            then error "Expected stdout from Maskies to get piped into this test app."
+            else print $ (test (args!!0) contents)
 
 type ID = T.Text
 type ExpectedOutput = T.Text
@@ -60,8 +64,32 @@ wire10 = Wire "wire-10" "Its metal face looks human, but not quite."
 wire11 = Wire "wire-11" "Welcome back, Wire 11. This is night 3."
 wire12 = Wire "wire-12" "You're in the hallway. Alone. To turn left, press a."
 wire13 = Wire "wire-13" "You have nothing to protect yourself and no map to tell you where to go."
+name1 = Wire "name-1" "That's a really long name, you know."
+name2 = Wire "name-2" "Short and sweet, aye?"
+name3 = Wire "name-3" "How interesting! Mind if I call you Pie?"
+name4 = Wire "name-4" "Short and sweet, aye?"
+name5 = Wire "name-5" "Hello, Brendan. You're in a dark hallway."
 
-knownWires = [wire1, wire2, wire3, wire4, wire5, wire6, wire7, wire8, wire9, wire10, wire11, wire12, wire13]
+knownWires = [
+        wire1
+        , wire2
+        , wire3
+        , wire4
+        , wire5
+        , wire6
+        , wire7
+        , wire8
+        , wire9
+        , wire10
+        , wire11
+        , wire12
+        , wire13
+        , name1
+        , name2
+        , name3
+        , name4
+        , name5
+    ]
 
 findKnownWire :: T.Text -> Maybe KnownWire
 findKnownWire name = List.find(\x -> wireID x == name) knownWires
@@ -89,4 +117,4 @@ test :: String -> String -> TestResult
 test [] [] = error "Received no arguments. Expected: wire identifier, stdout from applying that wire to Maskies."
 test name contents
     | containsOutputFrom (T.pack name) (T.pack contents) = SUCCESS
-    | otherwise = FAILURE --show [name, contents]
+    | otherwise = FAILURE

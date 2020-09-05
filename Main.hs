@@ -1,11 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+{-
+    Maskies is a text adventure horror survival game.
+    Try not to die.
+    @author A.E.Veltstra
+    @copyright A.E.Veltstra & T.R.Veltstra
+    @version 2.20.903.1847
+-}
 module Main where
 
 import Prelude
 import qualified Data.Char
 import qualified Data.Text as T
 import qualified System.IO
+import qualified System.Random as R
 
 {- Built-in Haskell function putStrLn operates on Strings. Due to constraints in the String type and how Haskell deals with them, it was chosen to use Data.Text instead. To output those to console, we have to unpack them. To prevent having to do that every time, use this function. -}
 putTxtLn :: T.Text -> IO ()
@@ -29,7 +37,8 @@ main = do
     let filteredUnvalidatedPlayerName = filter Data.Char.isPrint taintedUnvalidatedPlayerName
     let unvalidatedPlayerName = T.strip $ T.pack filteredUnvalidatedPlayerName
     let validationResult = validatePlayerName unvalidatedPlayerName
-    let player = replaceName unvalidatedPlayerName validationResult 
+    randomizerSeed <- R.newStdGen
+    let player = replaceName unvalidatedPlayerName validationResult randomizerSeed
     outputNameIfChanged player validationResult
    
     -- This turns off input buffering. 
@@ -58,11 +67,44 @@ validatePlayerName player
     | otherwise = AllGood
 
 {- Given a specific name validation result, this function returns the passed-in name or something else. -}
-replaceName :: T.Text -> PlayerNameValidationResult -> T.Text
-replaceName player AllGood = player
-replaceName player TooLong = "Pete"
-replaceName player TooShort = "B"
-replaceName player Pie = "Pie"
+replaceName :: T.Text -> PlayerNameValidationResult -> R.StdGen -> T.Text
+replaceName player AllGood _ = player
+replaceName _ TooLong seed = pick seed [
+                                 "Aadhira"
+                                 , "Aadesh"
+                                 , "Saanvi"
+                                 , "Aaditi"
+                                 , "Aadit"
+                                 , "Anika"
+                                 , "Aisha"
+                                 , "Ananya"
+                                 , "Arav"
+                                 , "Alisha"
+                                 , "Kaavya"
+                                 , "Saatvik"
+                                 , "Ahan"
+                                 , "Abhi"
+                             ]
+replaceName _ TooShort seed = pick seed [
+                                  "Elikapeka"
+                                  , "Kakalina"
+                                  , "Leimomi"
+                                  , "Mahaelani"
+                                  , "Waiola"
+                                  , "Ekewaka"
+                                  , "Uluwehi"
+                                  , "Healani"
+                                  , "Lanakila"
+                                  , "Leialoha"
+                              ]
+replaceName _ Pie _ = "Pie"
+
+pick :: R.StdGen -> [a] -> a
+pick seed xs 
+    | length xs == 1  = xs!!0
+    | otherwise       = x where
+        x = xs!!fst (R.randomR (0, (length xs) -1) seed)
+    
 
 {- If the validation of the player's name says it should be changed, this function lets them know about it. -}
 outputNameIfChanged :: T.Text -> PlayerNameValidationResult -> IO ()
