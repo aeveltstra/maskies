@@ -28,18 +28,23 @@ loop theStage player = do
     putStrLn ""
     loop (S.next theStage (K.key choice)) player
 
+{- Sanitizes and validated the player's name. If needed, reprimands the player for choosing a foolish name, and announces a substitute. Returns either the sanitized input or the substitute. -}
+checkPlayerName :: R.StdGen -> String -> IO T.Text
+checkPlayerName randomizerSeed taintedName = do
+    let unvalidated = T.strip $ T.filter Data.Char.isPrint $ T.pack taintedName
+    let result = NV.validatePlayerName unvalidated
+    let player = NV.replaceName unvalidated result randomizerSeed
+    NV.outputNameIfChanged player result 
+    return player
+
 {- This is the entry point of the application. It shows the Init stage, which asks the player to enter their name. Then it captures that name and calls it 'player'. Using that, it kicks off the game loop. -}
 main :: IO ()
 main = do
     TH.putTxtLn $ S.stage S.Init ""
-    taintedUnvalidatedPlayerName <- getLine
-    let filteredUnvalidatedPlayerName = T.filter Data.Char.isPrint $ T.pack taintedUnvalidatedPlayerName
-    let unvalidatedPlayerName = T.strip filteredUnvalidatedPlayerName
-    let validationResult = NV.validatePlayerName unvalidatedPlayerName
+    taintedName <- getLine
     randomizerSeed <- R.newStdGen
-    let player = NV.replaceName unvalidatedPlayerName validationResult randomizerSeed
-    NV.outputNameIfChanged player validationResult
-   
+    player <- checkPlayerName randomizerSeed taintedName
+
     -- This turns off input buffering. 
     -- Buffering makes it so that the executable will 
     -- wait for an enter key press after any input.
