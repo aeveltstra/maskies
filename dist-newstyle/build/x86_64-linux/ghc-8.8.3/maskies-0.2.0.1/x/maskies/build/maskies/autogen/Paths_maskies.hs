@@ -26,14 +26,14 @@ catchIO :: IO a -> (Exception.IOException -> IO a) -> IO a
 catchIO = Exception.catch
 
 version :: Version
-version = Version [0,1,0,1] []
+version = Version [0,2,0,1] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
 bindir     = "/home/dave/.cabal/bin"
-libdir     = "/home/dave/.cabal/lib/x86_64-linux-ghc-8.8.3/maskies-0.1.0.1-inplace-maskies"
+libdir     = "/home/dave/.cabal/lib/x86_64-linux-ghc-8.8.3/maskies-0.2.0.1-inplace-maskies"
 dynlibdir  = "/home/dave/.cabal/lib/x86_64-linux-ghc-8.8.3"
-datadir    = "/home/dave/.cabal/share/x86_64-linux-ghc-8.8.3/maskies-0.1.0.1"
-libexecdir = "/home/dave/.cabal/libexec/x86_64-linux-ghc-8.8.3/maskies-0.1.0.1"
+datadir    = "/home/dave/.cabal/share/x86_64-linux-ghc-8.8.3/maskies-0.2.0.1"
+libexecdir = "/home/dave/.cabal/libexec/x86_64-linux-ghc-8.8.3/maskies-0.2.0.1"
 sysconfdir = "/home/dave/.cabal/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath

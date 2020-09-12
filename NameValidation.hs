@@ -8,7 +8,7 @@
     needed
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.906.1122
+    @version 2.20.912.1050
 -}
 module NameValidation where
 
@@ -26,6 +26,7 @@ data PlayerNameValidationResult
     | TooLong
     | TooShort
     | Pie
+    | IsFnaf
     deriving (Show, Eq)
 
 {- Ensures that the player name is neither too long nor too short. And a special case is made for pi, because a certain someone found it necessary to boast their knowledge of the first 100 digits of pi. You know who you are. -}
@@ -34,6 +35,7 @@ validatePlayerName ""  = TooShort
 validatePlayerName player 
     | 0 < (T.count "3.1415" player) = Pie
     | T.length player > 30  = TooLong
+    | isFnaf player = IsFnaf
     | otherwise = AllGood
 
 subsForTooLong = [
@@ -66,12 +68,59 @@ subsForTooShort = [
    , "Leialoha"
    ]
 
+fnaf = [
+    --"freddy"
+    "fazbear"
+    --, "gabriel"
+    , "chica"
+    , "susie"
+    , "bonnie"
+    --, "jeremy"
+    , "foxy"
+    --, "fritz"
+    , "golden"
+    , "nightmare"
+    , "glitch"
+    , "withered"
+    , "goldie"
+    , "molten"
+    , "cassidy"
+    , "puppet"
+    , "marionette"
+    , "nightmarion"
+    , "afton"
+    --, "charlie"
+    --, "charlotte"
+    --, "clara"
+    , "mr. emily"
+    , "ballora"
+    , "circus baby"
+    , "trap"
+    , "scrap"
+    , "lefty"
+    , "helpy"
+    , "balloonboy"
+    , "phantom"
+    , "deedee"
+    , "funtimes"
+    , "fun times"
+    , "tape girl"
+    , "vanny"
+    , "purple guy"
+    , "orange man"
+    ]
+
+isFnaf :: T.Text -> Bool
+isFnaf player = length (filter (\x -> 0 < (T.count x y)) fnaf) > 0 where
+    y = T.toLower player
+
 {- Given a specific name validation result, this function returns the passed-in name or something else. -}
 replaceName :: T.Text -> PlayerNameValidationResult -> R.StdGen -> T.Text
-replaceName player AllGood _ = player
-replaceName _ TooLong seed = pick seed subsForTooLong
-replaceName _ TooShort seed = pick seed subsForTooShort
-replaceName _ Pie _ = "Pie"
+replaceName player AllGood  _    = player
+replaceName _      TooLong  seed = pick seed subsForTooLong
+replaceName _      TooShort seed = pick seed subsForTooShort
+replaceName _      Pie      _    = "Pie"
+replaceName _      IsFnaf   _    = "Jeremy"
 
 pick :: R.StdGen -> [a] -> a
 pick seed xs 
@@ -86,4 +135,5 @@ outputNameIfChanged newName AllGood = return ()
 outputNameIfChanged newName TooLong = TH.putTxtLn (T.replace "{name}" newName "That's a really long name, you know. I will call you {name}.")
 outputNameIfChanged newName TooShort = TH.putTxtLn (T.replace "{name}" newName "Short and sweet, aye? From now on, you will be known as {name}.")
 outputNameIfChanged newName Pie = TH.putTxtLn (T.replace "{name}" newName "How interesting! Mind if I call you {name}?")
+outputNameIfChanged newName IsFnaf = TH.putTxtLn (T.replace "{name}" newName "This isn't FNAF, you know... I will call you {name}.")
 

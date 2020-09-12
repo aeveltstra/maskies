@@ -5,7 +5,7 @@
     Try not to die.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.906.1136
+    @version 2.20.911.1046
 -}
 module Main where
 
@@ -25,7 +25,7 @@ loop S.Quit player = TH.putTxtLn $ S.stage S.Quit player
 loop theStage player = do 
     TH.putTxtLn $ S.stage theStage player
     choice <- getChar
-    putStrLn ""
+    putStrLn "\n"
     loop (S.next theStage (K.key choice)) player
 
 {- Sanitizes and validated the player's name. If needed, reprimands the player for choosing a foolish name, and announces a substitute. Returns either the sanitized input or the substitute. -}
