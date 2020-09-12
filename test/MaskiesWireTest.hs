@@ -18,7 +18,7 @@
 
   @author A.E.Veltstra
   @since 2.20.901.2100
-  @version 2.20.904.2000
+  @version 2.20.912.1500
 -}
 module Main where
 
@@ -43,52 +43,34 @@ type ID = T.Text
 type ExpectedOutput = T.Text
 
 data KnownWire = Wire 
-    { wireID :: ID
-      , expectedWireOutput :: ExpectedOutput
+    { 
+        wireID :: ID
+        , expectedWireOutput :: ExpectedOutput
     }
     deriving (Show, Eq)
 
 --The language extension OverloadedStrings
 --allows us to write Strings and have haskell
 --compile them to Data.Text.Text.
-wire1 = Wire "wire-1" "Come back to play another day, Wire 1? Bring your friends! Bye!"
-wire2 = Wire "wire-2" "Making Maskie's Ice Cream very popular."
-wire3 = Wire "wire-3" "Penguins can't sing the ice cream song! Can they?"
-wire4 = Wire "wire-4" "Not so clean anymore. You have nothing to protect yourself."
-wire5 = Wire "wire-5" "That's going to make a mess!"
-wire6 = Wire "wire-6" "Best ice cream in the country, aye? Not so sure about that anymore, are you, "
-wire7 = Wire "wire-7" "Much better. What a relief!"
-wire8 = Wire "wire-8" "If only you had had something to protect yourself! But you don't."
-wire9 = Wire "wire-9" "Items you need tomorrow? Better go find them!"
-wire10 = Wire "wire-10" "It's a bunny? Pink and white, and fluffy... but big! And heavy!"
-wire11 = Wire "wire-11" "Welcome back, Wire 11. This is night 3."
-wire12 = Wire "wire-12" "You're in the hallway. Alone. You hear children's music. Where is it coming from?"
-wire13 = Wire "wire-13" "You have nothing to protect yourself and no map to tell you where to go."
-name1 = Wire "name-1" "That's a really long name, you know."
-name2 = Wire "name-2" "Short and sweet, aye?"
-name3 = Wire "name-3" "How interesting! Mind if I call you Pie?"
-name4 = Wire "name-4" "Short and sweet, aye?"
-name5 = Wire "name-5" "Hello, Brendan. You're in a dark hallway."
-
 knownWires = [
-        wire1
-        , wire2
-        , wire3
-        , wire4
-        , wire5
-        , wire6
-        , wire7
-        , wire8
-        , wire9
-        , wire10
-        , wire11
-        , wire12
-        , wire13
-        , name1
-        , name2
-        , name3
-        , name4
-        , name5
+    Wire "wire-1" "Come back to play another day, Wire 1? Bring your friends! Bye!"
+    , Wire "wire-2" "Making Maskie's Ice Cream very popular."
+    , Wire "wire-3" "Penguins can't sing the ice cream song! Can they?"
+    , Wire "wire-4" "Not so clean anymore. You have nothing to protect yourself."
+    , Wire "wire-5" "That's going to make a mess!"
+    , Wire "wire-6" "Best ice cream in the country, aye? Not so sure about that anymore, are you, "
+    , Wire "wire-7" "Much better. What a relief!"
+    , Wire "wire-8" "If only you had had something to protect yourself! But you don't."
+    , Wire "wire-9" "Items you need tomorrow? Better go find them!"
+    , Wire "wire-10" "It's a bunny? Blue and white, and fluffy... but big! And heavy!"
+    , Wire "wire-11" "Welcome back, Wire 11. This is night 3."
+    , Wire "wire-12" "You're in the hallway. Alone. You hear children's music. Where is it coming from?"
+    , Wire "wire-13" "So how do you know where to go? Just... pick a direction?"
+    , Wire "name-1" "That's a really long name, you know."
+    , Wire "name-2" "Short and sweet, aye?"
+    , Wire "name-3" "How interesting! Mind if I call you Pie?"
+    , Wire "name-4" "Short and sweet, aye?"
+    , Wire "name-5" "Hello, Brendan. You're in a dark hallway."
     ]
 
 findKnownWire :: T.Text -> Maybe KnownWire

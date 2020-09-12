@@ -4,7 +4,7 @@
 # gets output.
 # @author A.E.Veltstra
 # @since 2.20.902.0240
-# @version 2.20.911.1323
+# @version 2.20.912.1501
 # This script assumes the following:
 # 1. It lives in a child folder underneath
 #    the one in which the game Maskies lives.
@@ -20,7 +20,7 @@ list=wire-*.txt
 for wirefile in $list; do
     wire=$(basename -as .txt "$wirefile")
     echo Testing $wire:
-    cat "$wirefile" | ../Maskies | tail -6 | ./MaskiesWireTest "$wire"
+    cat "$wirefile" | ../Maskies | tail -7 | ./MaskiesWireTest "$wire"
 done
 
 list=name-*.txt
