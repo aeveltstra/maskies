@@ -1,6 +1,6 @@
-### Maskie's Ice Cream Parlor  
+# Maskie's Ice Cream Parlor  
 ## A text adventure horror survival game.  
-# Try not to die.  
+### Try not to die.  
 
 To build this game on your own Linux/Unix machine, you need:
 - GHC 8.8.3 or newer
