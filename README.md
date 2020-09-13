@@ -8,7 +8,7 @@ To build this game on your own Linux/Unix machine, you need:
 
 Download the source code into a folder of your choosing and run the following at a terminal prompt to download the game code's dependencies, and to make sure you can compile it:  
 ```bash:
-maskies/src/main/haskell:$ cabal build  
+maskies:$ cabal build  
 ```
 
 If it compiles correctly, you can build it with GHC using the following command at a terminal prompt:  
