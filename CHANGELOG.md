@@ -1,5 +1,9 @@
 # Revision history for maskies
 
+## 0.2.0.2 -- 2020-09-13
+
+* Added a README.md that includes build instructions.* Added more stages for the obstacle course in night 3.
+
 ## 0.2.0.1 -- 2020-09-12
 
 * Got into night 3.

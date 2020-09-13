@@ -8,7 +8,7 @@
     handle those.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.906.1132
+    @version 2.20.913.1034
 -}
 module Keys where
 
@@ -25,6 +25,11 @@ data Key
     | Y
     | N
     | H
+    | J1
+    | J2
+    | J3
+    | J4
+    | J5
     | Wait
     deriving (Show, Eq)
 
@@ -38,5 +43,10 @@ key 'y' = Y
 key 'n' = N
 key 'h' = H
 key 'q' = Q
+key '1' = J1
+key '2' = J2
+key '3' = J3
+key '4' = J4
+key '5' = J5
 key  _  = Wait
 

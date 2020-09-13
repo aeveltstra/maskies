@@ -2,7 +2,7 @@ cabal-version:       >=1.10
 -- For further documentation, see http://haskell.org/cabal/users-guide/
 
 name:                maskies
-version:             0.2.0.1
+version:             0.2.0.2
 synopsis:            Text-based horror adventure game
 description:         Find out what is killing the security guards, and why. And maybe stop them.
 bug-reports:         aev@sdf.org
