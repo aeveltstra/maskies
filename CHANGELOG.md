@@ -1,5 +1,9 @@
 # Revision history for maskies
 
+## 0.2.0.3 -- 2020-09-13
+
+* Adopted a common project layout that works well with the gradle build system for automating unit tests.
+
 ## 0.2.0.2 -- 2020-09-13
 
 * Added a README.md that includes build instructions.* Added more stages for the obstacle course in night 3.
