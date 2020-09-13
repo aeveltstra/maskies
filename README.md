@@ -20,3 +20,9 @@ If compiling fails, reach out to me, the author.
 - Mastodon: @aeveltstra@mastodon.social
 - Email: aev@sdf.org
 
+And then you can play the game with this terminal prompt command:  
+```bash:
+$ ./Maskies  
+``` 
+  
+Good luck.
