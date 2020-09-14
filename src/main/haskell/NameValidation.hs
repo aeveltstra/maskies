@@ -8,7 +8,7 @@
     needed
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.912.1050
+    @version 2.20.913.2332
 -}
 module NameValidation where
 
@@ -21,7 +21,7 @@ import qualified System.Random as R
 
 
 {- These are the results recognized by the validation of the player's name. -}
-data PlayerNameValidationResult
+data Result
     = AllGood
     | TooLong
     | TooShort
@@ -30,9 +30,9 @@ data PlayerNameValidationResult
     deriving (Show, Eq)
 
 {- Ensures that the player name is neither too long nor too short. And a special case is made for pi, because a certain someone found it necessary to boast their knowledge of the first 100 digits of pi. You know who you are. -}
-validatePlayerName :: T.Text -> PlayerNameValidationResult
-validatePlayerName ""  = TooShort
-validatePlayerName player 
+validate :: T.Text -> Result
+validate ""  = TooShort
+validate player 
     | 0 < (T.count "3.1415" player) = Pie
     | T.length player > 30  = TooLong
     | isFnaf player = IsFnaf
@@ -115,12 +115,12 @@ isFnaf player = length (filter (\x -> 0 < (T.count x y)) fnaf) > 0 where
     y = T.toLower player
 
 {- Given a specific name validation result, this function returns the passed-in name or something else. -}
-replaceName :: T.Text -> PlayerNameValidationResult -> R.StdGen -> T.Text
-replaceName player AllGood  _    = player
-replaceName _      TooLong  seed = pick seed subsForTooLong
-replaceName _      TooShort seed = pick seed subsForTooShort
-replaceName _      Pie      _    = "Pie"
-replaceName _      IsFnaf   _    = "Jeremy"
+replace :: T.Text -> Result -> R.StdGen -> T.Text
+replace player AllGood  _    = player
+replace _      TooLong  seed = pick seed subsForTooLong
+replace _      TooShort seed = pick seed subsForTooShort
+replace _      Pie      _    = "Pie"
+replace _      IsFnaf   _    = "Jeremy"
 
 pick :: R.StdGen -> [a] -> a
 pick seed xs 
@@ -130,10 +130,10 @@ pick seed xs
     
 
 {- If the validation of the player's name says it should be changed, this function lets them know about it. -}
-outputNameIfChanged :: T.Text -> PlayerNameValidationResult -> IO ()
-outputNameIfChanged newName AllGood = return ()
-outputNameIfChanged newName TooLong = TH.putTxtLn (T.replace "{name}" newName "That's a really long name, you know. I will call you {name}.")
-outputNameIfChanged newName TooShort = TH.putTxtLn (T.replace "{name}" newName "Short and sweet, aye? From now on, you will be known as {name}.")
-outputNameIfChanged newName Pie = TH.putTxtLn (T.replace "{name}" newName "How interesting! Mind if I call you {name}?")
-outputNameIfChanged newName IsFnaf = TH.putTxtLn (T.replace "{name}" newName "This isn't FNAF, you know... I will call you {name}.")
+outputIfChanged :: T.Text -> Result -> IO ()
+outputIfChanged newName AllGood = return ()
+outputIfChanged newName TooLong = TH.ln (T.replace "{name}" newName "That's a really long name, you know. I will call you {name}.")
+outputIfChanged newName TooShort = TH.ln (T.replace "{name}" newName "Short and sweet, aye? From now on, you will be known as {name}.")
+outputIfChanged newName Pie = TH.ln (T.replace "{name}" newName "How interesting! Mind if I call you {name}?")
+outputIfChanged newName IsFnaf = TH.ln (T.replace "{name}" newName "This isn't FNAF, you know... I will call you {name}.")
 
