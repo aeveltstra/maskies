@@ -1,5 +1,9 @@
 # Revision history for maskies
 
+## 0.2.0.4 -- 2020-09-15
+
+* Switched a name recognition filter to succeed fast, so it doesn't have to evaluate all possibilities.
+
 ## 0.2.0.3 -- 2020-09-13
 
 * Adopted a common project layout that works well with the gradle build system for automating unit tests.

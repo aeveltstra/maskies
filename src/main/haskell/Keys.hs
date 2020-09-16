@@ -31,7 +31,7 @@ data Key
     | J4
     | J5
     | Wait
-    deriving (Show, Eq)
+    deriving (Show, Eq, Enum)
 
 {- The application captures key presses. This function converts those into Key events (see above). Unrecognized keys turn into the Wait Key event. This is used to determine which stage to show next: the Wait event makes the same stage to replay. -}
 key :: Char -> Key

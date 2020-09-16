@@ -18,8 +18,6 @@ import qualified TextHelper as TH
 import qualified Keys as K
 import qualified Stages as S
 import qualified NameValidation as NV
-import qualified Brick as B
-import qualified Brick.Main as BM
 
 {- This is the game loop. It keeps looping stages until the player quits. It assumes that the stage will give the player options for keys to press to have actions performed. It then asks the player for their input, uses that to figure out which stage to show next, and recurses in on itself. -}
 loop :: S.Stage -> T.Text -> IO ()
@@ -48,6 +46,7 @@ checkPlayerName randomizerSeed taintedName = do
   act on it, too, acting twice on the same stage. 
   By turning off buffering, that is avoided.
 -}
+disableBuffering :: IO ()
 disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
 
 {- This is the entry point of the application. It shows the Init stage, which asks the player to enter their name. It captures and validates that name, and uses the result to kick off the game loop. -}

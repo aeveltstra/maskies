@@ -167,11 +167,11 @@ data Stage =
   | C4fw
   | C4faw
   | Quit
-  deriving (Show, Eq)
+  deriving (Show, Eq, Enum)
 
 {- This function wires Key events to stages, to determine which stage to show next. If the event is Wait, the same stage gets returned as put in. If the event is Q, the function returns the Quit event. If the player enters a key that is not wired up to a stage here, the function throws an error. -}
 next :: Stage -> K.Key -> Stage
-next stage K.Wait = stage
+next theStage K.Wait = theStage
 next _ K.Q = Quit
 next Init _ = A1DarkHallway
 next A1DarkHallway K.H = A1Help
@@ -675,24 +675,34 @@ stage C2faSurvive name = T.replace "{name}" name c2fSurviveMsg
 stage C2fwSurvive name = T.replace "{name}" name c2fSurviveMsg
 stage C2fawSurvive name = T.replace "{name}" name c2fSurviveMsg
 
+c2fSurviveMsg :: T.Text
 c2fSurviveMsg = "Good thinking! Now let's get back up and try and jump better. You hold your breath, jump up above the blue smoke. You see a ladder. Press a to ascend it. But maybe you've had enough? To quit, press q."
 
+c2fwDeathMsg :: T.Text
 c2fwDeathMsg = "You should have rolled on the floor. Searching for an extinguisher in this darkness takes way too long. And wrapping your map around you would've just caused it to burn, too. The smoke fills your lungs and you faint. And that's a good thing, {name}: now you won't feel the pain from burning alive. Press a to reincarnate and try again. Or give up and quit: press q."
 
+c2fDeathMsg :: T.Text
 c2fDeathMsg = "You should have rolled on the floor. Searching for an extinguisher or blanket in this darkness takes way too long. The smoke fills your lungs and you faint. And that's a good thing, {name}: now you won't feel the pain from burning alive. Press a to reincarnate and try again. Or give up and quit: press q."
 
+c2fAttackMsg :: T.Text
 c2fAttackMsg = "Where's that ladder? Can't find it! The darkness lights up from the broken cat's electricity sparks. Every spark shows bellowing blue smoke. That's a bit much, isn't it? A mechanical whir alerts you: cat ahead! You hear it screech and jump. "
 
+c2fMsg :: T.Text
 c2fMsg = "Err! Wrong! Down you go, into the darkness! You fall on top of something hard. It moves? It's one of those stuffed animal animatronics! It's a cat! Bright sparks emanate from its head, lighting up blue smoke that rises from the cat's body. Your fall must have broken it, {name}, and shorted a circuit. The sparking smoke engulfs you, making it hard to breathe. "
 
+c1fMsg :: T.Text
 c1fMsg = "You missed! You fall! Squishy pillows safely catch you. Around you, small lights appear in pairs, at eye level. The pairs start moving and approach you. A children's song gets louder as the lights close in. You recognize the whirring of machinery: animatronics. You also recognize the smells: vanilla, chocolate, motor oil, and... blood? Uh-oh. Let's get out of here, {name}. You reach around and find a ladder. Press s to climb up to the platform."
 
+b4EoSMsg :: T.Text
 b4EoSMsg = "The door bell rings. Would that be thieves? You walk to the ice cream parlor. The hallway lights turn on and you get met by a familiar face. It's your employer, John Masky. What's he doing here at this hour? He says: \"Hey there, {name}! How's it going? Shift's over for today. See you tomorrow night! Same ice cream time, same ice cream channel!\" He laughs. Like he made a joke. Probably a quaint reference to some old book or TV show. Anyway: press w to continue into night 3!"
 
+b4pEoSMsg :: T.Text
 b4pEoSMsg = "The door bell rings. Would that be thieves? You walk to the ice cream parlor. The hallway lights turn on and you get met by a familiar face. It's your employer, John Masky. What's he doing here at this hour? He says: \"Hey there, {name}! How's it going? Shift's over for today. Anything problematic to report?\" Hmm... You saw that video, didn't you? Do you feel like telling Masky? If so, press y. Or press n to stay silent and pretend you didn't see nothing, and jump straight into night 3!"
 
+b4RidiculeMsg :: T.Text
 b4RidiculeMsg = "So you tell Masky about the video. About the other security guard. About his concern for the animatronics. And how it looked like he got murdered. Masky takes it in, mulls it over, and responds: \"Murder? That's a serious allegation, {name}. By my animatronics, though? They're robots! They're only programmed to serve ice cream and sing children's songs! Do you really think that if they'd murder anyone, I'd still be in business? Come on now! Sounds like someone pranked you good! Tomorrow is going to be a busy day! See you at night fall! Same ice cream time, same ice cream channel!\" He laughs like he made a good joke. Probably some quaint reference to an old book or TV show. What do you do? Be upset with Masky and quit? If so, press q. Otherwise, press w to start night 3."
 
+c1Msg :: T.Text
 c1Msg = "Welcome back, {name}. This is night 3. Good to have you here. John Masky, your employer, promised today would be busy. He left you a letter. Maybe that will tell you what to expect? To read it, press h. There's enough moonlight to read by. You don't have to read it. Go ahead and ignore it! You know you want to! Press w."
 
 

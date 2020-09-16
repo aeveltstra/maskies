@@ -22,17 +22,6 @@
   (major1) == 4 && (major2) == 13 && (minor) <= 0)
 #endif /* MIN_VERSION_base */
 
-/* package brick-0.55 */
-#ifndef VERSION_brick
-#define VERSION_brick "0.55"
-#endif /* VERSION_brick */
-#ifndef MIN_VERSION_brick
-#define MIN_VERSION_brick(major1,major2,minor) (\
-  (major1) <  0 || \
-  (major1) == 0 && (major2) <  55 || \
-  (major1) == 0 && (major2) == 55 && (minor) <= 0)
-#endif /* MIN_VERSION_brick */
-
 /* package random-1.2.0 */
 #ifndef VERSION_random
 #define VERSION_random "1.2.0"
