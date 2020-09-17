@@ -1,0 +1,4 @@
+library-profiling: True
+profiling: True
+tests: True
+benchmarks: True

@@ -2,7 +2,7 @@ cabal-version:       >=1.10
 -- For further documentation, see http://haskell.org/cabal/users-guide/
 
 name:                maskies
-version:             0.2.0.3
+version:             0.2.0.5
 synopsis:            Text-based horror adventure game
 description:         Find out what is killing the security guards, and why. And maybe stop them.
 bug-reports:         aev@sdf.org
@@ -24,10 +24,9 @@ executable Maskies
                        , NameValidation
                        , Keys
                        , Stages
-  -- other-extensions:
   build-depends:       base >= 4.13 && < 5
                        , random >= 1.2.0 && < 1.3
                        , text >= 1.2.4 && < 1.3
   hs-source-dirs:      ./src/main/haskell
-  ghc-options:         -package random
+  ghc-options:         -O2
   default-language:    Haskell2010

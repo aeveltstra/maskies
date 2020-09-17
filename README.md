@@ -2,18 +2,22 @@
 ## A text adventure horror survival game.  
 ### Try not to die.  
 
+To play the game, you can try and run the executable "Maskies" that is available here. Chances are it won't run. If so, build the game from source.
+
 To build this game on your own Linux/Unix machine, you need:
 - GHC 8.8.3 or newer
 - Cabal 3.2.0 or newer
 
-Download the source code into a folder of your choosing and run the following at a terminal prompt to download the game code's dependencies, and to make sure you can compile it:  
+Download the source code (everything here) into a folder of your choosing and run the following at a terminal prompt:
 ```bash:
-maskies:$ cabal build  
+maskies:$ cabal install Maskies
 ```
 
-If it compiles correctly, you can build it with GHC using the following command at a terminal prompt:  
+This will resolve and download any dependencies the game source code needs to compile, compile it, and create an executable named "Maskies", and symlink it so you can run it from anywhere.
+
+Then you can from a terminal prompt:
 ```bash:
-maskies/src/main/haskell:$ ghc --make -O -o Maskies ./Main.hs -package random  
+~:$ Maskies
 ```
 
 If compiling fails, reach out to me, the author.  
