@@ -8,7 +8,17 @@ To use a wire, we can have a Linux command prompt read its contents, and send it
   
 ```bash:
 $ cat ./resources/wire-1.txt | ../../Maskies  
-```
+```  
+  
+or like this:  
+```bash:  
+$ ../../Maskies < ./resources/wire-1.txt  
+```  
+
+If you symlinked the game executable, it may be available globally, so you can omit the relative directory-ups:  
+```bash:  
+$ Maskies < ./resources/wire-1.txt  
+```  
   
 We have a program named MaskiesWireTest that accepts the output of the above command as input. We also need to tell it which wire we passed in. Like so:
 
