@@ -1,28 +1,8 @@
 JOB "Maskies-Profiling +RTS -N -p -h -i1 -sstderr"
-DATE "Thu Sep 17 20:29 2020"
+DATE "Thu Sep 17 21:18 2020"
 SAMPLE_UNIT "seconds"
 VALUE_UNIT "bytes"
 BEGIN_SAMPLE 0.000000
-END_SAMPLE 0.000000
-BEGIN_SAMPLE 0.000000
-(473)ln/loop/main.\.\/main...	104
-(241)GHC.Event.Poll.CAF	24
-(448)ln/main	40
-(316)GHC.IO.Encoding.Iconv.CAF	120
-(225)PINNED	69520
-(318)GHC.IO.Encoding.CAF	1000
-(336)GHC.Conc.Signal.CAF	640
-(262)GHC.Event.Thread.CAF	584
-(461)checkPlayerName.unval...	64
-(453)disableBuffering/main...	136
-(229)SYSTEM	24
-(472)loop/main.\.\/main.\/main	232
-(306)GHC.IO.Handle.Text.CAF	24
-(450)stage/Stages.CAF	808
-(439)Data.Text.Array.CAF	32
-(308)GHC.IO.Handle.FD.CAF	1088
-(447)main	192
-MAIN	37312
 END_SAMPLE 0.000000
 BEGIN_SAMPLE 0.000000
 END_SAMPLE 0.000000
