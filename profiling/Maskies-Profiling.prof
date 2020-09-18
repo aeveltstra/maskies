@@ -1,0 +1,74 @@
+	Thu Sep 17 20:29 2020 Time and Allocation Profiling Report  (Final)
+
+	   Maskies-Profiling +RTS -N -p -h -i1 -sstderr -RTS
+
+	total time  =        0.00 secs   (7 ticks @ 1000 us, 4 processors)
+	total alloc =     674,536 bytes  (excludes profiling overheads)
+
+COST CENTRE MODULE           SRC                                             %time %alloc
+
+MAIN        MAIN             <built-in>                                       85.7   13.8
+main        Main             ../src/main/haskell/Main.hs:(54,1)-(59,36)       14.3    0.3
+CAF         GHC.IO.Handle.FD <entire-module>                                   0.0    7.7
+loop.\      Main             ../src/main/haskell/Main.hs:(29,9)-(30,47)        0.0    4.5
+stage       Stages           ../src/main/haskell/Stages.hs:(442,1)-(676,63)    0.0    4.7
+ln          TextHelper       ../src/main/haskell/TextHelper.hs:22:1-36         0.0   66.5
+
+
+                                                                                                                                   individual      inherited
+COST CENTRE                      MODULE                 SRC                                                     no.     entries  %time %alloc   %time %alloc
+
+MAIN                             MAIN                   <built-in>                                              223          0   85.7   13.8   100.0  100.0
+ CAF                             Stages                 <entire-module>                                         443          0    0.0    0.0     0.0    3.4
+  stage                          Stages                 ../src/main/haskell/Stages.hs:(442,1)-(676,63)          450          0    0.0    3.4     0.0    3.4
+ CAF                             NameValidation         <entire-module>                                         442          0    0.0    0.0     0.0    0.7
+  fnaf                           NameValidation         ../src/main/haskell/NameValidation.hs:(72,1)-(112,5)    466          1    0.0    0.7     0.0    0.7
+  isFnaf                         NameValidation         ../src/main/haskell/NameValidation.hs:(115,1)-(116,24)  469          0    0.0    0.0     0.0    0.0
+   isFnaf.\                      NameValidation         ../src/main/haskell/NameValidation.hs:115:28-44         470          0    0.0    0.0     0.0    0.0
+  validate                       NameValidation         ../src/main/haskell/NameValidation.hs:(32,1)-(37,25)    464          0    0.0    0.0     0.0    0.0
+ CAF                             Main                   <entire-module>                                         441          0    0.0    0.0     0.0    0.0
+  disableBuffering               Main                   ../src/main/haskell/Main.hs:50:1-80                     452          1    0.0    0.0     0.0    0.0
+  main                           Main                   ../src/main/haskell/Main.hs:(54,1)-(59,36)              446          1    0.0    0.0     0.0    0.0
+   stage                         Stages                 ../src/main/haskell/Stages.hs:(442,1)-(676,63)          449          1    0.0    0.0     0.0    0.0
+ CAF                             Data.Text.Array        <entire-module>                                         439          0    0.0    0.0     0.0    0.0
+ CAF                             Data.Text.Internal     <entire-module>                                         436          0    0.0    0.0     0.0    0.0
+ CAF                             System.Random          <entire-module>                                         412          0    0.0    0.0     0.0    0.2
+  initSMGen                      System.Random.SplitMix src/System/Random/SplitMix.hs:384:1-35                  456          0    0.0    0.1     0.0    0.1
+   mkSMGen                       System.Random.SplitMix src/System/Random/SplitMix.hs:380:1-61                  457          1    0.0    0.0     0.0    0.0
+ CAF                             System.Random.SplitMix <entire-module>                                         410          0    0.0    0.0     0.0    0.0
+  initSMGen                      System.Random.SplitMix src/System/Random/SplitMix.hs:384:1-35                  455          1    0.0    0.0     0.0    0.0
+ CAF                             Data.Time.Clock.POSIX  <entire-module>                                         408          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.Conc.Signal        <entire-module>                                         336          0    0.0    0.1     0.0    0.1
+ CAF                             GHC.IO.Encoding        <entire-module>                                         318          0    0.0    0.4     0.0    0.4
+ CAF                             GHC.IO.Encoding.Iconv  <entire-module>                                         316          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.IO.Handle.FD       <entire-module>                                         308          0    0.0    7.7     0.0    7.7
+ CAF                             GHC.IO.Handle.Text     <entire-module>                                         306          0    0.0    0.0     0.0    0.0
+ CAF                             System.CPUTime         <entire-module>                                         276          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.Event.Thread       <entire-module>                                         262          0    0.0    0.2     0.0    0.2
+ CAF                             GHC.Event.Manager      <entire-module>                                         243          0    0.0    0.0     0.0    0.0
+ CAF                             GHC.Event.Poll         <entire-module>                                         241          0    0.0    0.0     0.0    0.0
+ main                            Main                   ../src/main/haskell/Main.hs:(54,1)-(59,36)              447          0   14.3    0.3    14.3   73.4
+  ln                             TextHelper             ../src/main/haskell/TextHelper.hs:22:1-36               448          1    0.0    2.2     0.0    2.2
+  main.\                         Main                   ../src/main/haskell/Main.hs:(56,9)-(59,36)              451          1    0.0    0.0     0.0   70.9
+   main.\.\                      Main                   ../src/main/haskell/Main.hs:(58,13)-(59,36)             459          1    0.0    0.0     0.0   70.7
+    loop                         Main                   ../src/main/haskell/Main.hs:(24,1)-(30,47)              472         14    0.0    0.3     0.0   70.4
+     loop.\                      Main                   ../src/main/haskell/Main.hs:(29,9)-(30,47)              477         13    0.0    4.5     0.0   67.8
+      key                        Keys                   ../src/main/haskell/Keys.hs:(38,1)-(51,14)              478         13    0.0    0.0     0.0    0.0
+      next                       Stages                 ../src/main/haskell/Stages.hs:(174,1)-(437,34)          479         13    0.0    0.0     0.0    0.0
+      ln                         TextHelper             ../src/main/haskell/TextHelper.hs:22:1-36               480         12    0.0   62.1     0.0   62.1
+      stage                      Stages                 ../src/main/haskell/Stages.hs:(442,1)-(676,63)          481         12    0.0    1.2     0.0    1.2
+     ln                          TextHelper             ../src/main/haskell/TextHelper.hs:22:1-36               473          2    0.0    2.2     0.0    2.2
+     stage                       Stages                 ../src/main/haskell/Stages.hs:(442,1)-(676,63)          474          2    0.0    0.1     0.0    0.1
+    checkPlayerName              Main                   ../src/main/haskell/Main.hs:(34,1)-(39,17)              460          1    0.0    0.0     0.0    0.3
+     checkPlayerName.player      Main                   ../src/main/haskell/Main.hs:37:9-61                     475          1    0.0    0.0     0.0    0.0
+      replace                    NameValidation         ../src/main/haskell/NameValidation.hs:(120,1)-(124,39)  476          1    0.0    0.0     0.0    0.0
+     checkPlayerName.result      Main                   ../src/main/haskell/Main.hs:36:9-40                     462          1    0.0    0.0     0.0    0.3
+      validate                   NameValidation         ../src/main/haskell/NameValidation.hs:(32,1)-(37,25)    463          1    0.0    0.0     0.0    0.3
+       isFnaf                    NameValidation         ../src/main/haskell/NameValidation.hs:(115,1)-(116,24)  465          1    0.0    0.1     0.0    0.2
+        isFnaf.\                 NameValidation         ../src/main/haskell/NameValidation.hs:115:28-44         467         32    0.0    0.0     0.0    0.0
+        isFnaf.y                 NameValidation         ../src/main/haskell/NameValidation.hs:116:5-24          468          1    0.0    0.1     0.0    0.1
+     checkPlayerName.unvalidated Main                   ../src/main/haskell/Main.hs:35:9-79                     461          1    0.0    0.0     0.0    0.0
+     outputIfChanged             NameValidation         ../src/main/haskell/NameValidation.hs:(135,1)-(139,122) 471          1    0.0    0.0     0.0    0.0
+   newStdGen                     System.Random          src/System/Random.hs:335:1-55                           454          1    0.0    0.0     0.0    0.0
+    splitSMGen                   System.Random.SplitMix src/System/Random/SplitMix.hs:(228,1)-(232,31)          458          1    0.0    0.0     0.0    0.0
+   disableBuffering              Main                   ../src/main/haskell/Main.hs:50:1-80                     453          0    0.0    0.2     0.0    0.2

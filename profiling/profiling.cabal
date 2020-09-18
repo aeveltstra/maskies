@@ -29,9 +29,9 @@ executable Maskies-Profiling
                        , text >= 1.2.4 && < 1.3
   hs-source-dirs:      ../src/main/haskell
   ghc-options:         -package random
-                       -O2
                        -threaded
                        -fprof-auto
+                       -rtsopts
                        "-with-rtsopts=-N -p -h -i1"
   default-language:    Haskell2010
 
