@@ -6,7 +6,7 @@
     This file contains the game's stages, their variations, and how they wire together.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.918.1430
+    @version 2.20.924.2210
 -}
 module Stages where
 
@@ -157,6 +157,11 @@ data Stage =
   | C3fa
   | C3fw
   | C3faw
+  | C3fDeathBelow
+  | C3faDeathBelow
+  | C3fawDeathBelow
+  | C3fwDeathBelow
+  | C3fDeathAbove
   | C4
   | C4a
   | C4w
@@ -165,6 +170,44 @@ data Stage =
   | C4fa
   | C4fw
   | C4faw
+  | C5
+  | C5a
+  | C5w
+  | C5aw
+  | C6
+  | C6a
+  | C6w
+  | C6aw
+  | C6f
+  | C6fa
+  | C6faw
+  | C6fw
+  | C6Attack
+  | C6aAttack
+  | C6awAttack
+  | C6wAttack
+  | C6Death
+  | C6aDeath
+  | C6awDeath
+  | C6Survive
+  | C6aSurvive
+  | C6awSurvive
+  | C7
+  | C7a
+  | C7aw
+  | C7w
+  | C8
+  | C8a
+  | C8aw
+  | C8w
+  | C9
+  | C9a
+  | C9aw
+  | C9w
+  | C10
+  | C10a
+  | C10w
+  | C10aw
   | Quit
   deriving (Show, Eq, Enum)
 
@@ -433,6 +476,108 @@ next C3w K.D = C4w
 next C3w _ = C3fw
 next C3aw K.D = C4aw
 next C3aw _ = C3faw
+next C3f K.W = C3fDeathBelow
+next C3fa K.W = C3faDeathBelow
+next C3faw K.W = C3fawDeathBelow
+next C3fw K.W = C3fwDeathBelow
+next C3f _ = C3fDeathAbove
+next C3fa _ = C3fDeathAbove
+next C3faw _ = C3fDeathAbove
+next C3fw _ = C3fDeathAbove
+next C3fDeathBelow K.A = C1
+next C3fDeathBelow _ = Quit
+next C3faDeathBelow K.A = C1a
+next C3faDeathBelow _ = Quit
+next C3fawDeathBelow K.A = C1aw
+next C3fawDeathBelow _ = Quit
+next C3fwDeathBelow K.A = C1w
+next C3fwDeathBelow _ = Quit
+next C3fDeathAbove K.A = C1
+next C3fDeathAbove _ = Quit
+next C4 K.S = C3f
+next C4 K.A = C5
+next C4 K.D = C6
+next C4 _ = C4f
+next C4a K.S = C3fa
+next C4a K.A = C5a
+next C4a K.D = C6a
+next C4a _ = C4fa
+next C4w K.S = C3fw
+next C4w K.A = C5w
+next C4w K.D = C6w
+next C4w _ = C4fw
+next C4aw K.S = C3faw
+next C4aw K.A = C5aw
+next C4aw K.D = C6aw
+next C4aw _ = C4faw
+next C5 K.S = C6
+next C5a K.S = C6a
+next C5aw K.S = C6aw
+next C5w K.S = C6w
+next C6 K.W = C8
+next C6a K.W = C8a
+next C6aw K.W = C8aw
+next C6w K.W = C8w
+next C6 _ = C6f
+next C6a _ = C6fa
+next C6aw _ = C6faw
+next C6w _ = C6fw
+next C6f K.N = C6Survive
+next C6f _ = C6Attack
+next C6fa K.N = C6aSurvive
+next C6fa _ = C6aAttack
+next C6faw K.N = C6awSurvive
+next C6faw _ = C6awAttack
+next C6fw K.N = C6Survive
+next C6fw _ = C6Attack
+next C6Attack K.Y = C6Survive
+next C6Attack _ = C6Death
+next C6aAttack K.Y = C6aSurvive
+next C6aAttack _ = C6aDeath
+next C6awAttack K.Y = C6awSurvive
+next C6awAttack _ = C6awDeath
+next C6wAttack K.Y = C6Survive
+next C6wAttack _ = C6Death
+next C6Death K.A = C1
+next C6Death _ = Quit
+next C6aDeath K.A = C1a
+next C6aDeath _ = Quit
+next C6awDeath K.A = C1aw
+next C6awDeath _ = Quit
+next C6Survive K.W = C8
+next C6Survive _ = C6Death
+next C6aSurvive K.W = C8a
+next C6aSurvive _ = C6aDeath
+next C6awSurvive K.W = C8aw
+next C6awSurvive _ = C6awDeath
+next C5 K.W = C7
+next C5a K.W = C7a
+next C5aw K.W = C7aw
+next C5w K.W = C7w
+next C5 _ = C5
+next C5a _ = C5a
+next C5w _ = C5w
+next C5aw _ = C5aw
+next C7 K.S = C6
+next C7a K.S = C6a
+next C7w K.S = C6w
+next C7aw K.S = C6aw
+next C7 K.W = C9
+next C7 _ = C7
+next C7a K.W = C9a
+next C7a _ = C7a
+next C7w K.W = C9w
+next C7w _ = C7w
+next C7aw K.W = C9aw
+next C7aw _ = C7aw
+next C9 K.W = C10
+next C9 _ = C6
+next C9a K.W = C10a
+next C9a _ = C6a
+next C9w K.W = C10w
+next C9w _ = C6w
+next C9aw K.W = C10aw
+next C9aw _ = C6aw
 next _ _ = error "Yet to wire up."
 
 {- These are the texts to show for each stage. This architecture assumes that the game loop outputs these texts and captures input from the player, to return to an other stage. -}
@@ -646,13 +791,13 @@ stage C2w name = T.replace "{name}" name "Nice jumping! Your map was right. You 
 
 stage C2aw name = T.replace "{name}" name "Nice jumping! Your map was right. You land safely. This platform is gross. There's chunks of something all over. Don't look too closely. And it smells like blood. Let's get off of here before something bad happens. You can see other platforms, but not where they lead. Check your map: does that say to jump forward? If you trust the map, press w. Otherwise, press a to jump left, or d to jump to the right. You could try jumping backwards by pressing s."
 
-stage C3 name = T.replace "{name}" name "Oh good, you made it! The music is louder here. This platform has a speaker. It's barely visible, but definitely audible. Another sound is made by your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your pants, for lack of anything better. You hear metal clanging below. Like something is climbing a ladder. Want to stick around and find out what that is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right."
+stage C3 name = T.replace "{name}" name "Oh good, you made it! But Your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your pants, for lack of anything better. You hear metal clanging below. Like something is climbing a ladder. Want to stick around and find out what that is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right."
 
-stage C3a name = T.replace "{name}" name "Oh good, you made it! The music is louder here. This platform has a speaker. It's barely visible, but definitely audible. Another sound is made by your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your pants: no need to get your shield yucky. You hear metal clanging below. Like something is climbing a ladder. Want to stick around and find out what it is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right."
+stage C3a name = T.replace "{name}" name "Oh good, you made it! But. Your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your pants: no need to get your shield yucky. You hear metal clanging below. Like something is climbing a ladder. Want to stick around and find out what it is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right."
 
-stage C3w name = T.replace "{name}" name "Oh good, you made it! The music is louder here. This platform has a speaker. It's barely visible, but definitely audible. Another sound is made by your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your map. Was that smart? Now you can't see where to go next, {name}! You hear metal clanging below. Like something's climbing a ladder. Want to stick around and see what it is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right. Does the map say to go left? Hard to tell..."
+stage C3w name = T.replace "{name}" name "Oh good, you made it! But. Your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your map. Was that smart? Now you can't see where to go next, {name}! You hear metal clanging below. Like something's climbing a ladder. Want to stick around and see what it is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right. Does the map say to go left? Hard to tell..."
 
-stage C3aw name = T.replace "{name}" name "Oh good, you made it! The music is louder here. This platform has a speaker. It's barely visible, but definitely audible. Another sound is made by your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your map. No need to smear that all over your shield. But that makes it hard see where to go next, {name}! You hear metal clanging below. Like something's climbing a ladder. Want to stick around to find out what it is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right. Does the map say to go left?"
+stage C3aw name = T.replace "{name}" name "Oh good, you made it! But. Your shoes. They're sticky. You feel their soles: some thick liquid. You smell your fingers: blood! You must have stepped in some, earlier. Will that make it harder to jump? Yes it will! You wipe your hands on your map. No need to smear that all over your shield. But that makes it hard see where to go next, {name}! You hear metal clanging below. Like something's climbing a ladder. Want to stick around to find out what it is? If so, press s. If not, let's jump! There's 3 more platforms within reach. Choose: a for left, w for forward, or d for right. Does the map say to go left?"
 
 stage C2f name = T.replace "{name}" name (T.concat [c2fMsg, T.pack "You have nothing to protect you. Duck to the ground and reach around to find a ladder: press a, w, d, or s. Or give up and quit by pressing q."])
 stage C2fa name = T.replace "{name}" name (T.concat [c2fMsg, T.pack "You waft your shield to keep the smoke away, but it barely works. Duck to the ground and reach around to find a ladder: press a, w, d, or s. Or give up and quit by pressing q."])
@@ -673,6 +818,130 @@ stage C2fSurvive name = T.replace "{name}" name c2fSurviveMsg
 stage C2faSurvive name = T.replace "{name}" name c2fSurviveMsg
 stage C2fwSurvive name = T.replace "{name}" name c2fSurviveMsg
 stage C2fawSurvive name = T.replace "{name}" name c2fSurviveMsg
+
+stage C3f name = T.replace "{name}" name c3fMsg
+stage C3fa name = T.replace "{name}" name c3fMsg
+stage C3faw name = T.replace "{name}" name c3fMsg
+stage C3fw name = T.replace "{name}" name c3fMsg
+
+stage C3fDeathBelow name = T.replace "{name}" name "Cold metal claws wrap around your arms and pull you under. You have nothing to protect yourself, but even if you had, those claws are too strong. The soggy, disgusting not-bean clumps smack into your face. They feel and smell like cuts of veal... or worse... This is an ice cream parlor after all: no veal here. That and other thoughts race through your mind. Weird. So this is game over, {name}. Want to try again? Press a to reincarnate and try again. Or press q to quit."
+stage C3faDeathBelow name = T.replace "{name}" name "Cold metal claws wrap around your arms and pull you under. Your shield does nothing to protect you: those claws are too strong. The soggy, disgusting not-bean clumps smack into your face. They feel and smell like cuts of veal... or worse... This is an ice cream parlor after all: no veal here. That and other thoughts race through your mind. Weird. So this is game over, {name}. Want to try again? Press a to reincarnate and try again. Or press q to quit."
+stage C3fawDeathBelow name = T.replace "{name}" name "Cold metal claws wrap around your arms and pull you under. Your shield does nothing to protect you: those claws are too strong. The soggy, disgusting not-bean clumps smack into your face. They feel and smell like cuts of veal... or worse... This is an ice cream parlor after all: no veal here. That and other thoughts race through your mind. Weird. So this is game over, {name}. Want to try again? Press a to reincarnate and try again. Or press q to quit."
+stage C3fwDeathBelow name = T.replace "{name}" name "Cold metal claws wrap around your arms and pull you under. Your map does nothing to protect you: those claws are too strong. The soggy, disgusting not-bean clumps smack into your face. They feel and smell like cuts of veal... or worse... This is an ice cream parlor after all: no veal here. That and other thoughts race through your mind. Weird. So this is game over, {name}. Want to try again? Press a to reincarnate and try again. Or press q to quit."
+
+stage C3fDeathAbove name = T.replace "{name}" name c3fDeathAboveMsg 
+
+stage C4 name = T.replace "{name}" name c4Msg
+stage C4a name = T.replace "{name}" name c4Msg
+stage C4aw name = T.replace "{name}" name c4wMsg
+stage C4w name = T.replace "{name}" name c4wMsg
+
+stage C5 name = T.replace "{name}" name c5Msg
+stage C5a name = T.replace "{name}" name c5Msg
+stage C5w name = T.replace "{name}" name c5Msg
+stage C5aw name = T.replace "{name}" name c5Msg
+
+stage C6 name = T.replace "{name}" name (T.concat [c6Msg, "Which is pretty amazing since you have neither a shield nor a map. ", c6Msg2])
+stage C6a name = T.replace "{name}" name (T.concat [c6Msg, "Which is pretty amazing since you have no map. But luckily your shield protected you. ", c6Msg2])
+stage C6w name = T.replace "{name}" name (T.concat [c6Msg, "Aren't you happy you have that map? Might have been easier with a shield, too. ", c6Msg2])
+stage C6aw name = T.replace "{name}" name (T.concat [c6Msg, "That map and shield really helped. Better hang on to them. ", c6Msg2])
+
+stage C6f name = T.replace "{name}" name (T.concat [c6fMsg, "You have nothing to protect yourself. No shield. How brave. ", c6fMsg2])
+stage C6fa name = T.replace "{name}" name (T.concat [c6fMsg, "You hold up your shield. ", c6fMsg2])
+stage C6faw name = T.replace "{name}" name (T.concat [c6fMsg, "You hold up your shield. ", c6fMsg2])
+stage C6fw name = T.replace "{name}" name (T.concat [c6fMsg, "You pull out your map, rip it up, and throw it into the air in an attempt to distract them. ", c6fMsg2])
+
+stage C6Attack name = T.replace "{name}" name (T.concat [c6AttackMsg, "And you ain't got no shield. No nothing. ", c6AttackMsg2])
+stage C6aAttack name = T.replace "{name}" name (T.concat [c6AttackMsg, "You have a shield. Will it help? ", c6AttackMsg2])
+stage C6wAttack name = T.replace "{name}" name (T.concat [c6AttackMsg, "And you ain't got no shield. No map. ", c6AttackMsg2])
+stage C6awAttack name = T.replace "{name}" name (T.concat [c6AttackMsg, "You have a shield and a map. Will they help? ", c6AttackMsg2])
+
+stage C6Survive name = T.replace "{name}" name c6SurviveMsg
+stage C6aSurvive name = T.replace "{name}" name c6SurviveMsg
+stage C6awSurvive name = T.replace "{name}" name c6SurviveMsg
+
+stage C6Death name = T.replace "{name}" name (T.concat [c6DeathMsg, "You try and fend them off as best you can. ", c6DeathMsg2])
+stage C6aDeath name = T.replace "{name}" name (T.concat [c6DeathMsg, "You fend them off with your shield, but there's too many! ", c6DeathMsg2])
+stage C6awDeath name = T.replace "{name}" name (T.concat [c6DeathMsg, "You fend them off with your shield, but there's too many! You even rip up your map and throw it into the air as a distraction. It doesn't work. ", c6DeathMsg2])
+
+stage C7 name = T.replace "{name}" name c7Msg
+stage C7a name = T.replace "{name}" name c7Msg
+stage C7w name = T.replace "{name}" name c7Msg
+stage C7aw name = T.replace "{name}" name c7Msg
+
+stage C9 name = T.replace "{name}" name c9Msg
+stage C9a name = T.replace "{name}" name c9Msg
+stage C9w name = T.replace "{name}" name c9Msg
+stage C9aw name = T.replace "{name}" name c9Msg
+
+stage C10 name = T.replace "{name}" name (T.concat [c10Msg, "", c10Msg2])
+stage C10a name = T.replace "{name}" name (T.concat [c10Msg, "", c10Msg2])
+stage C10aw name = T.replace "{name}" name (T.concat [c10Msg, "", c10Msg2])
+stage C10w name = T.replace "{name}" name (T.concat [c10Msg, "", c10Msg2])
+
+stage C8 name = T.replace "{name}" name c8Msg
+stage C8a name = T.replace "{name}" name c8Msg
+stage C8w name = T.replace "{name}" name c8Msg
+stage C8aw name = T.replace "{name}" name c8Msg
+
+c8Msg :: T.Text
+c8Msg = "Ack! You just got sick to your stomach. And there's that blue smoke again! You duck instinctively. The smoke quickly clears up. You're back in the hallway of the ice cream parlor. You turn around to see the door... but all it shows is the end of the hallway. Where is the obstacle course? Did you just get teleported? Again? What's going on in this place? But you have no time to contemplate: the door bell rings. Now what? Press a to turn left into the parlor and check out who entered. Press d to turn right. W to go forward. For backwards, press s. Not sure why you would want to do that."
+
+c10Msg :: T.Text
+c10Msg = ""
+
+c10Msg2 :: T.Text
+c10Msg2 = ""
+
+c9Msg :: T.Text
+c9Msg = "Security duty FTW! You call out to the stranger: \n'Oi! Who are you? What you doing here? It's the middle of the night. The parlor is closed!' \nSurely that made an impact! The stranger looks up at you. And says: \n'It's about time you got here, {name}. I've been waiting for you. Nice jumping out there. Do you know what your employer did? Jacques Masquie? He fired all of us. Replaced us with these... robots. He took my job. I lost my house. My health insurance. My youngest child... He's gotta pay for that.' \nThe stranger presses a button on the desk. The cages open. What do you do? Press s to return to safety. Press w to wait and see."
+
+c7Msg :: T.Text
+c7Msg = "You are in a lit room. The walls are lined with cages. Each cage houses a stuffed animal animatronic. Their movements seem erratic. Like they're broken. You see a bunny with square eyes, drenched in blood, a cat that sparks and has an ice-cream cone for 1 ear, an elephant on a wheel spinning in circles, and many more... In the middle of the room there is a desk. With a chair. With someone sitting in it. Do you back out slowly and ignore this, {name}? If so, press s. Or do you do your security guard duty and ask this person what they're doing? If so, press w. You can also quit by pressing q."
+
+c7Msg2 :: T.Text
+c7Msg2 = ""
+
+c6DeathMsg :: T.Text
+c6DeathMsg = "There's animatronics on every side. No way out. Claws ripping at your clothes. Sparks burning your skin. Ice scoops verrrry close to your eyes. "
+
+c6DeathMsg2 :: T.Text
+c6DeathMsg2 = "You kick them and punch them and dodge and scream. All to no avail. The animatronics are too tough. Whoever reprogrammed them really must have hated Masquie. And you're the victim of that hatred. One of the many, considering the bloody lumps all over the place. You did well. You got pretty far. I tip my hat to you in respect. May you reincarnate and try again by pressing a. Or press q to quit."
+
+c6SurviveMsg :: T.Text
+c6SurviveMsg = "So you run. Faster! Them claws rip your clothes. Sparks burn your skin. Ice scoops get verrrrry close to your eyes. But there's the door! Jump! Jump now! Press w to jump!"
+
+c6AttackMsg :: T.Text
+c6AttackMsg = "Ready to fight, are you? Have you met these animatronics before? They aren't right in the head. Someone's done messed them up. Someone who was very angry with Jacques Masquie. And turned cute stuffed animals into murder machines. With ice cream scoops, forks, and grabby claws. "
+
+c6AttackMsg2 :: T.Text
+c6AttackMsg2 = "For a strategic retreat and see if that door leads to safety, press y. To stay and fight, press n. Or press q to quit now."
+
+c6fMsg :: T.Text
+c6fMsg = "What are you doing? You had the exit right in front of you? But you had to go and press a different button, didn't you? Instant karma, {name}: children's music closes in on you from all sides, as well as mechanical whirring. Differing songs from each side, growing louder. Animatronic stuffed animals slide into the light. Surrounding you. Blocking your escape. "
+
+c6fMsg2 :: T.Text
+c6fMsg2 = "Do you stand your ground and fight? If yes, press y. If not, press n to flee and run to the door."
+
+c6Msg :: T.Text
+c6Msg = "You land safely on what feels like rubber mats. "
+c6Msg2 :: T.Text
+c6Msg2 = "Ahead you see a rectangle of light. A door? Would that be the end of this bloody obstacle course? It's about time! Press w to go forward to that door."
+
+c5Msg :: T.Text
+c5Msg = "Interesting choice. You arrived in front of a room. There's light there. And music. Quite a lot of it and from the sound of it, multiple songs at the same time. Want to enter that room and check it out, {name}? If so, press w. Instead you may want to turn back and take the down ramp. If so, press s. Or... quit, by pressing q."
+
+c4Msg :: T.Text
+c4Msg = "GG, {name}, gg! This platform splits into a ramp up and a slide down. There's barely enough light to make that out... you can't see what's beyond either end. If only you had had a map. So... pick a way. Press a for up, or d for down. You could press s to try and jump back. But I wouldn't. To give up and quit, press q."
+
+c4wMsg :: T.Text
+c4wMsg = "GG, {name}, gg! This platform splits into a ramp up and a slide down. There's barely enough light to make that out... you can't see what's beyond either end. Luckily you have a map. Which is smudged. It might direct you down. Or not. Press a for up, or d for down. You could press s to try and jump back. But I wouldn't. To give up and quit, press q."
+
+c3fDeathAboveMsg :: T.Text
+c3fDeathAboveMsg = "Metal claws shoot up from below. You scramble to your feet and dodge. And bump into something furry you didn't see before. It moves. And sings. A children's song. That's where the music came from! You back away. The animatronic follows you. It's sparking, as if a wire is short-circuiting. The sparks show a blue smoke bellowing out of the cat's mouth. You back away further. And fall into the soggy lumps. With the metal claws. That hold you in place. The blue smoke suffocates you. The cat sparks electrocute you. So this is game over, {name}. Want to try again? Press a to reincarnate and try again. Or press q to quit."
+
+c3fMsg :: T.Text
+c3fMsg = "Eep! That platform is too far away! You crash into the wall, and reach out to grab the ledge... but you're not used to pulling up your own weight, are you, {name}? And that ledge is slippery. So you slip and slide down the slick stone, faster and faster as you fear the fall... into soft and fluffy bean bags? But soggy. Maybe not bean bags. Maybe something way more disgusting. And it's moving? What's under there? Press w to press on and find out. Press s to scramble back up on your feet."
 
 c2fSurviveMsg :: T.Text
 c2fSurviveMsg = "Good thinking! Now let's get back up and try and jump better. You hold your breath, jump up above the blue smoke. You see a ladder. Press a to ascend it. But maybe you've had enough? To quit, press q."

@@ -1,32 +1,37 @@
-cabal-version:       >=1.10
--- For further documentation, see http://haskell.org/cabal/users-guide/
+cabal-version:      >=1.10
+name:               maskies
+version:            0.2.0.6
+license:            OtherLicense
+license-file:       LICENSE
+copyright:          2020 A.E.Veltstra & T.R.Veltstra
+maintainer:         aev@sdf.org
+author:             A.E.Veltstra
+stability:          Experimental
+tested-with:        ghc ==8.8.3
+bug-reports:        aev@sdf.org
+synopsis:           Text-based horror adventure game
+description:
+    Find out what is killing the security guards, and why. And maybe stop them.
 
-name:                maskies
-version:             0.2.0.5
-synopsis:            Text-based horror adventure game
-description:         Find out what is killing the security guards, and why. And maybe stop them.
-bug-reports:         aev@sdf.org
-license:             OtherLicense
-license-file:        LICENSE
-author:              A.E.Veltstra
-maintainer:          aev@sdf.org
-copyright:           2020 A.E.Veltstra & T.R.Veltstra
-category:            Games
-build-type:          Simple
-stability:           Experimental
-extra-source-files:  CHANGELOG.md
-                     README.md
-tested-with:         GHC == 8.8.3
+category:           Games
+build-type:         Simple
+extra-source-files:
+    CHANGELOG.md
+    README.md
 
 executable Maskies
-  main-is:             Main.hs
-  other-modules:       TextHelper
-                       , NameValidation
-                       , Keys
-                       , Stages
-  build-depends:       base >= 4.13 && < 5
-                       , random >= 1.2.0 && < 1.3
-                       , text >= 1.2.4 && < 1.3
-  hs-source-dirs:      ./src/main/haskell
-  ghc-options:         -O2
-  default-language:    Haskell2010
+    main-is:          Main.hs
+    hs-source-dirs:   ./src/main/haskell
+    other-modules:
+        TextHelper
+        NameValidation
+        Keys
+        Stages
+
+    default-language: Haskell2010
+    ghc-options:      -O2 -threaded
+    build-depends:
+        base >=4.13.0.0 && <4.14,
+        random >=1.2.0 && <1.3,
+        text >=1.2.4.0 && <1.3,
+        brick ==0.55.*
