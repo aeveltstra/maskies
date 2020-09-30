@@ -5,7 +5,7 @@
     Try not to die.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.914.0029
+    @version 2.20.929.700
 -}
 module Main where
 import qualified Data.Char
@@ -23,19 +23,18 @@ import qualified TextHelper as TH
 loop :: S.Stage -> T.Text -> IO ()
 loop S.Quit player = TH.ln $ S.stage S.Quit player
 loop theStage player
-  --(BM.simpleMain (B.str $ T.unpack $ S.stage theStage player)) >>
   = (TH.ln $ S.stage theStage player) >> getChar >>=
-      \ k -> putStrLn "\n" >> loop (S.next theStage (K.key k)) player
+      \ k -> putStrLn "\n" >> 
+         loop (S.next theStage (K.key k)) player
 
 {- Sanitizes and validates the player's name. If needed, reprimands the player for choosing a foolish name, and announces a substitute. Returns either the sanitized input or the substitute. -}
 checkPlayerName :: R.StdGen -> String -> IO T.Text
-checkPlayerName randomizerSeed taintedName
-  = do let unvalidated
-             = T.strip $ T.filter Data.Char.isPrint $ T.pack taintedName
-           result = NV.validate unvalidated
-           player = NV.replace unvalidated result randomizerSeed
-       NV.outputIfChanged player result
-       return player
+checkPlayerName randomizerSeed taintedName = do 
+    let unvalidated = T.strip $ T.filter Data.Char.isPrint $ T.pack taintedName
+        result = NV.validate unvalidated
+        player = NV.replace unvalidated result randomizerSeed
+    NV.outputIfChanged player result
+    return player
 
 {- 
   This turns off input buffering. 
@@ -52,7 +51,6 @@ disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
 main :: IO ()
 main
   = (TH.ln $ S.stage S.Init "") >> getLine >>=
-      \ p ->
-        disableBuffering >> R.newStdGen >>=
-          \ s -> checkPlayerName s p >>= loop S.A1DarkHallway
+      \ p -> disableBuffering >> R.newStdGen >>=
+        \ s -> checkPlayerName s p >>= loop S.A1DarkHallway
 
