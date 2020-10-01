@@ -5,7 +5,7 @@
     Try not to die.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1001.708
+    @version 2.20.1001.1417
 -}
 module Main where
 import qualified Data.Char
@@ -33,7 +33,7 @@ checkPlayerName randomizerSeed taintedName = do
     let unvalidated = T.strip $ T.filter Data.Char.isPrint $ T.pack taintedName
         result = NV.validate unvalidated
         player = NV.replace unvalidated result randomizerSeed
-    NV.outputIfChanged player result
+    NV.show result player 
     return player
 
 {- 

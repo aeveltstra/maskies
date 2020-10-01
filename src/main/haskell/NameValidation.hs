@@ -8,7 +8,7 @@
     needed
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.929.1431
+    @version 2.20.1001.1335
 -}
 module NameValidation where
 import qualified Data.Text as T
@@ -25,7 +25,7 @@ data Result = AllGood
             | IsFnaf
             | IsBetty
             | IsJeremy
-                deriving (Show, Eq, Enum)
+                deriving (Bounded, Read, Show, Eq, Enum)
 
 {- Ensures that the player name is neither too long nor too short. And a special case is made for pi, because a certain someone found it necessary to boast their knowledge of the first 100 digits of pi. You know who you are. -}
 validate :: T.Text -> Result
@@ -63,22 +63,18 @@ isFnaf player = any (\ x -> 0 < (T.count x y)) fnaf
   where y = T.toLower player
 
 isBetty :: T.Text -> Bool
-isBetty player = "betty" == ptl 
-  where ptl = T.toLower player
+isBetty player = "betty" == (T.toLower player)
 
 isJeremy :: T.Text -> Bool
-isJeremy player = "jeremy" == ptl
-  where ptl = T.toLower player
+isJeremy player = "jeremy" == (T.toLower player)
 
 {- Given a specific name validation result, this function returns the passed-in name or something else. -}
 replace :: T.Text -> Result -> R.StdGen -> T.Text
-replace player AllGood _ = player
 replace _ TooLong seed = pick seed subsForTooLong
 replace _ TooShort seed = pick seed subsForTooShort
 replace _ Pie _ = "Pie"
 replace _ IsFnaf _ = "Jeremy"
-replace player IsBetty _ = player
-replace player IsJeremy _ = player
+replace player _ _ = player
 
 pick :: R.StdGen -> [a] -> a
 pick seed xs
@@ -87,24 +83,24 @@ pick seed xs
   where x = xs !! fst (R.randomR (0, (length xs) - 1) seed)
 
 {- If the validation of the player's name says it should be changed, this function lets them know about it. -}
-outputIfChanged :: T.Text -> Result -> IO ()
-outputIfChanged _ AllGood = return ()
-outputIfChanged newName TooLong
+show :: Result -> T.Text -> IO ()
+show AllGood _ = return ()
+show TooLong newName
   = TH.ln
       (T.replace "{name}" newName
          "That's a really long name, you know. I will call you {name}.")
-outputIfChanged newName TooShort
+show TooShort newName
   = TH.ln
       (T.replace "{name}" newName
          "Short and sweet, aye? From now on, you will be known as {name}.")
-outputIfChanged newName Pie
+show Pie newName
   = TH.ln
       (T.replace "{name}" newName "How interesting! Mind if I call you {name}?")
-outputIfChanged newName IsFnaf
+show IsFnaf newName
   = TH.ln
       (T.replace "{name}" newName
          "This isn't FNAF, you know... I will call you {name}.")
-outputIfChanged _ IsBetty
+show IsBetty _
   = TH.ln "When you call me, you can call me Al."
-outputIfChanged _ IsJeremy
+show IsJeremy _
   = TH.ln "I know a tester by that name."
