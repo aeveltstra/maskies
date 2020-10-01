@@ -6,7 +6,7 @@
     This file contains the game’s stages, their variations, and how they wire together.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1001:0003
+    @version 2.20.1001.0003
 -}
 module Stages where
 
@@ -221,7 +221,7 @@ data Stage =
   | C11w
   | C11aw
   | Quit
-  deriving (Show, Eq, Enum)
+  deriving (Bounded, Read, Show, Eq, Enum)
 
 {- | This function wires Key events to stages, to determine which stage to show next. If the event is Wait, the same stage gets returned as put in. If the event is Q, the function returns the Quit event. If the player enters a key that is not wired up to a stage here, the function throws an error. -}
 next :: Stage -> K.Key -> Stage
@@ -621,6 +621,7 @@ next C10awDeath K.A = C1aw
 next _ _ = error "Yet to wire up."
 
 {- | These are the texts to show for each stage. This architecture assumes that the game loop outputs these texts and captures input from the player, to return to an other stage. -}
+-- Not using a Show instance here, because that messes up the “next” function.
 stage :: Stage -> T.Text -> T.Text 
 
 stage Init _ = "Welcome to Maskie’s Ice Cream. What is your name? Type your name and press Enter:"

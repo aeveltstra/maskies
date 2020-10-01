@@ -8,7 +8,7 @@
     handle those.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.917.2058
+    @version 2.20.1001.706
 -}
 module Keys where
 
@@ -31,22 +31,22 @@ data Key
     | J4
     | J5
     | Wait
-    deriving (Show, Eq, Enum)
+    deriving (Bounded, Read, Show, Eq, Enum)
 
 {- The application captures key presses. This function converts those into Key events (see above). Unrecognized keys turn into the Wait Key event. This is used to determine which stage to show next: the Wait event makes the same stage to replay. -}
-key :: Char -> Key
-key 'w' = W
-key 'a' = A
-key 's' = S
-key 'd' = D
-key 'y' = Y
-key 'n' = N
-key 'h' = H
-key 'q' = Q
-key '1' = J1
-key '2' = J2
-key '3' = J3
-key '4' = J4
-key '5' = J5
-key  _  = Wait
+read :: Char -> Key
+read 'w' = W
+read 'a' = A
+read 's' = S
+read 'd' = D
+read 'y' = Y
+read 'n' = N
+read 'h' = H
+read 'q' = Q
+read '1' = J1
+read '2' = J2
+read '3' = J3
+read '4' = J4
+read '5' = J5
+read  _  = Wait
 

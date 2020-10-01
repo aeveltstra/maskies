@@ -5,12 +5,12 @@
     Try not to die.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.929.700
+    @version 2.20.1001.708
 -}
 module Main where
 import qualified Data.Char
 import qualified Data.Text as T
-import qualified Keys as K
+import qualified Keys
 import qualified NameValidation as NV
 
 import Prelude
@@ -25,7 +25,7 @@ loop S.Quit player = TH.ln $ S.stage S.Quit player
 loop theStage player
   = (TH.ln $ S.stage theStage player) >> getChar >>=
       \ k -> putStrLn "\n" >> 
-         loop (S.next theStage (K.key k)) player
+         loop (S.next theStage (Keys.read k)) player
 
 {- Sanitizes and validates the player's name. If needed, reprimands the player for choosing a foolish name, and announces a substitute. Returns either the sanitized input or the substitute. -}
 checkPlayerName :: R.StdGen -> String -> IO T.Text
