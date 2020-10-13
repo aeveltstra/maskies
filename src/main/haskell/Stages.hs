@@ -6,7 +6,7 @@
     This file contains the game’s stages, their variations, and how they wire together.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1007.1028
+    @version 2.20.1013.1217
 -}
 module Stages where
 
@@ -226,9 +226,22 @@ data Stage =
   | D1DarkHallway
   | D1DarkHallwayEnd
   | D1DarkToilets
+  | D1DarkToiletsAttack
   | D1DarkParlor
   | D1DarkOffice
-  | D1DarkOfficeDesk
+  | D1DarkDesk
+  | D1DarkDeskHelp
+  | D1DarkLocker
+  | D1DarkLockerAttack
+  | D1DarkFountain
+  | D1DarkDrink
+  | D1DarkMirror
+  | D1DarkMirrorAttack
+  | D1DarkMirrorAvoid
+  | D1DarkMirrorDeath
+  | D2LitDesk
+  | D2LitDeskHelp
+  | D3DarkDesk
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
@@ -240,6 +253,7 @@ next Init _ = A1DarkHallway
 next A1DarkHallway K.H = A1Help
 next A1Help K.J2 = B1DarkHallway
 next A1Help K.J3 = C1aw
+next A1Help K.J4 = D1Intro
 next A1Help _ = A1LightAppears
 next A1DarkHallway _ = A1LightAppears
 next A1LightAppears _ = A1HallwayDeath
@@ -635,6 +649,43 @@ next C11 _ = D1Intro
 next C11a _ = D1Intro
 next C11aw _ = D1Intro
 next C11w _ = D1Intro
+next D1Intro K.W = D1DarkHallway
+next D1Intro _ = D1Help
+next D1Help _ = D1DarkHallway
+next D1DarkHallway K.H = D1Help
+next D1DarkHallway K.W = D1DarkHallwayEnd
+next D1DarkHallway K.A = D1DarkOffice
+next D1DarkHallway K.D = D1DarkParlor
+next D1DarkHallway _ = D1DarkHallway
+next D1DarkHallwayEnd K.S = D1DarkHallway
+next D1DarkHallwayEnd K.D = D1DarkParlor
+next D1DarkHallwayEnd K.A = D1DarkToilets
+next D1DarkHallwayEnd _ = D1Help
+next D1DarkOffice K.A = D1DarkLocker
+next D1DarkOffice K.W = D1DarkFountain
+next D1DarkOffice K.D = D1DarkDesk
+next D1DarkOffice _ = D1Help
+next D1DarkLocker K.S = D1DarkOffice
+next D1DarkLocker _ = D1DarkLockerAttack
+next D1DarkToilets K.S = D1DarkHallwayEnd
+next D1DarkToilets _ = D1DarkToiletsAttack
+next D1DarkFountain K.S = D1DarkOffice
+next D1DarkFountain K.D = D1DarkDrink
+next D1DarkFountain K.W = D1DarkMirror
+next D1DarkFountain _ = D1DarkFountain
+next D1DarkDrink K.W = D1DarkToilets
+next D1DarkDrink K.S = D1DarkOffice
+next D1DarkDrink _ = D1DarkMirrorAttack
+next D1DarkMirror K.A = D1DarkMirrorAvoid
+next D1DarkMirror _ = D1DarkMirrorAttack
+next D1DarkMirrorAvoid K.A = D1DarkDesk
+next D1DarkMirrorAvoid _ = D1DarkMirrorAttack
+next D1DarkDesk K.Y = D2LitDesk
+next D1DarkDesk K.N = D3DarkDesk
+next D1DarkDesk _ = D1DarkDeskHelp
+next D1DarkMirrorAttack _ = D1DarkMirrorDeath
+next D1DarkMirrorDeath K.A = D1Intro
+next D1DarkMirrorDeath _ = Quit
 next _ _ = error "Yet to wire up."
 
 {- | These are the texts to show for each stage. This architecture assumes that the game loop outputs these texts and captures input from the player, to return to an other stage. -}
@@ -958,6 +1009,35 @@ stage C11 name = T.replace "{name}" name (T.concat [c11Msg, "Masquie sees you la
 stage C11a name = T.replace "{name}" name (T.concat [c11Msg, "Masquie sees your shield. “Nice touch. Did it help?” ", c11Msg2])
 stage C11w name = T.replace "{name}" name (T.concat [c11Msg, "Masquie sees your map. “Nice touch. Did it help?” ", c11Msg2])
 stage C11aw name = T.replace "{name}" name (T.concat [c11Msg, "Masquie sees your shield and map. “Nice touch. Did they help?” ", c11Msg2])
+
+stage D1Intro name = T.replace "{name}" name "This is night 4. You’re back in Maskie’s Ice Cream Parlor. I guess we did a bad job at scaring you off. We’ll try again! Your employer Jacques Masquie ran yet another special event for the customers. Maybe he left a letter about it on the desk in the office. Maybe not. Wouldn’t you like to find out, {name}? If yes, press w. For help, press h. Or press q to quit."
+
+stage D1Help name = T.replace "{name}" name "Maskie’s Ice Cream Parlor is a text adventure game. It makes you read a lot. In night 4 you get to navigate a maze. Your objective is to stay alive and reach the exit. And maybe save the lives of some customers. Make sure to read the hints and clues, and pick up anything that might help you survive. At any point in the game you can type q to quit. Other keys will be announced when available. Good luck, {name}. Press s to continue."
+
+stage D1DarkHallway name = T.replace "{name}" name "You’re in the hallway, {name}. You hear children’s music. They really ought to turn that off after hours. The hallway is dark, but for a few security lights. They show doors to the left and right, and more hallway forward. On the wall at the end of the hallway you see a painting. It looks different from before. Wouldn’t you like to study it from close by? If yes, press w. To turn left, press a. There’s a light there. Press d to turn right."
+
+stage D1DarkHallwayEnd name = T.replace "{name}" name "You reached the end of the hallway. The music is louder here. The toilets are to the left. The ice cream parlor is to the right. And a painting is mounted on the wall in front of you. It looks different from before. That red gumball with the yellow smiley face… is it sticking out? And is that the source of the music? It may have holes for a speaker… Hard to tell, with so little light. Maybe head back and fetch a light, {name}? If so, press s. Or go left by pressing a. Press d to turn right."
+
+stage D1DarkOffice name = T.replace "{name}" name "This is the office. It’s dark. A desk stands at the right wall. A lantern is set atop the desk. Would you like to inspect the desk? If so, press d. Against the left wall you see a storage locker. Press a to look through the locker. The far wall features a fountain with a mirror. To have a cold drink, press w. It is getting hot in here, again. Or if you choose to quit, {name}, press q."
+
+stage D1DarkDesk name = T.replace "{name}" name "The desk holds a lantern. It’s the only light in the office besides the security beacon above the door. Wouldn’t you like to pick it up, so you don’t stumble around in the dark? Press y to pick it up. Press n to ignore it. I wouldn’t. But hey, I’m not playing."
+
+stage D1DarkLocker name = T.replace "{name}" name "This is the storage locker. There really isn’t enough light here to see what’s in it. 2 Days ago it held some uniforms, a broom, a mop, and a bucket. Do you really want to poke around in the dark? If so, press w. But wouldn’t you rather close the locker and look for a light? Press s to do that, {name}."
+
+stage D1DarkFountain name = T.replace "{name}" name "Ah yes, the fountain. Good for a refreshing cold drink. Someone should check out the airconditioning. Not you. Are you a mechanic? Thought so. Not hired to be one here. Here you are a security guard. Let’s go, do some securing. Press s to head back, {name}. Or maybe have that cold drink, first. Press d to drink. Or would you rather study your face in the mirror? If yes, press w."
+
+stage D1DarkDrink name = T.replace "{name}" name "Nothing better than a cold drink on a hot night, right, {name}? But now you have to pee. Better go find those toilets. You know where they are, don’t you? Press w to go there now. Or would you rather ignore your bladder and pretend to be strong? You know you can’t hold it forever, you know. Press s to self-hypnotize and not feel the pressure."
+
+stage D1DarkMirror name = T.replace "{name}" name "You reflect upon your face. Is this a trick mirror? It seems you grew a few more gray hairs since last time. This job must be getting to you. And what’s with the wrinkles around your eyes? The poor light really deepens those shadows, {name}. Suddenly something red and small jumps into the corner of the mirror. Turn around to face it, quick! Press a!"
+
+stage D1DarkMirrorAvoid name = T.replace "{name}" name "The office is empty. Whatever red thing jumped into your view in the mirror, now it is gone. You feel your heart beating in your chest. Your ears are hot with blood. Surely you’re blushing now, and no-one can see. Because it’s too dark. Why didn’t you pick up that lantern yet, {name}? It’s on the desk. Right there. Press a to check the desk."
+
+stage D1DarkMirrorAttack name = T.replace "{name}" name "Your choice. Not wise, though. You get bumped by someone or something you can’t even see. They knock you onto the floor. And they’re singing? To children’s music? They sit on your back: you can’t even look at their face. Ah! Pain! You got punched! Oh no, worse! They’re hammering on your back! It hurts! Scream! Struggle! Try and shove them off! Press s!"
+
+stage D1DarkMirrorDeath name = T.replace "{name}" name "So sad. You never even got to see their face. Anyway, you’re dead now. What a mess. The cleaning crew is not going to be happy about that. You really should have picked up that lantern, {name}. But hey, what do I know? I just work here. So I guess this is game over. Good job though, getting this far. As a reward, if you reincarnate, you’ll jump straight back into night 4. Press a to do that. Or give up and quit, by pressing q."
+
+stage D1DarkToilets name = T.replace "{name}" name "You found the toilets. And just in time! You realize your bladder has been bugging you for a while. It smells clean in here, but it’s a bit too dark for your liking. What do you do? Go back to the office to pick up the lantern from the desk? Or stay here and pee in the dark? Press s to go back. Otherwise, {name}, pick a stall: a, w, or d."
+
 
 c11Msg :: T.Text
 c11Msg = "Before you get there, lights turn on and the familiar face of Jacques Masquie greets you: “Hey there, {name}! How you doing? Flushed out any stragglers from the obstacle course?” You think about the jumps. The platforms. What you saw. Did you see any customers left behind? "
