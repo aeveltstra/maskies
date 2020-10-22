@@ -227,6 +227,8 @@ data Stage =
   | D1DarkHallwayEnd
   | D1DarkToilets
   | D1DarkToiletsAttack
+  | D1DarkToiletsDeath
+  | D1DarkToiletsSurvive
   | D1DarkParlor
   | D1DarkOffice
   | D1DarkDesk
@@ -242,6 +244,9 @@ data Stage =
   | D2LitDesk
   | D2LitDeskHelp
   | D3DarkDesk
+  | D3DarkDeskHelp
+  | D3DarkDeskVideo
+  | D3DarkOffice
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
@@ -669,6 +674,13 @@ next D1DarkLocker K.S = D1DarkOffice
 next D1DarkLocker _ = D1DarkLockerAttack
 next D1DarkToilets K.S = D1DarkHallwayEnd
 next D1DarkToilets _ = D1DarkToiletsAttack
+next D1DarkToiletsAttack K.S = D1DarkToiletsSurvive
+next D1DarkToiletsAttack _ = D1DarkToiletsDeath
+next D1DarkToiletsSurvive K.D = D1DarkHallway
+next D1DarkToiletsSurvive K.W = D1DarkParlor
+next D1DarkToiletsSurvive _ = D1DarkToiletsDeath
+next D1DarkToiletsDeath K.A = D1Intro
+next D1DarkToiletsDeath _ = Quit
 next D1DarkFountain K.S = D1DarkOffice
 next D1DarkFountain K.D = D1DarkDrink
 next D1DarkFountain K.W = D1DarkMirror
@@ -683,9 +695,21 @@ next D1DarkMirrorAvoid _ = D1DarkMirrorAttack
 next D1DarkDesk K.Y = D2LitDesk
 next D1DarkDesk K.N = D3DarkDesk
 next D1DarkDesk _ = D1DarkDeskHelp
+next D1DarkDeskHelp K.S = D1DarkDesk
+next D1DarkDeskHelp _ = D1DarkDeskHelp
 next D1DarkMirrorAttack _ = D1DarkMirrorDeath
 next D1DarkMirrorDeath K.A = D1Intro
 next D1DarkMirrorDeath _ = Quit
+next D3DarkDesk K.H = D3DarkDeskHelp
+next D3DarkDesk _ = D3DarkDesk
+next D3DarkDeskHelp _ = D3DarkDeskVideo
+next D3DarkDeskVideo _ = D3DarkOffice
+next D3DarkOffice K.A = D1DarkHallway
+next D3DarkOffice K.W = D1DarkParlor
+next D3DarkOffice K.H = D1Help
+next D3DarkOffice K.D = Quit
+next D3DarkOffice _ = D3DarkOffice
+
 next _ _ = error "Yet to wire up."
 
 {- | These are the texts to show for each stage. This architecture assumes that the game loop outputs these texts and captures input from the player, to return to an other stage. -}
@@ -698,7 +722,7 @@ stage Quit name = T.replace "{name}" name "Come back to play another day, {name}
 
 stage A1DarkHallway name = T.replace "{name}" name "Hello, {name}. You’re in a dark hallway. It is night. Need help? Press h. To go forward: press w. To give up and quit: press q."
 
-stage A1Help name = T.replace "{name}" name "This is a text adventure game. It makes you read a lot. After each scene, you get a choice for what to do next. Enter your choice to continue, or q to quit. Take your time. Take as long as you need. No really, {name}: think it through. To go back, press w."
+stage A1Help name = T.replace "{name}" name "This is a text adventure game. It makes you read a lot. Each scene may offer some hints and clues. Sometimes you can pick up items that may or may not help, later. After each scene, you get a choice for what to do next. Enter your choice to continue, or q to quit. Take your time. Take as long as you need. No really, {name}: think it through. To go back, press w."
 
 stage A1LightAppears name = T.replace "{name}" name "At the end of the hallway, a light moves in. It brightens the opposite wall, which shows an image. It is too far away to recognize. The light comes from a lantern, held by a security guard. He shines it at the image on the wall. It’s an ice cream cone. He turns around and sees you. To go forward: press w. To give up and quit: q."
 
@@ -1022,6 +1046,8 @@ stage D1DarkOffice name = T.replace "{name}" name "This is the office. It’s da
 
 stage D1DarkDesk name = T.replace "{name}" name "The desk holds a lantern. It’s the only light in the office besides the security beacon above the door. Wouldn’t you like to pick it up, so you don’t stumble around in the dark? Press y to pick it up. Press n to ignore it. I wouldn’t. But hey, I’m not playing."
 
+stage D1DarkDeskHelp name = T.replace "{name}" name "No. Your options were to press either y or n. Press s now to go back to the desk and press the correct key. Want to quit? Press q!"
+
 stage D1DarkLocker name = T.replace "{name}" name "This is the storage locker. There really isn’t enough light here to see what’s in it. 2 Days ago it held some uniforms, a broom, a mop, and a bucket. Do you really want to poke around in the dark? If so, press w. But wouldn’t you rather close the locker and look for a light? Press s to do that, {name}."
 
 stage D1DarkFountain name = T.replace "{name}" name "Ah yes, the fountain. Good for a refreshing cold drink. Someone should check out the airconditioning. Not you. Are you a mechanic? Thought so. Not hired to be one here. Here you are a security guard. Let’s go, do some securing. Press s to head back, {name}. Or maybe have that cold drink, first. Press d to drink. Or would you rather study your face in the mirror? If yes, press w."
@@ -1037,6 +1063,21 @@ stage D1DarkMirrorAttack name = T.replace "{name}" name "Your choice. Not wise, 
 stage D1DarkMirrorDeath name = T.replace "{name}" name "So sad. You never even got to see their face. Anyway, you’re dead now. What a mess. The cleaning crew is not going to be happy about that. You really should have picked up that lantern, {name}. But hey, what do I know? I just work here. So I guess this is game over. Good job though, getting this far. As a reward, if you reincarnate, you’ll jump straight back into night 4. Press a to do that. Or give up and quit, by pressing q."
 
 stage D1DarkToilets name = T.replace "{name}" name "You found the toilets. And just in time! You realize your bladder has been bugging you for a while. It smells clean in here, but it’s a bit too dark for your liking. What do you do? Go back to the office to pick up the lantern from the desk? Or stay here and pee in the dark? Press s to go back. Otherwise, {name}, pick a stall: a, w, or d."
+
+stage D1DarkToiletsAttack name = T.replace "{name}" name "So. That stall. Why that one? Anyway, it’ll do, I’m sure. Alright. Go ahead. Do your thing. I’ll wait. \r\n\r\nDone yet, {name}? \r\n\r\nWhat’s that? Did you hear that? That buzzing? Almost like static electricity? And hammering now? What on earth? Pull up those pants! You gotta go! I mean: get out of here! Press s now!"
+
+stage D1DarkToiletsDeath name = T.replace "{name}" name "Why? Is pressing the correct key so hard? You could have survived that, you know. But nooo, {name} has to rebel. Well. Tough. You’re dead. You got knocked upside the head by a flying red ball with a yellow smiley face. It hammered your head in. Gross: your brains splattered all over the toilet and the stall walls. Wanna try that again? Press a to reincarnate and have another go. Or give up! Press q to quit."
+
+stage D1DarkToiletsSurvive name = T.replace "{name}" name "Just in time you duck out of the way. A red ball flies through the air, wielding a hammer, aiming for your head. It has a yellow smiley painted on. Haven’t you seen that somewhere before? Instead of your head, it flies into the door. And now it’s trying to hammer down that door. Better make a run for it. Press d to head back into the hallway, or w to jump into the ice cream parlor. Make up your mind, {name}! Choose now!"
+
+stage D3DarkDesk name = T.replace "{name}" name "Strong-headed, are we? Good for you! Don’t let a game tell you what to do! Even though it strongly hints you in the best direction! Besides, there’s a letter on the desk that requires your attention. Wouldn’t you like to read it, {name}? Might help. If so, press h."
+
+stage D3DarkDeskHelp name = T.replace "{name}" name "The letter is from your employer, Jacques Masquie. It reads: \r\n\r\n“Dear {name}, \r\nWe have received some customer complaints. Some people got left behind in the obstacle course yesterday. You should have found them and flushed them out. You failed. Some customers got hurt by our animatronics. We have had to turn those off, and pay the customers’ hospital bills. Do not let that happen again. \r\nSigned, \r\nJacques Masquie, owner.” \r\nErm. OK, then. Press s to put down the letter. Or admit defeat and press q to quit."
+
+stage D3DarkDeskVideo name = T.replace "{name}" name "You twiddle your thumbs on the desk in real authentic security guard fashion. Accidentally your one thumb hits a button. You knew it was there from the other day. A screen rises up from the desk. It starts playing a video. It shows a different security guard. She wears a uniform like your’s. But something is wrong with her face: it’s too round, and too red, and her smile seems painted on in yellow. Oh no! That is not her face at all! Press s to close the screen. What does it mean?"
+
+stage D3DarkOffice name = T.replace "{name}" name "Alright. Enough is enough. Let’s get out of here. This building has 2 exits: the side door and the parlor door. Press d to take a right turn and exit out the side door. Press w to go forward into the ice cream parlor. Press a to turn left instead. For reasons, I guess. Which way, {name}?"
+
 
 
 c11Msg :: T.Text
