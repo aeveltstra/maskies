@@ -6,7 +6,7 @@
     This file contains the game’s stages, their variations, and how they wire together.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1013.1217
+    @version 2.20.1027.2013
 -}
 module Stages where
 
@@ -241,6 +241,9 @@ data Stage =
   | D1DarkMirrorAttack
   | D1DarkMirrorAvoid
   | D1DarkMirrorDeath
+  | D1DarkMazeEntrance
+  | D1DarkMazeAttack
+  | D1DarkMazeDeath
   | D2LitDesk
   | D2LitDeskHelp
   | D3DarkDesk
@@ -700,6 +703,14 @@ next D1DarkDeskHelp _ = D1DarkDeskHelp
 next D1DarkMirrorAttack _ = D1DarkMirrorDeath
 next D1DarkMirrorDeath K.A = D1Intro
 next D1DarkMirrorDeath _ = Quit
+next D1DarkParlor K.S = D1DarkHallway
+next D1DarkParlor _ = D1DarkMazeEntrance
+next D1DarkMazeEntrance K.S = D1DarkHallway
+next D1DarkMazeEntrance _ = D1DarkMazeAttack
+next D1DarkMazeAttack K.S = D1DarkHallway
+next D1DarkMazeAttack _ = D1DarkMazeDeath
+next D1DarkMazeDeath K.A = D1Intro
+next D1DarkMazeDeath _ = Quit
 next D3DarkDesk K.H = D3DarkDeskHelp
 next D3DarkDesk _ = D3DarkDesk
 next D3DarkDeskHelp _ = D3DarkDeskVideo
@@ -1078,7 +1089,13 @@ stage D3DarkDeskVideo name = T.replace "{name}" name "You twiddle your thumbs on
 
 stage D3DarkOffice name = T.replace "{name}" name "Alright. Enough is enough. Let’s get out of here. This building has 2 exits: the side door and the parlor door. Press d to take a right turn and exit out the side door. Press w to go forward into the ice cream parlor. Press a to turn left instead. For reasons, I guess. Which way, {name}?"
 
+stage D1DarkParlor name = T.replace "{name}" name "It’s a bit darker here than usual. The security lights are off? Why? You can’t really see where you’re going. The counter should be to your left, and a gratuity ice cream dispenser to the right. But you can’t see them. The front door should be forward. Can’t see that either. Maybe you should go fetch a light. Where do you want to go, {name}? Press a for left, r for right, w for forward, or s for back to the hallway."
 
+stage D1DarkMazeEntrance name = T.replace "{name}" name "Sure. Why not, {name}? Walk on in the dark. You just bumped into a wall you didn’t even see. You can’t go any further forward. I guess that door isn’t where you thought it was. You stretch out your arms and feel left and right: there seem to be hallways there. Would you like to turn left? If so, press a. Press d to turn right. Or go back to the hallway: press s. Last chance to get out. Choose wisely."
+
+stage D1DarkMazeAttack name = T.replace "{name}" name "You hear something. Voices. People talking. Children. Customers stuck in the maze? “Hello!” The voices stop. A spark lights up the hallway. And someone’s face. A girl. Another spark. She’s right in front of you! You back away. And fall over backwards. You hear the girl following you. And the smell: motor oil. That’s no girl. The hand that grabs you is too strong. Lifts you right up off the floor. To struggle loose, press s."
+
+stage D1DarkMazeDeath name = T.replace "{name}" name "How hard is it to press S, {name}? Very hard, apparently. Did you think I was joking? You were wrong. That not-a-girl that lifted you up like you weigh nothing? It has a hammer. You can’t see it. But you can feel it. Again. And again. And then nothing. Because you’re dead. You made some bad choices there. Want to try again? Press a to reincarnate. Or quit? Press q."
 
 c11Msg :: T.Text
 c11Msg = "Before you get there, lights turn on and the familiar face of Jacques Masquie greets you: “Hey there, {name}! How you doing? Flushed out any stragglers from the obstacle course?” You think about the jumps. The platforms. What you saw. Did you see any customers left behind? "

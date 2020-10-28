@@ -1,6 +1,6 @@
 cabal-version:      >=1.10
 name:               maskies
-version:            0.2.0.6
+version:            0.2.0.8
 license:            OtherLicense
 license-file:       LICENSE
 copyright:          2020 A.E.Veltstra & T.R.Veltstra
