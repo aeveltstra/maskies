@@ -675,6 +675,8 @@ next D1DarkOffice K.D = D1DarkDesk
 next D1DarkOffice _ = D1Help
 next D1DarkLocker K.S = D1DarkOffice
 next D1DarkLocker _ = D1DarkLockerAttack
+next D1DarkLockerAttack K.A = D1Intro
+next D1DarkLockerAttack _ = Quit
 next D1DarkToilets K.S = D1DarkHallwayEnd
 next D1DarkToilets _ = D1DarkToiletsAttack
 next D1DarkToiletsAttack K.S = D1DarkToiletsSurvive
@@ -720,7 +722,7 @@ next D3DarkOffice K.W = D1DarkParlor
 next D3DarkOffice K.H = D1Help
 next D3DarkOffice K.D = Quit
 next D3DarkOffice _ = D3DarkOffice
-
+next D2LitDesk K.H = D2LitDeskHelp
 next _ _ = error "Yet to wire up."
 
 {- | These are the texts to show for each stage. This architecture assumes that the game loop outputs these texts and captures input from the player, to return to an other stage. -}
@@ -1059,7 +1061,9 @@ stage D1DarkDesk name = T.replace "{name}" name "The desk holds a lantern. It’
 
 stage D1DarkDeskHelp name = T.replace "{name}" name "No. Your options were to press either y or n. Press s now to go back to the desk and press the correct key. Want to quit? Press q!"
 
-stage D1DarkLocker name = T.replace "{name}" name "This is the storage locker. There really isn’t enough light here to see what’s in it. 2 Days ago it held some uniforms, a broom, a mop, and a bucket. Do you really want to poke around in the dark? If so, press w. But wouldn’t you rather close the locker and look for a light? Press s to do that, {name}."
+stage D1DarkLocker name = T.replace "{name}" name "This is the storage locker. There really isn’t enough light here to see what’s in it. 2 Days ago it held some uniforms, a broom, a mop, and a bucket. A uniform is missing. Do you really want to poke around in the dark? If so, press w. But wouldn’t you rather close the locker and look for a light? Press s to do that, {name}."
+
+stage D1DarkLockerAttack name = T.replace "{name}" name "Hey, that hurt! What’s poking you? And from all sides? And the door closed behind you! You want to push it open, but your hand gets stabbed. You move your hand, and it gets stabbed again! There’s spikes or knives all over! And they’re getting closer! You feel around for an opening. Maybe duck? Jump up? Oh no: the entire locker falls over with you in it! Oh, dear. Erm. That’s a mess. Erm. So. I guess this is game over? Press a to reincarnate and try again, or q to quit."
 
 stage D1DarkFountain name = T.replace "{name}" name "Ah yes, the fountain. Good for a refreshing cold drink. Someone should check out the airconditioning. Not you. Are you a mechanic? Thought so. Not hired to be one here. Here you are a security guard. Let’s go, do some securing. Press s to head back, {name}. Or maybe have that cold drink, first. Press d to drink. Or would you rather study your face in the mirror? If yes, press w."
 
@@ -1096,6 +1100,12 @@ stage D1DarkMazeEntrance name = T.replace "{name}" name "Sure. Why not, {name}? 
 stage D1DarkMazeAttack name = T.replace "{name}" name "You hear something. Voices. People talking. Children. Customers stuck in the maze? “Hello!” The voices stop. A spark lights up the hallway. And someone’s face. A girl. Another spark. She’s right in front of you! You back away. And fall over backwards. You hear the girl following you. And the smell: motor oil. That’s no girl. The hand that grabs you is too strong. Lifts you right up off the floor. To struggle loose, press s."
 
 stage D1DarkMazeDeath name = T.replace "{name}" name "How hard is it to press S, {name}? Very hard, apparently. Did you think I was joking? You were wrong. That not-a-girl that lifted you up like you weigh nothing? It has a hammer. You can’t see it. But you can feel it. Again. And again. And then nothing. Because you’re dead. You made some bad choices there. Want to try again? Press a to reincarnate. Or quit? Press q."
+
+stage D2LitDesk name = T.replace "{name}" name "Your lantern lights up the desk. It holds a letter addressed to you, {name}. Wouldn’t you like to read it? If you would, press w. You don’t have to. It might help, though. But you can ignore it. Maybe rummage around in the storage locker? Press a!"
+
+stage D2LitDeskHelp name = T.replace "{name}" name "You found a map! That letter you’re holding contains a drawing of a maze. And some handwritten text: “Dear {name}, \r\nThank you for your great work the other day. The customers were quite happy with your performance. They made it a point today to let me know you make them feel safe. For that you deserve a promotion. Come and see me tomorrow? \r\nFor tonight your job is to make sure no customer got left behind in the maze. Follow the map. Good luck. \r\nSigned,\r\nJacques Masquie, owner.” \r\nWhat maze? Where? Press s to head back into the hallway and have a look."
+
+stage D2LitStorageLocker name = T.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. To day it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? "
 
 c11Msg :: T.Text
 c11Msg = "Before you get there, lights turn on and the familiar face of Jacques Masquie greets you: “Hey there, {name}! How you doing? Flushed out any stragglers from the obstacle course?” You think about the jumps. The platforms. What you saw. Did you see any customers left behind? "
