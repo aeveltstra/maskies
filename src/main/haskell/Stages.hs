@@ -246,6 +246,7 @@ data Stage =
   | D1DarkMazeDeath
   | D2LitDesk
   | D2LitDeskHelp
+  | D2LitStorageLocker
   | D3DarkDesk
   | D3DarkDeskHelp
   | D3DarkDeskVideo
@@ -1105,7 +1106,7 @@ stage D2LitDesk name = T.replace "{name}" name "Your lantern lights up the desk.
 
 stage D2LitDeskHelp name = T.replace "{name}" name "You found a map! That letter you’re holding contains a drawing of a maze. And some handwritten text: “Dear {name}, \r\nThank you for your great work the other day. The customers were quite happy with your performance. They made it a point today to let me know you make them feel safe. For that you deserve a promotion. Come and see me tomorrow? \r\nFor tonight your job is to make sure no customer got left behind in the maze. Follow the map. Good luck. \r\nSigned,\r\nJacques Masquie, owner.” \r\nWhat maze? Where? Press s to head back into the hallway and have a look."
 
-stage D2LitStorageLocker name = T.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. To day it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? "
+stage D2LitStorageLocker name = T.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. To day it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? The cleaning bucket is gone too. Let’s keep an eye ou for it. Press s to close the locker and return to the office."
 
 c11Msg :: T.Text
 c11Msg = "Before you get there, lights turn on and the familiar face of Jacques Masquie greets you: “Hey there, {name}! How you doing? Flushed out any stragglers from the obstacle course?” You think about the jumps. The platforms. What you saw. Did you see any customers left behind? "
