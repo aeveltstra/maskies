@@ -1147,7 +1147,7 @@ next D2LitMirrorSurvive name = T.replace "{name}" name "Ooh, that was close! It 
 
 next D2LitMirrorDeath name = T.replace "{name}" name "Erm. Taking risks is one thing. Getting your head hammered in because you refuse to press d is another. Why, {name}? Why couldn’t you simply press d? Look at you now. Your head in the fountain. The sink turning red with your blood and covered in bits of brain. And a puddle of pee is forming around your feet. Gross! Well I guess this is good-bye. Unless you want to reincarnate and try again. In which case you can press a."
 
-next D2LitMazeEntrance name = T.replace "{name}" name ""
+next D2LitMazeEntrance name = T.replace "{name}" name "You find yourself in a hallway you have not yet seen. Maybe you have been here before when it was dark? There’s 4 exits: forward (w), left (a), right (d), and back (s). There’s a red ball flying to the right. Press d to follow it. Otherwise, press any of these: a, w, s."
 
 next D2LitLockerUniform name = T.replace "{name}" name "You feel around inside the uniform. It’s a bit sticky and moist. Eew, gross. That uniform should get washed. Better wash your hands soon. Hey, you found a roll of paper in the inside coat pocket! Another map? Nice! You pull back your hand to study the paper. It’s soaked with blood! And your hand is covered in it, too! Press w to go wash your hands!"
 
