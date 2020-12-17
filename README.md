@@ -2,9 +2,9 @@
 ## A text adventure horror survival game.  
 ### Try not to die.  
 
-##Starting the game
+## Starting the game
 
-###On MS Windows:
+### On MS Windows:
 
 To play the game, you can copy the executable "Maskies.exe" that is available here. It got compiled and tested on Microsoft Windows 7. It should work on any newer version too. 
 
@@ -16,7 +16,7 @@ This game is a text adventure. It runs in the command prompt. Start a command pr
 %userprofile%\Downloads\> Maskies
 ```
 
-###On Linux and Unix systems:
+### On Linux and Unix systems:
 
 To play the game, you can try and run the executable "Maskies" that is available here. Chances are it won't run. If so, build the game from source.
 
@@ -37,7 +37,7 @@ Then you can from a terminal prompt:
 ```
 
 
-##Testing
+## Testing
 
 A suite of tests is available in:  
 maskies/src/test/  
@@ -45,9 +45,9 @@ maskies/src/test/
 Good luck.
 
 
-##For feedback and support, reach out to Treasure Trove Studio:
+## For feedback and support, reach out to Treasure Trove Studio:
 
-- Fediverse: [@trezjrtrove@pleroma.site](https://pleroma.site/@trezjrtrove)
+- Fediverse: [@trezjrtrove @pleroma.site](https://pleroma.site/@trezjrtrove)
 - Email: [trezjrtrove@protonmail.com](mailto:trezjrtrove@protonmail.com)
 - Twitter: [@trezjrtrove](https://twitter.com/trezjrtrove/)
 
