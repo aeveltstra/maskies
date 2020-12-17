@@ -2,6 +2,8 @@
 ## A text adventure horror survival game.  
 ### Try not to die.  
 
+We now have a [wiki](https://man.sr.ht/~aev/maskies/). It's just starting out.
+
 ## The programming has yet to complete 
 This game is not finished. You are welcome to try it out and play it to its end... but you will find it just stops and breaks at some point. Or at several points. Check back for updates! 
 
