@@ -6,13 +6,12 @@
     This file contains the game’s stages, their variations, and how they wire together.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1210.1855
+    @version 2.20.1217.2133
 -}
 module Stages where
 
 import Prelude
 import qualified Data.Text as T
-import qualified TextHelper as TH
 import qualified Keys as K 
 
 {- | Let’s use Haskell’s type system to determine exactly which stages the game can have. If we forget one, the compiler will complain. Unfortunately it does not complain if we forget to wire up a stage in the function ‘next’. But it does help when showing stages: the compiler automatically constrains us to only show stages that have been defined here. -}
@@ -719,6 +718,8 @@ next D1DarkDesk K.Y = D2LitDesk
 next D1DarkDesk K.N = D3DarkDesk
 next D1DarkDesk _ = D1DarkDeskHelp
 next D1DarkDeskHelp K.S = D1DarkDesk
+next D1DarkDeskHelp K.Y = D2LitDesk
+next D1DarkDeskHelp K.N = D3DarkDesk
 next D1DarkDeskHelp _ = D1DarkDeskHelp
 next D1DarkMirrorAttack _ = D1DarkMirrorDeath
 next D1DarkMirrorDeath K.A = D1Intro

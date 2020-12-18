@@ -1,6 +1,6 @@
 cabal-version:      >=1.10
 name:               maskies
-version:            0.2.0.8
+version:            0.2.0.9
 license:            OtherLicense
 license-file:       LICENSE
 copyright:          2020 A.E.Veltstra & T.R.Veltstra
@@ -29,7 +29,8 @@ executable Maskies
         Stages
 
     default-language: Haskell2010
-    ghc-options:      -O2 -threaded
+    ghc-options:      -Wall 
+                      -Wincomplete-uni-patterns
     build-depends:
         base >=4.13.0.0 && <4.14,
         random >=1.1 && <1.3,

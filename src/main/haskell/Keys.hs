@@ -8,12 +8,11 @@
     handle those.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1001.706
+    @version 2.20.1217.2132
 -}
 module Keys where
 
 import Prelude
-import qualified Data.Char
 
 {- The game expects very specific key presses from the player. Those are listed below. Consider them events. Note that 'Wait' is not a key press... but it is an event. The Key events are used to determine which stage to show next. The Wait Key event is used to make the same stage replay. -}
 data Key
