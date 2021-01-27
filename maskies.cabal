@@ -1,37 +1,33 @@
-cabal-version:      >=1.10
+cabal-version:      3.0
 name:               maskies
 version:            0.2.0.9
-license:            OtherLicense
-license-file:       LICENSE
-copyright:          2020 A.E.Veltstra & T.R.Veltstra
-maintainer:         aev@sdf.org
-author:             A.E.Veltstra
-stability:          Experimental
-tested-with:        ghc ==8.8.3
-bug-reports:        aev@sdf.org
 synopsis:           Text-based horror adventure game
-description:
-    Find out what is killing the security guards, and why. And maybe stop them.
-
+description:        Find out what is killing the security guards, and why. And maybe stop them.
+bug-reports:        aev@sdf.org
+license:            CC-BY-NC-4.0
+license-file:       LICENSE
+author:             A.E.Veltstra
+maintainer:         aev@sdf.org
+copyright:          2020 A.E.Veltstra & T.R.Veltstra
+stability:          Experimental
 category:           Games
 build-type:         Simple
-extra-source-files:
-    CHANGELOG.md
-    README.md
+extra-source-files: CHANGELOG.md
+                    README.md
+tested-with:        GHC == { 8.8.3, 8.8.4 }
 
 executable Maskies
     main-is:          Main.hs
     hs-source-dirs:   ./src/main/haskell
-    other-modules:
-        TextHelper
-        NameValidation
-        Keys
-        Stages
-
+    other-modules:    TextHelper
+                      , NameValidation
+                      , Keys
+                      , Stages
+    other-exensions:  OverloadedStrings
     default-language: Haskell2010
     ghc-options:      -Wall 
                       -Wincomplete-uni-patterns
     build-depends:
-        base >=4.13.0.0 && <4.14,
+        base >=4.11.0.0 && <4.14,
         random >=1.1 && <1.3,
         text >=1.2.4.0 && <1.3
