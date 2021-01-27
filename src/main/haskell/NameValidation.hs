@@ -8,14 +8,14 @@
     needed
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1001.1335
+    @version 2.21.0126.2207
 -}
 module NameValidation where
-import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.IO as TLIO
 
 import Prelude
 import qualified System.Random as R
-import qualified TextHelper as TH
 
 {- These are the results recognized by the validation of the player's name. -}
 data Result = AllGood
@@ -28,27 +28,27 @@ data Result = AllGood
                 deriving (Bounded, Read, Show, Eq, Enum)
 
 {- Ensures that the player name is neither too long nor too short. And a special case is made for pi, because a certain someone found it necessary to boast their knowledge of the first 100 digits of pi. You know who you are. -}
-validate :: T.Text -> Result
+validate :: TL.Text -> Result
 validate "" = TooShort
 validate player
-  | 0 < (T.count "3.1415" player) = Pie
-  | T.length player > 30 = TooLong
+  | 0 < (TL.count "3.1415" player) = Pie
+  | TL.length player > 30 = TooLong
   | isFnaf player = IsFnaf
   | isBetty player = IsBetty
   | isJeremy player = IsJeremy
   | otherwise = AllGood
 
-subsForTooLong :: [T.Text]
+subsForTooLong :: [TL.Text]
 subsForTooLong
   = ["Aadhira", "Aadesh", "Saanvi", "Aaditi", "Aadit", "Anika", "Aisha",
      "Ananya", "Arav", "Alisha", "Kaavya", "Saatvik", "Ahan", "Abhi"]
 
-subsForTooShort :: [T.Text]
+subsForTooShort :: [TL.Text]
 subsForTooShort
   = ["Elikapeka", "Kakalina", "Leimomi", "Mahaelani", "Waiola", "Ekewaka",
      "Uluwehi", "Healani", "Lanakila", "Leialoha"]
 
-fnaf :: [T.Text]
+fnaf :: [TL.Text]
 fnaf
   --"freddy", "gabriel", "jeremy", "fritz", "charlie", "charlotte", "clara"
   = ["fazbear", "chica", "susie", "bonnie", "foxy", "golden", "nightmare",
@@ -58,18 +58,18 @@ fnaf
      "deedee", "funtimes", "fun times", "tape girl", "vanny", "purple guy",
      "orange man"]
 
-isFnaf :: T.Text -> Bool
-isFnaf player = any (\ x -> 0 < (T.count x y)) fnaf
-  where y = T.toLower player
+isFnaf :: TL.Text -> Bool
+isFnaf player = any (\ x -> 0 < (TL.count x y)) fnaf
+  where y = TL.toLower player
 
-isBetty :: T.Text -> Bool
-isBetty player = "betty" == (T.toLower player)
+isBetty :: TL.Text -> Bool
+isBetty player = "betty" == (TL.toLower player)
 
-isJeremy :: T.Text -> Bool
-isJeremy player = "jeremy" == (T.toLower player)
+isJeremy :: TL.Text -> Bool
+isJeremy player = "jeremy" == (TL.toLower player)
 
 {- Given a specific name validation result, this function returns the passed-in name or something else. -}
-replace :: T.Text -> Result -> R.StdGen -> T.Text
+replace :: TL.Text -> Result -> R.StdGen -> TL.Text
 replace _ TooLong seed = pick seed subsForTooLong
 replace _ TooShort seed = pick seed subsForTooShort
 replace _ Pie _ = "Pie"
@@ -83,24 +83,24 @@ pick seed xs
   where x = xs !! fst (R.randomR (0, (length xs) - 1) seed)
 
 {- If the validation of the player's name says it should be changed, this function lets them know about it. -}
-show :: Result -> T.Text -> IO ()
+show :: Result -> TL.Text -> IO ()
 show AllGood _ = return ()
 show TooLong newName
-  = TH.ln
-      (T.replace "{name}" newName
+  = TLIO.putStrLn
+      (TL.replace "{name}" newName
          "That's a really long name, you know. I will call you {name}.")
 show TooShort newName
-  = TH.ln
-      (T.replace "{name}" newName
+  = TLIO.putStrLn
+      (TL.replace "{name}" newName
          "Short and sweet, aye? From now on, you will be known as {name}.")
 show Pie newName
-  = TH.ln
-      (T.replace "{name}" newName "How interesting! Mind if I call you {name}?")
+  = TLIO.putStrLn
+      (TL.replace "{name}" newName "How interesting! Mind if I call you {name}?")
 show IsFnaf newName
-  = TH.ln
-      (T.replace "{name}" newName
+  = TLIO.putStrLn
+      (TL.replace "{name}" newName
          "This isn't FNAF, you know... I will call you {name}.")
 show IsBetty _
-  = TH.ln "When you call me, you can call me Al."
+  = TLIO.putStrLn "When you call me, you can call me Al."
 show IsJeremy _
-  = TH.ln "I know a tester by that name."
+  = TLIO.putStrLn "I know a tester by that name."

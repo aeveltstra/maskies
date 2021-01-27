@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               maskies
-version:            0.2.0.9
+version:            0.2.0.10
 synopsis:           Text-based horror adventure game
 description:        Find out what is killing the security guards, and why. And maybe stop them.
 bug-reports:        aev@sdf.org
@@ -19,8 +19,7 @@ tested-with:        GHC == { 8.8.3, 8.8.4 }
 executable Maskies
     main-is:          Main.hs
     hs-source-dirs:   ./src/main/haskell
-    other-modules:    TextHelper
-                      , NameValidation
+    other-modules:    NameValidation
                       , Keys
                       , Stages
     other-exensions:  OverloadedStrings

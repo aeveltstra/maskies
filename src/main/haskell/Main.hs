@@ -5,11 +5,12 @@
     Try not to die.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1217.2127
+    @version 2.21.026.2217
 -}
 module Main where
 import qualified Data.Char
-import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.IO as TLIO
 import qualified Keys
 import qualified NameValidation as NV
 
@@ -17,29 +18,28 @@ import Prelude
 import qualified Stages as S
 import qualified System.IO
 import qualified System.Random as R
-import qualified TextHelper as TH
 
 {- This is the game loop. It keeps looping stages until the player quits. It assumes that the stage will give the player options for keys to press to have actions performed. It then asks the player for their input, uses that to figure out which stage to show next, and recurses in on itself. -}
-loop :: S.Stage -> T.Text -> IO ()
-loop S.Quit player = TH.ln $ S.stage S.Quit player
+loop :: S.Stage -> TL.Text -> IO ()
+loop S.Quit player = TLIO.putStrLn $ S.stage S.Quit player
 #if defined(mingw32_HOST_OS)
 loop theStage player
-  = (TH.ln $ S.stage theStage player) >> getLine >>=
-      \ k -> putStrLn "\n" >> 
-         if 0 == length k 
+  = (TLIO.putStrLn $ S.stage theStage player) >> TLIO.getLine >>=
+      \ k -> TLIO.putStrLn "\n" >> 
+         if 0 == TL.length k 
            then loop (S.next theStage (Keys.read '-')) player
            else loop (S.next theStage (Keys.read (k!!0))) player
 #else
 loop theStage player
-  = (TH.ln $ S.stage theStage player) >> getChar >>=
-      \ k -> putStrLn "\n" >> 
+  = (TLIO.putStrLn $ S.stage theStage player) >> getChar >>=
+      \ k -> TLIO.putStrLn "\n" >> 
          loop (S.next theStage (Keys.read k)) player
 #endif
 
 {- Sanitizes and validates the player's name. If needed, reprimands the player for choosing a foolish name, and announces a substitute. Returns either the sanitized input or the substitute. -}
-checkPlayerName :: R.StdGen -> String -> IO T.Text
+checkPlayerName :: R.StdGen -> TL.Text -> IO TL.Text
 checkPlayerName randomizerSeed taintedName = do 
-    let unvalidated = T.strip $ T.filter Data.Char.isPrint $ T.pack taintedName
+    let unvalidated = TL.strip $ TL.filter Data.Char.isPrint taintedName
         result = NV.validate unvalidated
         player = NV.replace unvalidated result randomizerSeed
     NV.show result player 
@@ -63,7 +63,7 @@ disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
 {- This is the entry point of the application. It shows the Init stage, which asks the player to enter their name. It captures and validates that name, and uses the result to kick off the game loop. -}
 main :: IO ()
 main
-  = (TH.ln $ S.stage S.Init "") >> getLine >>=
+  = (TLIO.putStrLn $ S.stage S.Init "") >> TLIO.getLine >>=
       \ p -> disableBuffering >> R.newStdGen >>=
         \ s -> checkPlayerName s p >>= loop S.A1DarkHallway
 
