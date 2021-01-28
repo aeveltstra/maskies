@@ -13,6 +13,7 @@ import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.IO as TLIO
 import qualified Keys
 import qualified NameValidation as NV
+import qualified TextWrapper as TW
 
 import Prelude
 import qualified Stages as S
@@ -24,16 +25,14 @@ loop :: S.Stage -> TL.Text -> IO ()
 loop S.Quit player = TLIO.putStrLn $ S.stage S.Quit player
 #if defined(mingw32_HOST_OS)
 loop theStage player
-  = (TLIO.putStrLn $ S.stage theStage player) >> TLIO.getLine >>=
-      \ k -> TLIO.putStrLn "\n" >> 
-         if 0 == TL.length k 
+  = (TW.wrap $ S.stage theStage player) >> TLIO.getLine >>=
+      \ k -> if 0 == TL.length k 
            then loop (S.next theStage (Keys.read '-')) player
            else loop (S.next theStage (Keys.read (k!!0))) player
 #else
 loop theStage player
-  = (TLIO.putStrLn $ S.stage theStage player) >> getChar >>=
-      \ k -> TLIO.putStrLn "\n" >> 
-         loop (S.next theStage (Keys.read k)) player
+  = (TW.wrap $ S.stage theStage player) >> getChar >>=
+      \ k -> loop (S.next theStage (Keys.read k)) player
 #endif
 
 {- Sanitizes and validates the player's name. If needed, reprimands the player for choosing a foolish name, and announces a substitute. Returns either the sanitized input or the substitute. -}
@@ -63,7 +62,7 @@ disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
 {- This is the entry point of the application. It shows the Init stage, which asks the player to enter their name. It captures and validates that name, and uses the result to kick off the game loop. -}
 main :: IO ()
 main
-  = (TLIO.putStrLn $ S.stage S.Init "") >> TLIO.getLine >>=
+  = (TW.wrap $ S.stage S.Init "") >> TLIO.getLine >>=
       \ p -> disableBuffering >> R.newStdGen >>=
         \ s -> checkPlayerName s p >>= loop S.A1DarkHallway
 
