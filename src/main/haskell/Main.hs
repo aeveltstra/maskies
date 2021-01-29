@@ -28,7 +28,7 @@ loop theStage player
   = (TW.wrap $ S.stage theStage player) >> TLIO.getLine >>=
       \ k -> if 0 == TL.length k 
            then loop (S.next theStage (Keys.read '-')) player
-           else loop (S.next theStage (Keys.read (k!!0))) player
+           else loop (S.next theStage (Keys.read ((TL.unpack k)!!0))) player
 #else
 loop theStage player
   = (TW.wrap $ S.stage theStage player) >> getChar >>=
