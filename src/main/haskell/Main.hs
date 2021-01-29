@@ -22,7 +22,7 @@ import qualified System.Random as R
 
 {- This is the game loop. It keeps looping stages until the player quits. It assumes that the stage will give the player options for keys to press to have actions performed. It then asks the player for their input, uses that to figure out which stage to show next, and recurses in on itself. -}
 loop :: S.Stage -> TL.Text -> IO ()
-loop S.Quit player = TLIO.putStrLn $ S.stage S.Quit player
+loop S.Quit player = TW.wrap $ S.stage S.Quit player
 #if defined(mingw32_HOST_OS)
 loop theStage player
   = (TW.wrap $ S.stage theStage player) >> TLIO.getLine >>=
