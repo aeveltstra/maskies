@@ -8,11 +8,11 @@
     needed
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.21.0128.2036
+    @version 2.21.0207.1443
 -}
 module NameValidation where
 import qualified Data.Text.Lazy as TL
-import qualified Data.Text.Lazy.IO as TLIO
+--import qualified Data.Text.Lazy.IO as TLIO
 import qualified TextWrapper as TW
 
 import Prelude

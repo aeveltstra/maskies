@@ -1,20 +1,34 @@
 {- | Wraps text to the width of the terminal window,
  -   such that short words aren't broken. Long words 
  -   will be broken according to regular grammar rules.
+ -   @version 2.21.207.1445
  -}
 module TextWrapper (wrap) where
 
 import qualified System.Console.Terminal.Size as SCTS
 import qualified Text.Wrap as Wrap
 import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
 import qualified Data.Text.Lazy as TL
-import qualified Data.Text.Lazy.IO as TLIO
+--import qualified Data.Text.Lazy.IO as TLIO
 
 {- | Specify what character(s) to add as the left margin. 
  -   Generally expected to be just a space.
  -}
 firstMargin :: T.Text
 firstMargin = T.pack " "
+
+{- | The amount of characters in the firstMargin.
+ -   Precalculated to save time later on.
+ -}
+firstMarginWidth :: Int
+firstMarginWidth = T.length firstMargin
+
+{- | Double the amount of characters in the firstMargin.
+ -   Precalculated to save time later on.
+ -} 
+doubleFirstMarginWidth :: Int
+doubleFirstMarginWidth = 2 * firstMarginWidth
 
 {- | Specify what character(s) to add to the left of each
  -   line. Generally equals a new-line character and the
@@ -43,18 +57,19 @@ wrapSettings = Wrap.WrapSettings {
  -   an error.
  -   If the window width is 4 columns or less, this method throws
  -   an error.
+ -   This implementation breaks the laziness of the input text 
+ -   and turns it strict, instead.
  -}
 wrap :: TL.Text -> IO ()
 wrap t = do
   p <- SCTS.size
   case p of
     Nothing -> error "Could not get your window size."
-    Just (SCTS.Window _ cols) -> do
-      case (4>cols) of 
+    Just (SCTS.Window _ columns) -> do
+      case (4 > columns) of 
         True -> error "Your window is too narrow."
-        False -> TLIO.putStrLn out where
-          columnMargin = T.length firstMargin
-          innerWidth = (cols - (columnMargin * 2))
-          tw = Wrap.wrapTextToLines wrapSettings innerWidth (TL.toStrict t)
-          out = TL.fromStrict (T.intercalate prefix (firstMargin : tw))
+        False -> TIO.putStrLn out where
+          innerWidth = columns - doubleFirstMarginWidth
+          wrapped = Wrap.wrapTextToLines wrapSettings innerWidth (TL.toStrict t)
+          out = T.intercalate prefix (firstMargin : wrapped)
   
