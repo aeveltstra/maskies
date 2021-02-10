@@ -4,11 +4,11 @@
     Maskies is a text adventure horror survival game.
     Try not to die.
     This file contains functions and data to validate
-    a player's name and choose a different one if
+    a player’s name and choose a different one if
     needed
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.21.0207.1443
+    @version 2.21.0210.600
 -}
 module NameValidation where
 import qualified Data.Text.Lazy as TL
@@ -18,7 +18,7 @@ import qualified TextWrapper as TW
 import Prelude
 import qualified System.Random as R
 
-{- | These are the results recognized by the validation of the player's name. -}
+{- | These are the results recognized by the validation of the player’s name. -}
 data Result = AllGood
             | TooLong
             | TooShort
@@ -83,16 +83,16 @@ pick seed xs
   | otherwise = x
   where x = xs !! fst (R.randomR (0, (length xs) - 1) seed)
 
-{- | If the validation of the player's name says it should be changed, this function lets them know about it. -}
+{- | If the validation of the player’s name says it should be changed, this function lets them know about it. -}
 show :: Result -> TL.Text -> IO ()
 show AllGood _ = return ()
 show TooLong newName = TW.wrap (TL.replace "{name}" newName
-  "That's a really long name, you know. I will call you {name}.")
+  "That’s a really long name, you know. I will call you {name}.")
 show TooShort newName = TW.wrap (TL.replace "{name}" newName
   "Short and sweet, aye? From now on, you will be known as {name}.")
 show Pie newName = TW.wrap (TL.replace "{name}" newName 
   "How interesting! Mind if I call you {name}?")
 show IsFnaf newName = TW.wrap (TL.replace "{name}" newName
-  "This isn't FNAF, you know... I will call you {name}.")
+  "This isn’t FNAF, you know... I will call you {name}.")
 show IsBetty _ = TW.wrap "When you call me, you can call me Al."
 show IsJeremy _ = TW.wrap "I know a tester by that name."

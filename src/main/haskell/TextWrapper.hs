@@ -1,7 +1,7 @@
 {- | Wraps text to the width of the terminal window,
  -   such that short words aren't broken. Long words 
  -   will be broken according to regular grammar rules.
- -   @version 2.21.207.1445
+ -   @version 2.21.209.1923
  -}
 module TextWrapper (wrap) where
 
@@ -10,7 +10,7 @@ import qualified Text.Wrap as Wrap
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import qualified Data.Text.Lazy as TL
---import qualified Data.Text.Lazy.IO as TLIO
+import qualified Data.Text.Lazy.IO as TLIO
 
 {- | Specify what character(s) to add as the left margin. 
  -   Generally expected to be just a space.
@@ -64,7 +64,7 @@ wrap :: TL.Text -> IO ()
 wrap t = do
   p <- SCTS.size
   case p of
-    Nothing -> error "Could not get your window size."
+    Nothing -> TLIO.putStrLn t
     Just (SCTS.Window _ columns) -> do
       case (4 > columns) of 
         True -> error "Your window is too narrow."

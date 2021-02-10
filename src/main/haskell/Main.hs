@@ -4,7 +4,7 @@
      Try not to die.
      @author A.E.Veltstra
      @copyright A.E.Veltstra & T.R.Veltstra
-     @version 2.21.0207.1605
+     @version 2.21.0209.1828
 -}
 module Main where
 import qualified Data.Char
@@ -15,7 +15,7 @@ import qualified NameValidation as NV
 import qualified TextWrapper as TW
 
 import Prelude
-import qualified Stages as S
+import qualified Stages
 --import qualified System
 import qualified System.IO
 import qualified System.Random as R
@@ -27,21 +27,21 @@ import qualified System.Random as R
  -   asks the player for their input, uses that to figure out 
  -   which stage to show next, and recurses in on itself. 
  -}
-loop :: S.Stage -> TL.Text -> IO ()
-loop S.Quit player = TW.wrap $ S.stage S.Quit player
+loop :: Stages.Stage -> Stages.UserName -> IO ()
+loop Stages.Quit player = TW.wrap $ Stages.show Stages.Quit player
 #if defined(mingw32_HOST_OS)
-loop theStage player = do
-  let t = S.stage theStage player
+loop stage player = do
+  let t = Stages.show stage player
   TW.wrap t
   TLIO.getLine >> = 
     \k -> if 0 == TL.length k 
-            then loop (S.next theStage (Keys.read '-')) player
-            else loop (S.next theStage (Keys.read ((TL.unpack k)!!0))) player
+            then loop (Stages.next stage (Keys.read '-')) player
+            else loop (Stages.next stage (Keys.read ((TL.unpack k)!!0))) player
 #else
-loop theStage player = do
-  let t = S.stage theStage player
+loop stage player = do
+  let t = Stages.show stage player
   TW.wrap t
-  getChar >>= \k -> loop (S.next theStage (Keys.read k)) player
+  getChar >>= \k -> loop (Stages.next stage (Keys.read k)) player
 #endif
 
 {- | Sanitizes and validates the player's name. If needed, 
@@ -49,7 +49,7 @@ loop theStage player = do
  -   announces a substitute. Returns either the sanitized 
  -   input or the substitute. 
  -}
-checkPlayerName :: R.StdGen -> TL.Text -> IO TL.Text
+checkPlayerName :: R.StdGen -> Stages.UserName -> IO Stages.UserName
 checkPlayerName randomizerSeed taintedName = do 
     let unvalidated = TL.strip $ TL.filter Data.Char.isPrint taintedName
         result = NV.validate unvalidated
@@ -78,7 +78,7 @@ disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
  -}
 main :: IO ()
 main
-  = (TW.wrap $ S.stage S.Init "") >> TLIO.getLine >>=
+  = (TW.wrap $ Stages.show Stages.Init "") >> TLIO.getLine >>=
       \ p -> disableBuffering >> R.newStdGen >>=
-        \ s -> checkPlayerName s p >>= loop S.A1DarkHallway
+        \ s -> checkPlayerName s p >>= loop Stages.A1DarkHallway
 

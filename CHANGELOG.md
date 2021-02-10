@@ -1,5 +1,14 @@
 # Revision history for maskies
 
+## 0.2.0.12 -- 2021-02-10
+
+* Got into night 4. Ready to enter the maze.
+* Added word wrap to window width: short words no longer break.
+* Improved input parsing for Windows OS.
+* Increased type safety of Stages module: easier compilation and fewer warnings.
+* Corrected Wire Test to reflect minor text changes in Stages.
+* Increased type safety of Wire Test.
+
 ## 0.2.0.4 -- 2020-09-15
 
 * Switched a name recognition filter to succeed fast, so it doesn't have to evaluate all possibilities.

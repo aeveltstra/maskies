@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               maskies
-version:            0.2.0.11
+version:            0.2.0.12
 synopsis:           Text-based horror adventure game
 description:        Find out what is killing the security guards, and why. And maybe stop them.
 bug-reports:        aev@sdf.org

@@ -32,13 +32,11 @@
 list=../resources/wire-*.txt
 for wirefile in $list; do
     wire=$(basename -as .txt "$wirefile")
-    echo Testing $wire:
     cat "$wirefile" | ../../../Maskies | tail -7 | ../MaskiesWireTest "$wire"
 done
 
 list=../resources/name-*.txt
 for namefile in $list; do
     name=$(basename -as .txt "$namefile")
-    echo Testing $name:
     cat "$namefile" | ../../../Maskies | tail -6 | ../MaskiesWireTest "$name"
 done

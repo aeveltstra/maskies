@@ -1,0 +1,22 @@
+SUCCESS. Test: wire-10
+SUCCESS. Test: wire-11
+SUCCESS. Test: wire-12
+SUCCESS. Test: wire-13
+SUCCESS. Test: wire-1
+SUCCESS. Test: wire-2
+SUCCESS. Test: wire-3
+SUCCESS. Test: wire-4
+SUCCESS. Test: wire-5
+SUCCESS. Test: wire-6
+SUCCESS. Test: wire-7
+SUCCESS. Test: wire-8
+SUCCESS. Test: wire-9
+FAILURE. Test: name-1. Expected result to contain this: [That’s a really long name, you know.]. Instead found: [Welcome to Maskie’s Ice Cream. What is your name? Type your name and press Enter:
+That's a really long name, you know. I will call you Saanvi.
+Hello, Saanvi. You’re in a dark hallway. It is night. Need help? Press h. To go forward: press w. To give up and quit: press q.
+Come back to play another day, Saanvi? Bring your friends! Bye!
+].
+SUCCESS. Test: name-2
+SUCCESS. Test: name-3
+SUCCESS. Test: name-4
+SUCCESS. Test: name-5
