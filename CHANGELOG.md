@@ -1,5 +1,10 @@
 # Revision history for maskies
 
+## 0.2.0.13
+
+* More wire tests.
+* Minor stage text and instruction corrections.
+
 ## 0.2.0.12 -- 2021-02-10
 
 * Got into night 4. Ready to enter the maze.

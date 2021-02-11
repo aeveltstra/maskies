@@ -2,4 +2,7 @@ dist-newstyle/
 dist-newstyle/**/*
 profiling/
 profiling/**/*
+**/*.hi
+**/*.o
+**/*.swp
 
