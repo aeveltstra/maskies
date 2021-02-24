@@ -254,13 +254,30 @@ data Stage =
   | D3DarkDeskVideo
   | D3DarkOffice
   | D4LitLocker
+  | D4LitLockerUniform
   | D4LitOffice
   | D4LitOfficeHelp
+  | D4LitDesk
   | D4LitFountain
   | D4LitMirror
   | D4LitMirrorAttack
   | D4LitMirrorSurvive
+  | D4LitMirrorDeath
   | D4LitMazeEntrance
+  | D2mA
+  | D4mA
+  | D2mAN
+  | D4mAN
+  | D2mAY
+  | D4mAY
+  | D2mAYHelp
+  | D4mAYHelp
+  | D2mAYA
+  | D4mAYA
+  | D2mAYW
+  | D4mAYW
+  | D2mAYD
+  | D4mAYD
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
@@ -736,14 +753,65 @@ next D3DarkOffice K.H = D1Help
 next D3DarkOffice K.D = Quit
 next D3DarkOffice _ = D3DarkOffice
 next D2LitDesk K.H = D2LitDeskHelp
-next D2LitDesk K.A = D2LitLocker
+next D2LitDesk K.A = D4LitLocker
 next D2LitDesk _ = D2LitOffice
+next D2LitLocker K.W = D2LitLockerUniform
 next D2LitLocker _ = D2LitOffice
+next D4LitLocker K.W = D4LitLockerUniform
+next D4LitLocker _ = D4LitOffice
 next D2LitOffice K.A = D2LitLocker
 next D2LitOffice K.D = D2LitDesk
 next D2LitOffice K.W = D2LitFountain
 next D2LitOffice K.S = D2LitMazeEntrance
 next D2LitOffice _ = D2LitOfficeHelp
+next D4LitOffice K.A = D4LitLocker
+next D4LitOffice K.D = D4LitDesk
+next D4LitOffice K.W = D4LitFountain
+next D4LitOffice K.S = D4LitMazeEntrance
+next D4LitOffice _ = D4LitOfficeHelp
+next D2LitDeskHelp K.S = D2LitMazeEntrance
+next D2LitDeskHelp _ = D2LitOffice
+next D2LitLockerUniform K.W = D2LitFountain
+next D2LitLockerUniform _ = D2LitLockerUniform
+next D2LitFountain K.D = D2LitOffice
+next D2LitFountain _ = D2LitMirror
+next D2LitMirror K.D = D2LitMirrorSurvive
+next D2LitMirror _ = D2LitMirrorAttack
+next D2LitMirrorAttack K.D = D2LitMirrorSurvive
+next D2LitMirrorAttack _ = D2LitMirrorDeath
+next D2LitMirrorSurvive _ = D2LitMazeEntrance
+next D2LitMirrorDeath K.A = D1Intro
+next D2LitMirrorDeath _ = Quit
+next D2LitMazeEntrance K.S = D2LitOffice
+next D2LitMazeEntrance _ = D2mA
+next D4LitMazeEntrance K.S = D4LitOffice
+next D4LitMazeEntrance _ = D4mA
+next D4LitFountain K.S = D4LitMirrorSurvive
+next D4LitFountain _ = D4LitMirrorAttack
+next D4LitMirrorAttack K.D = D4LitMirrorSurvive
+next D4LitMirrorAttack _ = D4LitMirrorDeath
+next D4LitMirrorDeath K.A = D1Intro
+next D4LitMirrorDeath _ = Quit
+next D2mA K.Y = D2mAY
+next D2mA _ = D2mAN
+next D2mAN K.Y = D2mAY
+next D2mAN _ = D2mAN
+next D4mA K.Y = D4mAY
+next D4mA _ = D4mAN
+next D4mAN K.Y = D4mAY
+next D4mAN _ = D4mAN
+next D2mAY K.H = D2mAYHelp
+next D2mAY K.A = D2mAYA
+next D2mAY K.W = D2mAYW
+next D2mAY K.D = D2mAYD
+next D2mAY _ = D2mAY
+next D4mAY K.H = D4mAYHelp
+next D4mAY K.A = D4mAYA
+next D4mAY K.W = D4mAYW
+next D4mAY K.D = D4mAYD
+next D4mAY _ = D4mAY
+next D2mAYHelp _ = D2mAY
+next D4mAYHelp _ = D4mAY
 next _ _ = error "Yet to wire up."
 
 type UserName = TL.Text
@@ -1128,13 +1196,19 @@ show D2LitDesk name = TL.replace "{name}" name "Your lantern lights up the desk.
 
 show D2LitDeskHelp name = TL.replace "{name}" name "You found a map! That letter you’re holding contains a drawing of a maze. And some handwritten text: “Dear {name}, \r\nThank you for your great work the other day. The customers were quite happy with your performance. They made it a point today to let me know you make them feel safe. For that you deserve a promotion. Come and see me tomorrow? \r\nFor tonight your job is to make sure no customer got left behind in the maze. Follow the map. Good luck. \r\nSigned,\r\nJacques Masquie, owner.” \r\nWhat maze? Where? Press s to head back into the hallway and have a look."
 
-show D2LitLocker name = TL.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. To day it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? The cleaning bucket is gone too. Let’s keep an eye out for it. Press s to shut the door and return to the office. Would you rather inspect the cleaner’s uniform? If so, press w."
+show D2LitLocker name = TL.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. Today it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? The cleaning bucket is gone too. Let’s keep an eye out for it. Press s to shut the door and return to the office. Would you rather inspect the cleaner’s uniform? If so, press w."
 
-show D2LitOffice name = TL.replace "{name}" name "This office really is a boring place, wouldn’t you agree, {name}? Let’s get out of here. You don’t really have much of a choice, though. You can press d to go out into the hallway, w to have a drink at the fountain, or q to quit. Which is it?"
+show D4LitLocker name = TL.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. Today it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? The cleaning bucket is gone too. Let’s keep an eye out for it. Press s to shut the door and return to the office. Would you rather inspect the cleaner’s uniform? If so, press w."
 
-show D2LitOfficeHelp name = TL.replace "{name}" name "No, {name}. Your options were to press either d, w, or q. Not whatever that was. Try again."
+show D2LitOffice name = TL.replace "{name}" name "This office really is a boring place, wouldn’t you agree, {name}? Let’s get out of here. You have other choice, though. You can press s to go out into the hallway, a to search the locker, d to study the desk, w to have a drink at the fountain, or q to quit. What will you do?"
 
-show D2LitFountain name = TL.replace "{name}" name "Another drink at the fountain? You really like that water, don’t you? Ah well. I guess it helps you stay alive. Just don’t overdo it, {name}, OK? And while you’re here, press w to look in the mirror. Or press d to return to the office without looking. But you’ll never find out what you missed!"
+show D2LitOfficeHelp name = TL.replace "{name}" name "No, {name}. Your options were to press either a, s, d, w, or q. Not whatever that was. Try again."
+
+show D4LitOffice name = TL.replace "{name}" name "This office really is boring, isn’t it? Let’s get out of here, {name}. Press d to go out into the hallway, w to have a drink at the fountain, or q to quit. Which is it?"
+
+show D4LitOfficeHelp name = TL.replace "{name}" name "Ugh. Again, {name}? Your options were to press either d, w, or q. Not whatever that was. Choose."
+
+show D2LitFountain name = TL.replace "{name}" name "Fountain. You really like that water, don’t you? Good for washing hands. And while you’re here, {name}, press w to look in the mirror. Or press d to return to the office without looking. But you’ll never find out what you missed!"
 
 show D2LitMirror name = TL.replace "{name}" name "A risk taker, aren’t you? I like it! So let’s have a look in that mirror. What do you see? Well. There’s you. And your uniform. Looking spiffy. And something just flew by in the corner of your eye. Do you duck instinctively? Press d! If not, press any of these keys: a, w, s."
 
@@ -1142,11 +1216,14 @@ show D2LitMirrorAttack name = TL.replace "{name}" name "Really? Why that key, {n
 
 show D2LitMirrorSurvive name = TL.replace "{name}" name "Ooh, that was close! It missed you by a hair! (You have hair, don’t you?) The ball is flying away. Where is it off to now? Quick, on your feet, and follow it. Press w."
 
-show D2LitMirrorDeath name = TL.replace "{name}" name "Erm. Taking risks is one thing. Getting your head hammered in because you refuse to press d is another. Why, {name}? Why couldn’t you simply press d? Look at you now. Your head in the fountain. The sink turning red with your blood and covered in bits of brain. And a puddle of pee is forming around your feet. Gross! Well I guess this is good-bye. Unless you want to reincarnate and try again. In which case you can press a."
+show D2LitMirrorDeath name = TL.replace "{name}" name "Erm. Taking risks is one thing. Getting your head hammered in because you refuse to press d is another. Why, {name}? Why couldn’t you simply press d? Look at you now. Your head in the sink. It turns red with blood and bits of brain. And a puddle of pee is forming around your feet. Gross! Well I guess this is good-bye. Unless you want to reincarnate and try again. In which case you can press a."
 
-show D2LitMazeEntrance name = TL.replace "{name}" name "You find yourself in a hallway you have not yet seen. Maybe you have been here before when it was dark? There’s 4 exits: forward (w), left (a), right (d), and back (s). There’s a red ball flying to the right. Press d to follow it. Otherwise, press any of these: a, w, s."
+show D4LitMirrorDeath name = TL.replace "{name}" name "Erm. Taking risks is one thing. Getting your head hammered in because you refuse to press d is another. Why couldn’t you simply press d, {name}? Look at you now. Your head in the sink. It turns red with blood and bits of brain. And a puddle of pee is forming around your feet. Gross! So I guess this is good-bye, {name}. Unless you want to reincarnate and try again? In that case you can press a."
 
-show D2LitLockerUniform name = TL.replace "{name}" name "You feel around inside the uniform. It’s a bit sticky and moist. Eew, gross. That uniform should get washed. Better wash your hands soon. Hey, you found a roll of paper in the inside coat pocket! Another map? Nice! You pull back your hand to study the paper. It’s soaked with blood! And your hand is covered in it, too! Press w to go wash your hands!"
+show D2LitMazeEntrance name = TL.replace "{name}" name "You find yourself in a hallway you have not yet seen. Maybe you have been here before when it was dark? There’s 4 exits: forward (w), left (a), right (d), and back (s). There’s a red ball flying to the right. It wields a wooden hammer, and has a yellow smile painted on its front. Press d to follow it. Otherwise, press any of these: a, w, s."
+
+show D2LitLockerUniform name = TL.replace "{name}" name "You feel around inside the uniform. It’s a bit sticky and moist. Eew, gross. That uniform should get washed. Better wash your hands soon. Hey, you found a roll of paper in the inside coat pocket! Another map? Nice! You pull back your hand to study the paper. It’s soaked with blood! Useless! And your hand is covered in blood, too! Press w to go wash your hands!"
+
 
 show D4LitFountain name = TL.replace "{name}" name "Washing your hands really was necessary. So refreshing! You can’t help but look in the mirror. Your face expresses relief, {name}. And then you see something fly at your head. A bird? Press d to duck, or s to ignore it and return to the office."
 
@@ -1154,7 +1231,30 @@ show D4LitMirrorAttack name = TL.replace "{name}" name "You ducked. The flying t
 
 show D4LitMirrorSurvive name = TL.replace "{name}" name "Good going! Now you remember: you have seen that ball before, {name}. On the painting at the end of the hallway. On the ice cream. Why did it get out? And did it attack you? And where is it heading now? Good questions! Let’s find out, shall we? Press w to follow the flying ball! Or press q to quit. Your choice, really."
 
-show D4LitMazeEntrance name = TL.replace "{name}" name "You're in a hallway you had not yet seen before. Despite having been here for 4 days. Maybe you have been here before, but it was too dark to see anything? There’s 4 exits: forward (w), left (a), right (d), and back (s). A red ball flew to the right. Do you follow it? If so, press d. Otherwise, press w, a, or s."
+show D4LitMazeEntrance name = TL.replace "{name}" name "You’re in a hallway you had not yet seen before. Despite having been here for 4 days. Maybe you have been here before, but it was too dark to see anything? There’s 4 exits: forward (w), left (a), right (d), and back (s). A red ball flew to the right. It wields a wooden hammer, and a yellow smile is painted on its front. Do you follow it? If so, press d. Otherwise, press w, a, or s."
+
+show D2mA name = TL.replace "{name}" name (TL.replace "{map}" ", and you have a map" mA)
+show D4mA name = TL.replace "{name}" name (TL.replace "{map}" "" mA)
+
+show D2mAN name = TL.replace "{name}" name mAN
+show D4mAN name = TL.replace "{name}" name mAN
+
+show D2mAY name = TL.replace "{name}" name (TL.replace "{map}" "To consult your map, press h." mAY)
+show D4mAY name = TL.replace "{name}" name (TL.replace "{map}" "" mAY)
+
+show D2mAYHelp name = TL.replace "{name}" name "The map has letters written unto it. The first letter after the big arrow that points at the maze entrance, has the letter w. Press s to put away your map and return to the sign. Once there, press w."
+show D4mAYHelp name = TL.replace "{name}" name "Ah, if only you had found a usable map, {name}. But think about it for a moment: does a bowl of ice cream have legs to walk on? Press s to return to the sign and try an answer."
+
+
+mAY :: TL.Text
+mAY = "The sign reads: To continue, choose the correct answer to the following problem. At dawn I walk on 4. At noon I walk on 2. At dusk I walk on 3. What am I? Your choices are: a for an animatronic, w for a human, or d for a bowl of ice cream. {map} Choose!"
+
+mAN :: TL.Text
+mAN = "Stubborn as usual, are we, {name}. Well. I guess you’re stuck here. Unless you want to read that sign now. Press y at any time. I’ll wait."
+
+mA :: TL.Text
+mA = "Whoops: you dropped into a hole. A cube with a gym mat on the floor, for a safe landing. Plenty of light. Children’s music and low hum. And you hear people speaking, but see no one. You see no way out. There is however a sign{map}. Would you like to read the sign, {name}? Press y for yes, n for no."
+
 
 c11Msg :: TL.Text
 c11Msg = "Before you get there, lights turn on and the familiar face of Jacques Masquie greets you: “Hey there, {name}! How you doing? Flushed out any stragglers from the obstacle course?” You think about the jumps. The platforms. What you saw. Did you see any customers left behind? "
