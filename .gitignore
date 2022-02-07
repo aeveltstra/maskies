@@ -5,4 +5,14 @@ profiling/**/*
 **/*.hi
 **/*.o
 **/*.swp
+*~
+*.lock
+_build/
+stack*.yaml.lock
+shake.yaml.lock
+.vscode
+.DS_Store
+/.direnv/
+/.envrc
+
 

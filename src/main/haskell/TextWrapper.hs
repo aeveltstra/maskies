@@ -1,7 +1,7 @@
 {- | Wraps text to the width of the terminal window,
  -   such that short words aren't broken. Long words 
  -   will be broken according to regular grammar rules.
- -   @version 2.21.209.1923
+ -   @version 2.22.207.621
  -}
 module TextWrapper (wrap) where
 
@@ -43,8 +43,10 @@ prefix = T.pack "\n "
  -}
 wrapSettings :: Wrap.WrapSettings
 wrapSettings = Wrap.WrapSettings {
-    Wrap.preserveIndentation = False
+      Wrap.preserveIndentation = False
     , Wrap.breakLongWords = True
+    , Wrap.fillScope = Wrap.FillAll
+    , Wrap.fillStrategy = Wrap.NoFill
   }
 
 {- | Wraps text lines to fit the window width and writes them 

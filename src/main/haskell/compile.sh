@@ -4,4 +4,4 @@
 # Requires:
 # - GHC 8.8.3 or newer.
 
-ghc --make -package random -package word-wrap -package terminal-size -O2 -o ../../../bin/Maskies ./Main.hs
+ghc -v --make -package random -package word-wrap -package terminal-size -O2 -o ../../../bin/Maskies ./Main.hs
