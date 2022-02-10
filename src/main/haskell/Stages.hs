@@ -6,7 +6,7 @@
     This file contains the game’s stages, their variations, and how they wire together.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.21.209.1817
+    @version 2.22.209.2107
 -}
 module Stages where
 
@@ -544,13 +544,13 @@ next C2fawDeath _ = Quit
 next C2fawSurvive K.A = C3aw
 next C2fawSurvive _ = C2fawSurvive
 next C3 K.D = C4
-next C3 _ = C3f
+next C3 _ = C3fDeathAbove
 next C3a K.D = C4a
-next C3a _ = C3fa
+next C3a _ = C3fDeathAbove
 next C3w K.D = C4w
-next C3w _ = C3fw
+next C3w _ = C3fDeathAbove
 next C3aw K.D = C4aw
-next C3aw _ = C3faw
+next C3aw _ = C3fDeathAbove
 next C3f K.W = C3fDeathBelow
 next C3fa K.W = C3faDeathBelow
 next C3faw K.W = C3fawDeathBelow

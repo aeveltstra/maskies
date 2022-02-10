@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               maskies
-version:            0.2.0.14
+version:            0.2.0.15
 synopsis:           Text-based horror adventure game
 description:        Find out what is killing the security guards, and why. And maybe stop them.
 bug-reports:        aev@sdf.org
@@ -14,7 +14,7 @@ category:           Games
 build-type:         Simple
 extra-source-files: CHANGELOG.md
                     README.md
-tested-with:        GHC == { 8.8.3, 8.8.4 }
+tested-with:        GHC == { 8.8.3, 8.8.4, 8.10.7 }
 
 executable Maskies
     main-is:          Main.hs

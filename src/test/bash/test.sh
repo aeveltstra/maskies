@@ -4,7 +4,7 @@
 # gets output.
 # @author A.E.Veltstra: aev@sdf.org
 # @since 2.20.902.0240
-# @version 2.20.913.1305
+# @version 2.22.207.637
 # This script assumes the following:
 # 1. It lives in a grand-child folder inside
 #    the one in which the game Maskies lives.
@@ -27,7 +27,7 @@
 # the game builds:
 #
 # $ cabal build
-# $ ghc --make -O -o Maskies ./src/haskell/Main.hs
+# $ ghc --make -O -o ./bin/Maskies ./src/haskell/Main.hs
 
 list=../resources/wire-*.txt
 for wirefile in $list; do
