@@ -278,6 +278,8 @@ data Stage =
   | D4mAYW
   | D2mAYD
   | D4mAYD
+  | D2mAYWW
+  | D4mAYWW
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
@@ -812,6 +814,20 @@ next D4mAY K.D = D4mAYD
 next D4mAY _ = D4mAY
 next D2mAYHelp _ = D2mAY
 next D4mAYHelp _ = D4mAY
+next D2mAYA K.S = D2mAY
+next D2mAYA _ = D2mAYA
+next D2mAYD K.S = D2mAY
+next D2mAYD _ = D2mAYD
+next D2mAYW K.W = D2mAYWW
+next D2mAYW _ = D2mAYW
+next D4mAYA K.S = D4mAY
+next D4mAYA _ = D4mAYA
+next D4mAYD K.S = D4mAY
+next D4mAYD _ = D4mAYD
+next D4mAYW K.W = D4mAYWW
+next D4mAYW _ = D4mAYW
+next D2mAYWW _ = D2mAYWW
+next D4mAYWW _ = D4mAYWW
 next _ _ = error "Yet to wire up."
 
 type UserName = TL.Text
@@ -1200,7 +1216,7 @@ show D2LitLocker name = TL.replace "{name}" name "The locker is pretty empty. 2 
 
 show D4LitLocker name = TL.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. Today it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? The cleaning bucket is gone too. Let’s keep an eye out for it. Press s to shut the door and return to the office. Would you rather inspect the cleaner’s uniform? If so, press w."
 
-show D2LitOffice name = TL.replace "{name}" name "This office really is a boring place, wouldn’t you agree, {name}? Let’s get out of here. You have other choice, though. You can press s to go out into the hallway, a to search the locker, d to study the desk, w to have a drink at the fountain, or q to quit. What will you do?"
+show D2LitOffice name = TL.replace "{name}" name "This office really is a boring place, wouldn’t you agree, {name}? Let’s get out of here. You have other choices, though. You can press s to go out into the hallway, a to search the locker, d to study the desk, w to have a drink at the fountain, or q to quit. What will you do?"
 
 show D2LitOfficeHelp name = TL.replace "{name}" name "No, {name}. Your options were to press either a, s, d, w, or q. Not whatever that was. Try again."
 
@@ -1245,6 +1261,17 @@ show D4mAY name = TL.replace "{name}" name (TL.replace "{map}" "" mAY)
 show D2mAYHelp name = TL.replace "{name}" name "The map has letters written unto it. The first letter after the big arrow that points at the maze entrance, has the letter w. Press s to put away your map and return to the sign. Once there, press w."
 show D4mAYHelp name = TL.replace "{name}" name "Ah, if only you had found a usable map, {name}. But think about it for a moment: does a bowl of ice cream have legs to walk on? Press s to return to the sign and try an answer."
 
+show D2mAYA name = TL.replace "{name}" name "OK. I understand why you would think that. But this riddle is a bit older. Press s to try again. Look at your map this time, {name}."
+show D2mAYW name = TL.replace "{name}" name "Yes! You marvelous miracle of history knowledge, you! Or did you figure it out by yourself, {name}? Awesome! The wall in front of you slides away and leads into another hall. Press w to move forwards, or q to quit."
+show D2mAYD name = TL.replace "{name}" name "Erm. A bowl of ice cream? Yummy as our ice cream is, you probably want to avoid eating it by the time it grows legs! Press s to try again. Trust your map, {name}!"
+
+show D4mAYA name = TL.replace "{name}" name "OK. I understand why you would think that. But this riddle is a bit older. Press s to try again, {name}."
+show D4mAYW name = TL.replace "{name}" name "Yes! You marvelous miracle of history knowledge, you! Or did you figure it out by yourself, {name}? Awesome! The wall in front of you slides away and leads into another hall. Press w to move forwards, or q to quit."
+show D4mAYD name = TL.replace "{name}" name "Erm. A bowl of ice cream? Yummy as our ice cream is, you probably want to avoid eating it by the time it grows legs! Press s to try again. Too bad you never found the maze map, {name}!"
+
+show D2mAYWW name = TL.replace "{name}" name "Great choice, {name}! Well. Not really. There still is no way out. There is, however, a shelf with 3 glasses. Each holds a straw of different lengths. The left glass has a short straw. The middle glass has a medium straw. The right glass has a large straw. Above the shelf, a sign on the wall reads: Pick One. Which will you pick? Press a for left, s for middle, or d for right."
+
+show D4mAYWW name = TL.replace "{name}" name "Great choice! Well. Not really. There still is no way out, {name}. There is, however, a shelf with 3 glasses. Each holds a straw of different lengths. The left glass has a short straw. The middle glass has a medium straw. The right glass has a large straw. Above the shelf, a sign on the wall reads: Pick One. Which will you pick? Press a for left, s for middle, or d for right."
 
 mAY :: TL.Text
 mAY = "The sign reads: To continue, choose the correct answer to the following problem. At dawn I walk on 4. At noon I walk on 2. At dusk I walk on 3. What am I? Your choices are: a for an animatronic, w for a human, or d for a bowl of ice cream. {map} Choose!"
