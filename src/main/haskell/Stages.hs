@@ -14,7 +14,12 @@ import Prelude
 import qualified Data.Text.Lazy as TL
 import qualified Keys as K 
 
-{- | Let’s use Haskell’s type system to determine exactly which stages the game can have. If we forget one, the compiler will complain. Unfortunately it does not complain if we forget to wire up a stage in the function ‘next’. But it does help when showing stages: the compiler automatically constrains us to only show stages that have been defined here. -}
+{- | Let’s use Haskell’s type system to determine exactly which stages the game
+can have. If we forget one, the compiler will complain. Unfortunately it does
+not complain if we forget to wire up a stage in the function ‘next’. But it
+does help when showing stages: the compiler automatically constrains us to only
+show stages that have been defined here. 
+-} 
 data Stage = 
   Init
   | A1Help
@@ -259,7 +264,6 @@ data Stage =
   | D4LitOfficeHelp
   | D4LitDesk
   | D4LitFountain
-  | D4LitMirror
   | D4LitMirrorAttack
   | D4LitMirrorSurvive
   | D4LitMirrorDeath
@@ -283,7 +287,11 @@ data Stage =
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
-{- | This function wires Key events to stages, to determine which stage to show next. If the event is Wait, the same stage gets returned as put in. If the event is Q, the function returns the Quit event. If the player enters a key that is not wired up to a stage here, the function throws an error. -}
+{- | This function wires Key events to stages, to determine which stage to show
+next. If the event is Wait, the same stage gets returned as put in. If the
+event is Q, the function returns the Quit event. If the player enters a key
+that is not wired up to a stage here, the function throws an error.  
+-}
 next :: Stage -> K.Key -> Stage
 next theStage K.Wait = theStage
 next _ K.Q = Quit
@@ -754,9 +762,12 @@ next D3DarkOffice K.W = D1DarkParlor
 next D3DarkOffice K.H = D1Help
 next D3DarkOffice K.D = Quit
 next D3DarkOffice _ = D3DarkOffice
-next D2LitDesk K.H = D2LitDeskHelp
-next D2LitDesk K.A = D4LitLocker
+next D2LitDesk K.H = D2LitDeskHelp --with letter
+next D4LitDesk K.H = D2LitDeskHelp --with letter
+next D2LitDesk K.A = D4LitLocker --without letter
+next D4LitDesk K.A = D4LitLocker --without letter
 next D2LitDesk _ = D2LitOffice
+next D4LitDesk _ = D4LitOffice
 next D2LitLocker K.W = D2LitLockerUniform
 next D2LitLocker _ = D2LitOffice
 next D4LitLocker K.W = D4LitLockerUniform
@@ -775,6 +786,8 @@ next D2LitDeskHelp K.S = D2LitMazeEntrance
 next D2LitDeskHelp _ = D2LitOffice
 next D2LitLockerUniform K.W = D2LitFountain
 next D2LitLockerUniform _ = D2LitLockerUniform
+next D4LitLockerUniform K.W = D4LitFountain
+next D4LitLockerUniform _ = D4LitLockerUniform
 next D2LitFountain K.D = D2LitOffice
 next D2LitFountain _ = D2LitMirror
 next D2LitMirror K.D = D2LitMirrorSurvive
@@ -842,17 +855,17 @@ show Quit name = TL.replace "{name}" name "Come back to play another day, {name}
 
 show A1DarkHallway name = TL.replace "{name}" name "Hello, {name}. You’re in a dark hallway. It is night. Need help? Press h. To go forward: press w. To give up and quit: press q."
 
-show A1Help name = TL.replace "{name}" name "This is a text adventure game. It makes you read a lot. Each scene may offer some hints and clues. Sometimes you can pick up items that may or may not help, later. After each scene, you get a choice for what to do next. Enter your choice to continue, or q to quit. Take your time. Take as long as you need. No really, {name}: think it through. To go back, press w."
+show A1Help name = TL.replace "{name}" name "This is a text adventure game. It makes you read a lot. Each scene may offer some hints and clues. Sometimes you can pick up items that may or may not help, later. After each scene, you get a choice for what to do next. Enter your choice to continue, or q to quit. Take your time. Take as long as you need. No really, {name}: think it through. If you press a button that is not known, the game will repeat. If you are ready to continue playing the game, press w."
 
 show A1LightAppears name = TL.replace "{name}" name "At the end of the hallway, a light moves in. It brightens the opposite wall, which shows an image. It is too far away to recognize. The light comes from a lantern, held by a security guard. He shines it at the image on the wall. It’s an ice cream cone. He turns around and sees you. To go forward: press w. To give up and quit: q."
 
-show A1HallwayDeath name = TL.replace "{name}" name "You take his lantern… but also his arm. Blood sprays from his torso onto the ice cream painting. He screams. It hurts your ears. You want to silence him. But his head is so very fragile. It breaks and falls off. The guard’s body sags to the tiled floor. You step backwards to avoid the spreading blood. Walking through the hallway, you see a mirror above the fountain. Let’s make sure no blood hit you. And if so, clean up. You see your face. You look kind-of like that guard. Not quite. Your eyes and ears are square, and your mouth has no lips to cover your teeth. Metal teeth. And so many! Confused you drop the lantern and disappear into a dark room. \n\nPress w to keep playing. Want to quit? Press q."
+show A1HallwayDeath name = TL.replace "{name}" name "You take his lantern… but also his arm. Blood sprays from his torso onto the ice cream painting. He screams. It hurts your ears. You want to silence him. But his head is so very fragile. It breaks and falls off. The guard’s body sags to the tiled floor. You step backwards to avoid the spreading blood. \n\nWalking through the hallway, you see a mirror above the fountain. Let’s make sure no blood hit you. And if so, clean up. You see your face. You look kind-of like that guard. Not quite. Your eyes and ears are square, and your mouth has no lips to cover your teeth. Metal teeth. And so many! Confused you drop the lantern and disappear into a dark room. \n\nPress w to keep playing. Want to quit? Press q."
 
 show B1Intro name = TL.replace "{name}" name "Hello, {name}. You’re a security guard. You got hired to keep this place secure. The hallway is dark: it is night. Security lights show the way to the exit, and light up just enough of the hallway to see it’s absurdly clean, and to spot the walls and doors. You hear some children’s music playing. From where? Speakers in the ceiling? And why? It’s night time! They should turn that off. Where do you want to go next? To go forward: press w. Press a to turn left. There’s a light there. To turn right, press d."
 
 show B1DarkHallway name = TL.replace "{name}" name "You’re in the hallway. It’s dark. Security lights hint where to go. Forward: press w. Press a to turn left. There’s a light there. To turn right, press d."
 
-show B1Help name = TL.replace "{name}" name "The letter reads: “Dear {name}, \nWelcome to Maskie’s Ice Cream! Great to have you on staff. Due a pandemic killing lots of people, I replaced all human employees with animatronics. Lots of them! They’re like robots, but better. And they look like stuffed animals for kids. That means no people touch the ice cream, thus no viruses get transmitted. Making Maskie’s Ice Cream very popular. So popular that thieves like to come and steal the ice cream. That’s where you come in, {name}. Your job is to keep out the thieves. See you tomorrow! \nSincerely, \nJacques Masquie, owner.” \nPress w to continue."
+show B1Help name = TL.replace "{name}" name "The letter reads: \r\n\r\n\x1b[0;33;40m“Dear {name}, \nWelcome to Maskie’s Ice Cream! Great to have you on staff. Due a pandemic killing lots of people, I replaced all human employees with animatronics. Lots of them! They’re like robots, but better. And they look like stuffed animals for kids. That means no people touch the ice cream, thus no viruses get transmitted. Making Maskie’s Ice Cream very popular. So popular that thieves like to come and steal the ice cream. That’s where you come in, {name}. Your job is to keep out the thieves. See you tomorrow! \nSincerely, \nJacques Masquie, owner.”\x1b[0m \r\n\r\nPress w to continue."
 
 show B1Office name = TL.replace "{name}" name "You are in a lit office. By the right wall there is a desk with a lantern, a water fountain by the far wall, and a locker to the left. Your employer gave you a letter. To read it, press h. You don’t have to read it. You could ignore it and instead press w to drink water from the fountain. Or press d to study the desk. To inspect the locker, press a. To go back to the hallway, press s."
 
@@ -912,7 +925,7 @@ show B2awdFind name = TL.replace "{name}" name "You found a memory stick! What w
 
 show B2OfficeDesk name = TL.replace "{name}" name "Lantern in hand, you now see a letter on the desk, with your name on it. Would you like to read it, {name}? If yes, press y. If not, press n."
 
-show B2ReadLetter name = TL.replace "{name}" name "The letter reads: “Dear {name}, \nIf you read this, I will be dead. Chances are you will die too. Something wanders the hallways at night. \nDid Jacques Masquie tell you that you need to keep out thieves? He lied to you. It isn’t thieves that kill us. It’s something much worse. And don’t trust the animatronics. They may look like cuddly animals, but every now and then they scare me half to death. \nI’ve hidden some helpful items in the locker. You’ll need them tomorrow. \nGood luck.” \nItems you need tomorrow? Better go find them! Press s to go back and keep playing. Scared? Give up and quit! Press q."
+show B2ReadLetter name = TL.replace "{name}" name "The letter reads: \r\n\r\n\x1b[0;32;40m“Dear {name}, \nIf you read this, I will be dead. Chances are you will die too. Something wanders the hallways at night. \nDid Jacques Masquie tell you that you need to keep out thieves? He lied to you. It isn’t thieves that kill us. It’s something much worse. And don’t trust the animatronics. They may look like cuddly animals, but every now and then they scare me half to death. \nI’ve hidden some helpful items in the locker. You’ll need them tomorrow. \nGood luck.”\x1b[0m \r\n\r\nItems you need tomorrow? Better go find them! Press s to go back and keep playing. Scared? Give up and quit! Press q."
 
 show B2OfficeFountain name = TL.replace "{name}" name "Aah, fresh, clean water! You needed that. The heat is getting unbearable! There’s a mirror on the wall in front of you. Let’s check your hair. Got to look the part, after all. To lean forward and look into the mirror, press w. To return to the office, press s."
 
@@ -983,13 +996,13 @@ show C1aWelcome name = TL.replace "{name}" name c1Msg
 show C1wWelcome name = TL.replace "{name}" name c1Msg
 show C1awWelcome name = TL.replace "{name}" name c1Msg
 
-show C1MaskiesLetter name = TL.replace "{name}" name "The letter reads: “How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be difficult if you don’t have a map. And you’ll have to be careful to avoid the animatronics. Some of them haven’t been stored properly. I’ll be back tomorrow morning to debrief you! Signed, Jacques Masquie.” Quit while you can! Press q. Or keep playing: press w."
+show C1MaskiesLetter name = TL.replace "{name}" name "The letter reads: \r\n\r\n\x1b[0;32;40m“How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be difficult if you don’t have a map. And you’ll have to be careful to avoid the animatronics. Some of them haven’t been stored properly. I’ll be back tomorrow morning to debrief you! \r\nSigned, \r\nJacques Masquie.”\x1b[0m Quit while you can! Press q. Or keep playing: press w."
 
-show C1aMaskiesLetter name = TL.replace "{name}" name "The letter reads: “How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be difficult if you don’t have a map. But don’t worry about the animatronics: they’ve been stored for the night. I’ll be back tomorrow morning to debrief you! Signed, Jacques Masquie.” Quit while you can! Press q. Or keep playing: press w."
+show C1aMaskiesLetter name = TL.replace "{name}" name "The letter reads: \r\n\r\n\x1b[0;32;40m“How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be difficult if you don’t have a map. But don’t worry about the animatronics: they’ve been stored for the night. I’ll be back tomorrow morning to debrief you! \r\nSigned, \r\nJacques Masquie.”\x1b[0m Quit while you can! Press q. Or keep playing: press w."
 
-show C1wMaskiesLetter name = TL.replace "{name}" name "The letter reads: “How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be easy if you have a map. And try and avoid the animatronics: some of them haven’t been stored properly. I’ll be back tomorrow morning to debrief you! Signed, Jacques Masquie.” Quit while you can! Press q. Or keep playing: press w."
+show C1wMaskiesLetter name = TL.replace "{name}" name "The letter reads: \r\n\r\n\x1b[0;32;40m“How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be easy if you have a map. And try and avoid the animatronics: some of them haven’t been stored properly. I’ll be back tomorrow morning to debrief you! \r\nSigned, \r\nJacques Masquie.”\x1b[0m Quit while you can! Press q. Or keep playing: press w."
 
-show C1awMaskiesLetter name = TL.replace "{name}" name "The letter reads: “How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be easy if you have a map. And you won’t have to worry about any animatronics: they’ve been stored for the night. I’ll be back tomorrow morning to debrief you! Signed, Jacques Masquie.” Quit while you can! Press q. Or keep playing: press w."
+show C1awMaskiesLetter name = TL.replace "{name}" name "The letter reads: \r\n\r\n\x1b[0;32;40m“How’s it going, {name}? Ready for this? The customers got a special treat today: an obstacle course! Unfortunately we kind-of lost track of some. We don’t know whether they’re still in there. It is your job tonight to inspect the obstacle course and flush out any stragglers. That’s going to be easy if you have a map. And you won’t have to worry about any animatronics: they’ve been stored for the night. I’ll be back tomorrow morning to debrief you! \r\nSigned, \r\nJacques Masquie.”\x1b[0m Quit while you can! Press q. Or keep playing: press w."
 
 show C1Hallway name = TL.replace "{name}" name "You’re in the hallway. Alone. You hear children’s music. Where is it coming from? You haven’t seen a radio anywhere, yet. To turn left, press a. To go forward, press w. Or press d to turn right."
 show C1aHallway name = TL.replace "{name}" name "You’re in the hallway. Alone. You hear children’s music. Where is it coming from? You haven’t seen a radio anywhere, yet. Better strap up that shield. If only you had a map. That would’ve helped. To turn left, press a. To go forward, press w. Or press d to turn right."
@@ -1210,7 +1223,7 @@ show D1DarkMazeDeath name = TL.replace "{name}" name "How hard is it to press S,
 
 show D2LitDesk name = TL.replace "{name}" name "Your lantern lights up the desk. It holds a letter addressed to you, {name}. Wouldn’t you like to read it? If so, press h. You don’t have to. It might help, though. But you can ignore it. Maybe rummage around in the storage locker instead? Press a!"
 
-show D2LitDeskHelp name = TL.replace "{name}" name "You found a map! That letter you’re holding contains a drawing of a maze. And some handwritten text: “Dear {name}, \r\nThank you for your great work the other day. The customers were quite happy with your performance. They made it a point today to let me know you make them feel safe. For that you deserve a promotion. Come and see me tomorrow? \r\nFor tonight your job is to make sure no customer got left behind in the maze. Follow the map. Good luck. \r\nSigned,\r\nJacques Masquie, owner.” \r\nWhat maze? Where? Press s to head back into the hallway and have a look."
+show D2LitDeskHelp name = TL.replace "{name}" name "You found a map! That letter you’re holding contains a drawing of a maze. And some handwritten text: \r\n\r\n“Dear {name}, \r\nThank you for your great work the other day. The customers were quite happy with your performance. They made it a point today to let me know you make them feel safe. For that you deserve a promotion. Come and see me tomorrow? \r\nFor tonight your job is to make sure no customer got left behind in the maze. Follow the map. Good luck. \r\nSigned,\r\nJacques Masquie, owner.” \r\nWhat maze? Where? Press s to head back into the hallway and have a look."
 
 show D2LitLocker name = TL.replace "{name}" name "The locker is pretty empty. 2 Days ago it held a security guard uniform. Today it is missing. Why would it be missing? You are the only guard employed, aren’t you, {name}? The cleaning bucket is gone too. Let’s keep an eye out for it. Press s to shut the door and return to the office. Would you rather inspect the cleaner’s uniform? If so, press w."
 
@@ -1220,15 +1233,17 @@ show D2LitOffice name = TL.replace "{name}" name "This office really is a boring
 
 show D2LitOfficeHelp name = TL.replace "{name}" name "No, {name}. Your options were to press either a, s, d, w, or q. Not whatever that was. Try again."
 
-show D4LitOffice name = TL.replace "{name}" name "This office really is boring, isn’t it? Let’s get out of here, {name}. Press d to go out into the hallway, w to have a drink at the fountain, or q to quit. Which is it?"
+show D4LitOffice name = TL.replace "{name}" name "This office really is boring, isn’t it? Let’s get out of here, {name}. Press s to go out into the hallway, w to have a drink at the fountain, or q to quit. If you really like the boring stuff, you could press d to head over to the desk. Maybe it will have a letter from Masquie. Which is it?"
 
-show D4LitOfficeHelp name = TL.replace "{name}" name "Ugh. Again, {name}? Your options were to press either d, w, or q. Not whatever that was. Choose."
+show D4LitOfficeHelp name = TL.replace "{name}" name "Ugh. Again, {name}? Your options were to press either d, s, w, or q. Not whatever that was. Choose."
+
+show D4LitDesk name = TL.replace "{name}" name "Your lantern lights up the boring desk. It holds a letter addressed to you, {name}. It probably is just as boring as everything else. Would you force yourself to read it anyway? If so, press h. You don’t have to. Instead, maybe rummage around in the storage locker? Press a!"
 
 show D2LitFountain name = TL.replace "{name}" name "Fountain. You really like that water, don’t you? Good for washing hands. And while you’re here, {name}, press w to look in the mirror. Or press d to return to the office without looking. But you’ll never find out what you missed!"
 
 show D2LitMirror name = TL.replace "{name}" name "A risk taker, aren’t you? I like it! So let’s have a look in that mirror. What do you see? Well. There’s you. And your uniform. Looking spiffy. And something just flew by in the corner of your eye. Do you duck instinctively? Press d! If not, press any of these keys: a, w, s."
 
-show D2LitMirrorAttack name = TL.replace "{name}" name "Really? Why that key, {name}? Watch out! Here it is again! That red flying ball with the yellow smile! And it’s got a hammer aimed at your head! Duck, duck duck! Press d now! {name}! Now!"
+show D2LitMirrorAttack name = TL.replace "{name}" name "Really? Why that key, {name}? Watch out! Here it is again! That red flying ball with the yellow smile! And it’s got a hammer aimed at your head! Duck, duck duck! Press d now! {name}! \x1b[31mNOW!!!\x1b[0m"
 
 show D2LitMirrorSurvive name = TL.replace "{name}" name "Ooh, that was close! It missed you by a hair! (You have hair, don’t you?) The ball is flying away. Where is it off to now? Quick, on your feet, and follow it. Press w."
 
@@ -1238,8 +1253,9 @@ show D4LitMirrorDeath name = TL.replace "{name}" name "Erm. Taking risks is one 
 
 show D2LitMazeEntrance name = TL.replace "{name}" name "You find yourself in a hallway you have not yet seen. Maybe you have been here before when it was dark? There’s 4 exits: forward (w), left (a), right (d), and back (s). There’s a red ball flying to the right. It wields a wooden hammer, and has a yellow smile painted on its front. Press d to follow it. Otherwise, press any of these: a, w, s."
 
-show D2LitLockerUniform name = TL.replace "{name}" name "You feel around inside the uniform. It’s a bit sticky and moist. Eew, gross. That uniform should get washed. Better wash your hands soon. Hey, you found a roll of paper in the inside coat pocket! Another map? Nice! You pull back your hand to study the paper. It’s soaked with blood! Useless! And your hand is covered in blood, too! Press w to go wash your hands!"
+show D2LitLockerUniform name = TL.replace "{name}" name "You feel around inside the uniform. It’s a bit sticky and moist. Eew, gross. That uniform should get washed. The uniform contains no other clues. You pull back your hand. Eew! It’s covered in blood! Press w to go wash your hands!"
 
+show D4LitLockerUniform name = TL.replace "{name}" name "You feel around inside the uniform. It’s a bit sticky and moist. Eew, gross. That uniform should get washed. Hey, you feel a roll of paper in the inside coat pocket! Another map? Nice! You pull back your hand to study the paper. Yuck! It’s soaked with blood! Useless! And your hand is covered in blood, too! Press w to go wash your hands!"
 
 show D4LitFountain name = TL.replace "{name}" name "Washing your hands really was necessary. So refreshing! You can’t help but look in the mirror. Your face expresses relief, {name}. And then you see something fly at your head. A bird? Press d to duck, or s to ignore it and return to the office."
 

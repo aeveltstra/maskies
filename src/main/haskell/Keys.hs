@@ -8,7 +8,7 @@
     handle those.
     @author A.E.Veltstra
     @copyright A.E.Veltstra & T.R.Veltstra
-    @version 2.20.1217.2132
+    @version 2.23.821.1642
 -}
 module Keys where
 
@@ -42,6 +42,14 @@ read 'y' = Y
 read 'n' = N
 read 'h' = H
 read 'q' = Q
+read 'W' = W
+read 'A' = A
+read 'S' = S
+read 'D' = D
+read 'Y' = Y
+read 'N' = N
+read 'H' = H
+read 'Q' = Q
 read '1' = J1
 read '2' = J2
 read '3' = J3

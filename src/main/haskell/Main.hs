@@ -4,7 +4,7 @@
      Try not to die.
      @author A.E.Veltstra
      @copyright A.E.Veltstra & T.R.Veltstra
-     @version 2.21.0209.1828
+     @version 2.23.821.1649
 -}
 module Main where
 import qualified Data.Char
@@ -16,10 +16,22 @@ import qualified TextWrapper as TW
 
 import Prelude
 import qualified Stages
---import qualified System
+import qualified System.Console.ANSI
 import qualified System.IO
 import qualified System.Random as R
 
+{- | Abbreviation to reduce verbosity.
+ -   This function clears the terminal screen,
+ -   and sets the cursor to the top left corner,
+ -   so that the text of the next stage is shown
+ -   at the top left corner rather than at the
+ -   bottom left corner, which is the default.
+ -   Not the history - merely the latest output.
+ -}
+cls :: IO ()
+cls = do
+  System.Console.ANSI.setCursorPosition 0 0
+  System.Console.ANSI.clearScreen
 
 {- | This is the game loop. It keeps looping stages until the 
  -   player quits. It assumes that the stage will give the player 
@@ -28,9 +40,12 @@ import qualified System.Random as R
  -   which stage to show next, and recurses in on itself. 
  -}
 loop :: Stages.Stage -> Stages.UserName -> IO ()
-loop Stages.Quit player = TW.wrap $ Stages.show Stages.Quit player
+loop Stages.Quit player = do
+  cls
+  TW.wrap $ Stages.show Stages.Quit player
 #if defined(mingw32_HOST_OS)
 loop stage player = do
+  cls
   let t = Stages.show stage player
   TW.wrap t
   TLIO.getLine >> = 
@@ -39,6 +54,7 @@ loop stage player = do
             else loop (Stages.next stage (Keys.read ((TL.unpack k)!!0))) player
 #else
 loop stage player = do
+  cls
   let t = Stages.show stage player
   TW.wrap t
   getChar >>= \k -> loop (Stages.next stage (Keys.read k)) player
@@ -66,9 +82,9 @@ checkPlayerName randomizerSeed taintedName = do
  -}
 disableBuffering :: IO ()
 #if defined(mingw32_HOST_OS)
-disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.LineBuffering
+disableBuffering = cls >> System.IO.hSetBuffering System.IO.stdin System.IO.LineBuffering
 #else
-disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
+disableBuffering = cls >> System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
 #endif
 
 {- | Entry point of the application. It shows the Init stage, 
@@ -78,7 +94,7 @@ disableBuffering = System.IO.hSetBuffering System.IO.stdin System.IO.NoBuffering
  -}
 main :: IO ()
 main
-  = (TW.wrap $ Stages.show Stages.Init "") >> TLIO.getLine >>=
+  = cls >> (TW.wrap $ Stages.show Stages.Init "") >> TLIO.getLine >>=
       \ p -> disableBuffering >> R.newStdGen >>=
         \ s -> checkPlayerName s p >>= loop Stages.A1DarkHallway
 

@@ -1,5 +1,12 @@
 # Revision history for maskies
 
+## 0.2.0.15
+
+* Added upper-case letters to navigation keys.
+* Fixed crash in day 4, when choosing to inspect the cleaner's uniform.
+* Made sure to indicate what result each action will have: don't just randomly pick stuff up.
+* Now clearing the terminal between scenes. This makes it easier to focus on the current scene.
+
 ## 0.2.0.13
 
 * More wire tests.
