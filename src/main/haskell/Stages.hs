@@ -284,6 +284,12 @@ data Stage =
   | D4mAYD
   | D2mAYWW
   | D4mAYWW
+  | E1
+  | Em1
+  | E2
+  | Em2
+  | E3
+  | Em3
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
@@ -839,7 +845,13 @@ next D4mAYD K.S = D4mAY
 next D4mAYD _ = D4mAYD
 next D4mAYW K.W = D4mAYWW
 next D4mAYW _ = D4mAYW
+next D2mAYWW K.A = Em1
+next D2mAYWW K.W = Em2
+next D2mAYWW K.D = Em3
 next D2mAYWW _ = D2mAYWW
+next D4mAYWW K.A = E1
+next D4mAYWW K.W = E2
+next D4mAYWW K.D = E3
 next D4mAYWW _ = D4mAYWW
 next _ _ = error "Yet to wire up."
 
@@ -1285,9 +1297,19 @@ show D4mAYA name = TL.replace "{name}" name "OK. I understand why you would thin
 show D4mAYW name = TL.replace "{name}" name "Yes! You marvelous miracle of history knowledge, you! Or did you figure it out by yourself, {name}? Awesome! The wall in front of you slides away and leads into another hall. Press w to move forwards, or q to quit."
 show D4mAYD name = TL.replace "{name}" name "Erm. A bowl of ice cream? Yummy as our ice cream is, you probably want to avoid eating it by the time it grows legs! Press s to try again. Too bad you never found the maze map, {name}!"
 
-show D2mAYWW name = TL.replace "{name}" name "Great choice, {name}! Well. Not really. There still is no way out. There is, however, a shelf with 3 glasses. Each holds a straw of different lengths. The left glass has a short straw. The middle glass has a medium straw. The right glass has a large straw. Above the shelf, a sign on the wall reads: Pick One. Which will you pick? Press a for left, s for middle, or d for right."
+show D2mAYWW name = TL.replace "{name}" name "Great choice, {name}! Well. Not really. There still is no way out. There is, however, a shelf with 3 glasses. Each holds a straw of different lengths. The left glass has a short straw. The middle glass has a medium straw. The right glass has a large straw. Above the shelf, a sign on the wall reads: Pick One. Which will you pick? Unfortunately your map offers no guidance for this one. Press a for left, s for middle, or d for right."
 
 show D4mAYWW name = TL.replace "{name}" name "Great choice! Well. Not really. There still is no way out, {name}. There is, however, a shelf with 3 glasses. Each holds a straw of different lengths. The left glass has a short straw. The middle glass has a medium straw. The right glass has a large straw. Above the shelf, a sign on the wall reads: Pick One. Which will you pick? Press a for left, s for middle, or d for right."
+
+show Em1 name = TL.replace "{name}" name "The left wall opens to darkness. A waft of bad air fills your nose. Tinny scratchy noises reach you from the dark… but whatever makes that noise is hidden. "
+show E1 name = TL.replace "{name}" name "The left wall opens to darkness. A waft of bad air fills your nose. Tinny scratchy noises reach you from the dark… but whatever makes that noise is hidden. "
+
+show Em2 name = TL.replace "{name}" name "The front wall opens to darkness. The music sounds louder here. It almost hides the tinny noises made by something hidden in the dark… Almost… "
+show E2 name = TL.replace "{name}" name "The front wall opens to darkness. The music sounds louder here. It almost hides the tinny noises made by something hidden in te dark… Almost… "
+
+show Em3 name = TL.replace "{name}" name "The right wall opens to darkness. Did it just get colder? Your hair just stood upright in places you didn‘t know you had hair, yet: something is looking at you… Something hidden… "
+show E3 name = TL.replace "{name}" name "The right wall opens to darkness. Did it just get colder? Your hair just stood upright in places you didn‘t know you had hair, yet: something is looking at you… Something hidden… "
+
 
 mAY :: TL.Text
 mAY = "The sign reads: To continue, choose the correct answer to the following problem. At dawn I walk on 4. At noon I walk on 2. At dusk I walk on 3. What am I? Your choices are: a for an animatronic, w for a human, or d for a bowl of ice cream. {map} Choose!"
