@@ -290,6 +290,36 @@ data Stage =
   | Em2
   | E3
   | Em3
+  | E1W
+  | Em1W
+  | E2W
+  | Em2W
+  | E3W
+  | E1WH
+  | Em1WH
+  | E2WH
+  | Em2WH
+  | Em3W
+  | E3WH
+  | Em3WH
+  | E1WA
+  | Em1WA
+  | E1WW
+  | Em1WW
+  | E1WD
+  | Em1WD
+  | E2WA
+  | Em2WA
+  | E2WW
+  | Em2WW
+  | E2WD
+  | Em2WD
+  | E3WA
+  | Em3WA
+  | E3WW
+  | Em3WW
+  | E3WD
+  | Em3WD
   | Quit
   deriving (Bounded, Read, Show, Eq, Enum)
 
@@ -853,6 +883,49 @@ next D4mAYWW K.A = E1
 next D4mAYWW K.W = E2
 next D4mAYWW K.D = E3
 next D4mAYWW _ = D4mAYWW
+next E1 K.S = D4mAYWW
+next E2 K.S = D4mAYWW
+next E3 K.S = D4mAYWW
+next Em1 K.S = D2mAYWW
+next Em2 K.S = D2mAYWW
+next Em3 K.S = D2mAYWW
+next E1 K.W = E1W
+next E2 K.W = E2W
+next E3 K.W = E3W
+next Em1 K.W = Em1W
+next Em2 K.W = Em2W
+next Em3 K.W = Em3W
+next E1 _ = E1
+next E2 _ = E2
+next E3 _ = E3
+next Em1 _ = Em1
+next Em2 _ = Em2
+next Em3 _ = Em3
+next E1W K.A = E1WA
+next E2W K.A = E2WA
+next E3W K.A = E3WA
+next Em1W K.A = Em1WA
+next Em2W K.A = Em2WA
+next Em3W K.A = Em3WA
+next E1W K.W = E1WW
+next E2W K.W = E2WW
+next E3W K.W = E3WW
+next Em1W K.W = Em1WW
+next Em2W K.W = Em2WW
+next Em3W K.W = Em3WW
+next E1W K.D = E1WD
+next E2W K.D = E2WD
+next E3W K.D = E3WD
+next Em1W K.D = Em1WD
+next Em2W K.D = Em2WD
+next Em3W K.D = Em3WD
+next Em1W K.H = Em1WH
+next Em2W K.H = Em2WH
+next Em3W K.H = Em3WH
+next Em1WH _ = Em1W
+next Em2WH _ = Em2W
+next Em3WH _ = Em3W
+
 next _ _ = error "Yet to wire up."
 
 type UserName = TL.Text
@@ -1301,15 +1374,32 @@ show D2mAYWW name = TL.replace "{name}" name "Great choice, {name}! Well. Not re
 
 show D4mAYWW name = TL.replace "{name}" name "Great choice! Well. Not really. There still is no way out, {name}. There is, however, a shelf with 3 glasses. Each holds a straw of different lengths. The left glass has a short straw. The middle glass has a medium straw. The right glass has a large straw. Above the shelf, a sign on the wall reads: Pick One. Which will you pick? Press a for left, s for middle, or d for right."
 
-show Em1 name = TL.replace "{name}" name "The left wall opens to darkness. A waft of bad air fills your nose. Tinny scratchy noises reach you from the dark… but whatever makes that noise is hidden. "
-show E1 name = TL.replace "{name}" name "The left wall opens to darkness. A waft of bad air fills your nose. Tinny scratchy noises reach you from the dark… but whatever makes that noise is hidden. "
+show Em1 name = TL.replace "{name}" name "The left wall opens to darkness. A waft of bad warm air fills your nose. Tinny scratchy noises reach you from the dark… but whatever makes that noise is hidden. Press w to move on, {name}, or s to go back. "
+show E1 name = TL.replace "{name}" name "The left wall opens to darkness. A waft of bad warm air fills your nose. Tinny scratchy noises reach you from the dark… but whatever makes that noise is hidden. Press w to move on, or s to go back, {name}. "
 
-show Em2 name = TL.replace "{name}" name "The front wall opens to darkness. The music sounds louder here. It almost hides the tinny noises made by something hidden in the dark… Almost… "
-show E2 name = TL.replace "{name}" name "The front wall opens to darkness. The music sounds louder here. It almost hides the tinny noises made by something hidden in te dark… Almost… "
+show Em2 name = TL.replace "{name}" name "The front wall opens to darkness. The music sounds louder here. It almost masks the tinny scratches made by something hidden in the dark… Almost… Press w to move on, {name}, or s to go back. "
+show E2 name = TL.replace "{name}" name "The front wall opens to darkness. The music sounds louder here. It almost masks the tinny scratches made by something hidden in te dark… Almost… Press w to move on, or s to go back, {name}. "
 
-show Em3 name = TL.replace "{name}" name "The right wall opens to darkness. Did it just get colder? Your hair just stood upright in places you didn‘t know you had hair, yet: something is looking at you… Something hidden… "
-show E3 name = TL.replace "{name}" name "The right wall opens to darkness. Did it just get colder? Your hair just stood upright in places you didn‘t know you had hair, yet: something is looking at you… Something hidden… "
+show Em3 name = TL.replace "{name}" name "The right wall opens to darkness. Did it just get colder? Your hair just stood upright in places you didn‘t know you had hair, yet: something is looking at you… Something hidden… Press w to move on, {name}, or s to go back. "
+show E3 name = TL.replace "{name}" name "The right wall opens to darkness. Did it just get colder? Your hair just stood upright in places you didn‘t know you had hair, yet: something is looking at you… Something hidden… Press w to move on, or s to go back, {name}. "
 
+show E1W name = TL.replace "{name}" name "Ahh, not scared easily, are you, {name}? Now it‘s dark all around. You have to feel your way around. But the walls give way on all sides. Perk your nose up: follow that tinny scratchy thing. Which way did it go? Left? It smells worse there, like sewage. Press a to go left. Forward? Press w. Or press d to turn right: smells like pancakes." 
+
+show Em1W name = TL.replace "{name}" name "Ahh, not scared easily, are you, {name}? Now it‘s dark all around. You have to feel your way around. But the walls give way on all sides. Perk your nose up: follow that tinny scratchy thing. Which way did it go? Left? It smells worse there, like sewage. Press a to go left. Forward? Press w. Or press d to turn right, smells like pancakes. Does your map provide a hint? To check, press h."
+
+show Em1WH name = TL.replace "{name}" name "You can barely make out the map, as the light is nearly gone. The only thing it seems to shows here, is a stack of pancakes. Press s to close the map."
+
+show E2W name = TL.replace "{name}" name "Forward! Oh wait. Stop. It‘s dark all around. You have to feel your way around. But the walls give way on all sides. Perk your ears up: follow that tinny scratchy noise. Which way did it go? Left? The music is louder there. Press a. Forward? Press w. Or press d to turn right, into the silence." 
+
+show Em2W name = TL.replace "{name}" name "Forward! Oh wait. Stop. It‘s dark all around. You have to feel your way around. But the walls give way on all sides. Perk your ears up: follow that tinny scratchy noise. Which way did it go? Left? The music is louder there. Press a. Forward? Press w. Or press d to turn right, into the silence. Does your map provide a hint? To check, press h."
+
+show Em2WH name = TL.replace "{name}" name "It‘s so dark it‘s difficult to read the map. It may show but a music note. What does that mean? Press s to close the map."
+
+show E3W name = TL.replace "{name}" name "Right on! Erm. Hold on. It‘s dark all around. You have to feel your way around. But the walls give way on all sides. Reach your hand out and feel: follow that which looked at you. Which way did it go? Left? It‘s warmer there. Press a. Forward? Press w. Or press d to turn right, into the icy cold." 
+
+show Em3W name = TL.replace "{name}" name "Right on! Erm. Hold on. It‘s dark all around. You have to feel your way around. But the walls give way on all sides. Perk your ears up: follow that which looked at you. Which way did it go? Left? It‘s warmer there. Press a. Forward? Press w. Or press d to turn right, into the icy cold. Does your map provide a hint? To check, press h."
+
+show Em3WH name = TL.replace "{name}" name "You prefer to read maps with more light. Now all you can make out is an ice berg. How is that going to help? Press s to close the map."
 
 mAY :: TL.Text
 mAY = "The sign reads: To continue, choose the correct answer to the following problem. At dawn I walk on 4. At noon I walk on 2. At dusk I walk on 3. What am I? Your choices are: a for an animatronic, w for a human, or d for a bowl of ice cream. {map} Choose!"
